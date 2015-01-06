@@ -1,0 +1,92 @@
+<tool id="findpromoter" name="findpromoter" version="1.0">
+  <description>program to search for a promoter motif and optionally, an adapter sequence from a source species on a target species</description>
+  <command interpreter="/local/gensoft/adm/bin/perl">findpromoter.pl -s $source_species -t $target_species -G $Promoter -g $num_mis_promo -M $Adpt_seq -m $num_mis_adpt -d $distance
+  #if $flag_x.x == "yes"
+      -x
+  #end if
+  #if $flag_u.u == "yes"
+      -u
+  #end if
+  #if $flag_a.a == "yes"
+      -a
+  #end if
+  -e $updownstream -w $threshold -i $bidentity -o $output -S $seq_suffix $blast_in
+  </command>
+  
+  <inputs>
+      <param name="source_species" label="source species" type="select" display="radio" help="species from which the promoters/adapter seq originate.">
+          <option value="Hs" selected="True">Homo sapiens</option>
+          <option value="Mm">Mus musculus</option>
+          <option value="Md">Monodelphis domestica</option>
+      </param>
+      <param name="target_species" label="target species" type="select" display="radio" help="species in which the promoters/adapter seq originate.">
+          <option value="Hs" selected="True">Homo sapiens</option>
+          <option value="Mm">Mus musculus</option>
+          <option value="Md">Monodelphis domestica</option>
+      </param>
+      <param name="Promoter" label="Promoter sequences" size="50" type="text" help="are the Promoter sequences (separate by ':') or unique sequence with mismatches example : TGGGTGGAT:CGGGTGGCA:CGGGTGGTC"> 
+          <validator type="regex" message="Use only ACTG characters and colon for separate promoter sequences">[ACTG:]+$</validator>
+      </param>
+      <param name="num_mis_promo" type="integer" size="5" value="1" min="0" label="number of Promoter mismatches"/>
+      <param name="Adpt_seq" label="Adpt sequence" size="50" type="text" help="is the Adpt sequence example : AATT:GTTC">
+           <validator type="regex" message="Use only ACTG characters and colon for separate promoter sequences">[ACTG:]+$</validator> 
+      </param>
+      <param name="num_mis_adpt" type="integer" size="5" value="0" min="0" label="number of Adpt mismatches"/>
+      <param name="distance" type="integer" size="10" value="100" min="0" label="maximum distance between Promoter motif and Adpt motif"/>
+      <conditional name="flag_x">
+          <param name="x" type="select" label="add Promoter/Adpt location from the mouse">
+	      <option value="yes" selected="True">YES</option>
+	      <option value="no">NO</option>
+          </param>
+	  <when value="yes"/>
+	  <when value="no"/>
+      </conditional>
+      <conditional name="flag_u">
+          <param name="u" type="select" label="use mismatches">
+	      <option value="yes" selected="True">YES</option>
+	      <option value="no">NO</option>
+          </param>
+	  <when value="yes"/>
+	  <when value="no"/>
+      </conditional>
+      <conditional name="flag_a">
+          <param name="a" type="select" label="list nearest mouse/human/opossum gene (within '-p' threshold) to Promoter sequence">
+	      <option value="yes" selected="True">YES</option>
+	      <option value="no">NO</option>
+          </param>
+	  <when value="yes"/>
+	  <when value="no"/>
+      </conditional>
+      <param name="updownstream" type="integer" size="10" value="0" min="0" max="10000" label="add bp (maximum 10000) upstream/downstream of mapped hit"/>
+      <param name="threshold" type="integer" size="10" value="10000" min="0" label="threshold for nearest gene (in bp)"/>
+      <param name="bidentity" type="float" size="5" value="0.9" min="0" max="100" label="Blast hit minimum identity (%)"/>
+      <param name="blength" type="integer" size="10" value="100" min="0" label="Blast hit minimum length (bp)"/>
+      <param name="seq_suffix" type="data" format="fasta" label="sequences file"/>
+      <param name="blast_in" type="data" format="txt" label="Blast output of source sequences to target genome (Pairwise text format)"/>
+  </inputs>
+  <outputs>
+      <data name="output" type="data" format="csv" label="report output file" />
+  </outputs>
+  <help>
+program to search for a promoter motif and optionally, an adapter sequence from a source species on a target species limits of the motif and adapter to it's nearest gene can be changed
+input files are blast output report of the sources species sequences blasted against the target genome the source species sequences must be fasta files, the fasta identifier must be in the form::
+
+>id chr|start|last|strand
+
+where id is an identifier which appears on the report
+
+chr|start|last|strand is the location/strand of the promoter region on the source species genome
+
+the 'chr' (chromosome) should be a short name like '1', '12', 'X', or 'Y' and must match the chromosome in the annotation GFF3 files the fasta id in the genome files should also be a short name for the chromosome and should also match the chromosome name in the GFF3 annotation files
+
+the program produces a tabulation separated results file that contains:
+
+the source species sequence identificator (from the fasta id from the source species sequences, the localisation of the region,
+
+the location and sequence of the promoter, the location of the adapter, and the nearest gene. This information is optional for
+
+the source species but included for the target species.
+  </help>
+
+</tool>
+

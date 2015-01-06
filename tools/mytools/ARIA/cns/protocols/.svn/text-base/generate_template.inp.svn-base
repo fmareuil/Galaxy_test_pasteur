@@ -1,0 +1,201 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: generate_template.inp,v $
+
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+
+evaluate ($iteration = $data.iteration)
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+
+!read the .psf files:
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+!Added by B. Bardiaux for dimers ; 22/10/04
+if ($Toppar.symmetry ne "1") then
+	delete selection= (not segid $Toppar.prot_segid_1) end
+end if
+
+! End of modification
+
+if ($Data.flags.sani = true) then
+  parameter @@RUN:toppar/par_axis.pro end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+{
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+}
+
+ident (x) ( all )
+do (x=x/5.) ( all )
+do (y=random(0.5) ) ( all )
+do (z=random(0.5) ) ( all )
+
+do (fbeta=50) (all)          {* friction coefficient, in 1/ps *}
+do (mass=100) (all)          {* heavy masses, in amu          *}
+
+parameter 
+
+   nbonds
+      cutnb=6.5 rcon=50. nbxmod=-2 repel=1.2  wmin=0.1 tolerance=1.
+      rexp=4 irexp=1 inhibit=0.0
+   end       
+
+   !set all force constants uniform to make dynamics more stable:
+   bonds    (all) (all) 1000.0 token
+   angles   (all) (all) (all) 500.0 token
+   improper (all) (all) (all) (all) 500.0 token token 
+
+   !remove any disuphide bonds :
+   bonds  (name sg) (name sg) 0.0 TOKEN
+   angles (all) (name sg) (name sg) 0.0 TOKEN
+
+end
+
+! BARDIAUX Zn patches, remove SG-ZN bonds
+@RUN:protocols/freezn.cns { defines store8 }
+parameter
+   bond (store8) (name ZN) 0.0 TOKEN
+   angle (all) (store8) (name ZN) 0.0 TOKEN
+   angle (store8) (name zn) (store8) 0.0 TOKEN
+   bond (name NE2) (name ZN) 0.0 TOKEN
+   bond (name ND1) (name ZN) 0.0 TOKEN
+   angle (all) (name NE2) (name ZN) 0.0 TOKEN
+   angle (all) (name ND1) (name ZN) 0.0 TOKEN
+   angle (all) (name ZN) (name NE2) 0.0 TOKEN
+   angle (all) (name ZN) (name ND1) 0.0 TOKEN
+end
+
+
+flags exclude * include bond angle vdw end
+
+minimize powell nstep=200  nprint=10 end
+
+flags include impr end
+
+minimize powell nstep=200 nprint=10 end
+
+do (vx=maxwell(1000)) (all)
+do (vy=maxwell(1000)) (all)
+do (vz=maxwell(1000)) (all)
+
+dynamics  cartesian
+   nstep=500  timestep=0.001   
+   tcoupling = true  temperature = 1000.   nprint=50  
+   cmremove=true cmperiodic=0 
+end
+
+parameter 
+   nbonds
+      rcon=25. nbxmod=5 repel=1.0
+   end
+end
+
+minimize powell nstep=100 nprint=10 end 
+
+dynamics  cartesian
+   nstep=2000  timestep=0.005   
+   tcoupling = true  temperature = 200.   nprint=100 
+   cmremove=true cmperiodic=0  
+end
+
+minimize powell nstep=200 nprint=50 end
+
+set echo off message off end
+
+!Added by B. Bardiaux for dimers ; 22/10/04
+if ($Toppar.symmetry ne "1") then
+	evaluate ($segidcount = 2)
+	while ($segidcount le $Toppar.mononum) loop segs
+   		evaluate ($segid = $Toppar.prot_segid_$segidcount)
+   		duplicate sele=(segid $Toppar.prot_segid_1) segid= $segid end
+   		evaluate ($segidcount = $segidcount + 1)
+	end loop segs
+     
+	coor orient end
+	evaluate ($rotation = 360/$Toppar.mononum)
+	evaluate ($rotangle = 0)
+
+	if ($Toppar.symmetry eq "2") then
+	   do (z = z + 5) (segid *)	
+           coor rotate selection= (segid $Toppar.prot_segid_2) axis (0 1 0) 180 end
+        elseif ($Toppar.symmetry eq "3") then
+           do (z = z + 5) (segid *)
+           coor rotate selection= (segid $Toppar.prot_segid_2) axis (1 0 0) 120 end
+           coor rotate selection= (segid $Toppar.prot_segid_3) axis (1 0 0) 240 end  
+	elseif ($Toppar.symmetry eq "222") then
+   	   do (z = z + 5) (segid *)
+   	   coor rotate selection= (segid $Toppar.prot_segid_2) axis (1 0 0)  90 end
+   	   coor rotate selection= (segid $Toppar.prot_segid_3) axis (1 0 0) 180 end
+   	   coor rotate selection= (segid $Toppar.prot_segid_4) axis (1 0 0) 270 end
+   	   coor rotate selection= (segid $Toppar.prot_segid_2) axis (0 0 1) 180 end
+   	   coor rotate selection= (segid $Toppar.prot_segid_4) axis (0 0 1) 180 end
+        elseif ($Toppar.symmetry eq "5") then
+           do (z = z + 5) (segid *)
+           coor rotate selection= (segid $Toppar.prot_segid_2) axis (1 0 0)  72 end
+           coor rotate selection= (segid $Toppar.prot_segid_3) axis (1 0 0) 144 end     
+           coor rotate selection= (segid $Toppar.prot_segid_4) axis (1 0 0) 216 end           
+           coor rotate selection= (segid $Toppar.prot_segid_5) axis (1 0 0) 288 end                 
+        end if
+
+	coor orient end
+end if
+!End of modification
+                                               {* write coordinates *}
+remarks produced by nmr/generate_template.inp
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+write coordinates output=$templatefile end  
+print threshold=1.0 impropers 
+
+stop
+
+
+
+
+
+
+
+
+

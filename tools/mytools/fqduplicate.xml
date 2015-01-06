@@ -1,0 +1,105 @@
+<tool id="fqduplicate" name="fqduplicate" version="1.0">
+    <description>Detect duplicate reads. Outputs a list of read names corresponding to reads already seen in the dataset with a better quality sum score (duplicates)</description>
+    <command>
+ fqduplicate 
+#if $read_type.read_type_selector == "paired":
+  $read_type.input1
+  $read_type.input2
+#else
+  $read_type.input
+#end if
+   > $output
+    </command>
+    <inputs>
+      <conditional name="read_type">
+        <param name="read_type_selector" type="select" label="Type of input data">
+          <option value="single" selected="True">Single Read</option>
+          <option value="paired">Paired End</option>
+        </param>
+        <when value="single">
+          <param name="input" type="data" format="fastqillumina,fastqsanger" label="Illumina Single-Read fastq dataset from your history"/>
+        </when>
+        <when value="paired">
+          <param name="input1" type="data" format="fastqillumina,fastqsanger" label="Illumina paired-end Read 1 Fastq dataset from your history"/>
+          <param name="input2" type="data" format="fastqillumina,fastqsanger" label="Illumina paired-end Read 2 Fastq dataset from your history"/>
+        </when>
+      </conditional>
+    </inputs>
+    <outputs>
+        <data name="output" format="lst"/>
+    </outputs>
+    <tests> 
+      <test>        
+        <param name="read_type_selector" value="single"/>
+        <param name="input" value="fqduplicate/s_7_1_sequence.txt" ftype="fastqillumina"/>
+        <output name="output" file="fqduplicate/s_7_SR_duplicates.lst"/>
+      </test>
+      <test>        
+        <param name="read_type_selector" value="paired"/>
+        <param name="input1" value="fqduplicate/s_7_1_sequence.txt" ftype="fastqillumina"/>
+        <param name="input2" value="fqduplicate/s_7_2_sequence.txt" ftype="fastqillumina"/>
+        <output name="output" file="fqduplicate/s_7_PE_duplicates.lst"/>
+      </test>
+    </tests>
+    <help>
+
+.. class:: warningmark
+
+To remove duplicates, use the output dataset as input for fqextract program 
+with option "Exclude listed reads (-x)".
+
+-----
+
+.. class:: infomark
+
+**What it does**
+
+Look up for duplicates in a fastq dataset. If duplicates are found, 
+the name of the reads with the **worst quality sum score** is written 
+in the output. This output can be used as an input for fqduplicate.
+
+In case of paired-end data, 2 pairs are considered identical if both
+ends are identical to one of the reads of the other pair. *But*
+
+.. class:: warningmark  
+
+**only the read 1 is listed in the output**.
+
+**Input**
+
+Example of original dataset::
+
+    @HWI-EAS285:6:1:1081:594#0/1
+    AAATAACCACAACAATCAAGCTAATTAACATAACTGTCAGATCGGAAGCGCGNN
+    +HWI-EAS285:6:1:1081:594#0/1
+    aabbaaaaaabZXa_aaaXX^aa_a_aX^aXX_X_GYX^BBBBBBBBBBBBBBB
+    @HWI-EAS285:6:1:1081:1541#0/1
+    AAAGAATATGACCGACTTAGAAGTAATTGAAGTAAATGTGAATGTTGTTGAGNN
+    +HWI-EAS285:6:1:1081:1541#0/1
+    aaaa^XaXbXa\_^^^bXaXXXa\a\a^^a_X^a__aa^aXBBBBBBBBBBBBB
+    @HWI-EAS285:6:1:1081:956#0/1
+    TTCTTTTCTTGGTTCTTCCGTTCTTGAATTAAGGCCTCCAATTTTTTTATGTNN
+    +HWI-EAS285:6:1:1081:956#0/1
+    aaababaabaaX_aXaX_aUaa^XXW___^^a_^^WaWL\XX_a_a_BBBBBBB
+    @HWI-EAS285:6:1:1081:327#0/1
+    GTCATGGGACGCAAGAACTGGCTCTTTTCTCAGAGCAGGACCGGTGCGACATNN
+    +HWI-EAS285:6:1:1081:327#0/1
+    aXaaa^^X^aP\aaSaX^_YSZ^^BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+    @HWI-EAS285:7:2:1082:595#0/1
+    AAATAACCACAACAATCAAGCTAATTAACATAACTGTCAGATCGGAAGCGCGNN
+    +HWI-EAS285:7:2:1082:595#0/1
+    abaaTabbXaXbXaaababaabaaX_baaaaaX_aX^XXaa____X_^_XWaBB
+
+
+-----
+
+**Output**
+
+List of duplicated reads with the worst quality sum score::
+
+    HWI-EAS285:6:1:1081:594#0/1
+
+    </help>
+</tool>
+
+

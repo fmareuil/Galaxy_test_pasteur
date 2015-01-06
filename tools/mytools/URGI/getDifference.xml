@@ -1,0 +1,127 @@
+<tool id="getDifference" name="get Difference">
+	<description>Gets all the regions of the genome, except the one given or get all the elements from the first set which does not ovelap with the second set (at the nucleotide level).</description>
+	<command interpreter="python">
+		../Java/Python/getDifference.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+			
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+			-g gtf
+		#end if
+
+
+		$split
+		
+		#if $OptionSequence.option == "Yes":
+			-s $OptionSequence.sequence
+		#end if
+		
+		-o $outputFileGff
+
+
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File Format 1">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File "/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File "/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File "/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File "/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File "/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File "/>
+			</when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input File Format 2">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="reference file"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="reference file"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="reference file"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="reference file"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="reference file"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="reference file"/>
+			</when>
+		</conditional>
+
+		<param name="split" type="boolean" truevalue="-p" falsevalue="" checked="false" label="split option" help="When comparing to a set of genomic coordinates, do not join."/>
+
+		
+		<conditional name="OptionSequence">
+			<param name="option" type="select" label="Compare with a reference fasta file.">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="sequence" type="data" label="Fasta File" format="fasta"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+	</inputs>
+
+
+	<outputs>
+		<data name="outputFileGff" format="gff3" label="[getDifference]output File."/>
+	</outputs> 
+
+</tool>

@@ -1,0 +1,265 @@
+<tool id="mpileup" name="mpileup" version="0.1.19">
+  <description>Filter bam file using mpileup on coverage and SNPs</description>
+  <stdio>
+     <exit_code range="0" level="warning" description="Description message" />
+     <exit_code range="1:" level="fatal" />
+  </stdio>
+  <command> 
+samtools mpileup 
+#if $outputformat.flag == "bcf":
+    -u
+#end if
+#if $ref.flag == "yes":
+    -f $ref.file
+#end if
+$anomalous $illumina3_encoding
+#if $exclusion.bool == "Yes":
+  -G $reads_to_exclude
+#end if
+#if $outputformat.flag == "bcf":
+    -L $outputformat.max_depth
+    -o $outputformat.gap_opening_error
+    -e $outputformat.gap_extension_error
+    -h $outputformat.coeff_homopolymer_error
+    -m $outputformat.min_gapped_reads_for_indel
+    -F $outputformat.min_frac_gapped_reads
+    $outputformat.per_sample_DP
+    $outputformat.per_sample_SP
+    $outputformat.no_indel_calling
+#end if
+#if $advanced_settings.type_of_settings != "pre_set":
+-M $advanced_settings.cap_mapping_quality
+-Q $advanced_settings.min_base_quality
+-q $advanced_settings.min_mapping_quality
+  $advanced_settings.extended_BAQ
+  $advanced_settings.disable_BAQ
+#end if
+$bam_file > 
+#if $outputformat.flag == "bcf":
+    $output_bcf
+#else:
+    $output_mpileup
+#end if
+  </command>
+  <requirements>
+    <requirement type='package'>samtools</requirement>
+  </requirements>
+  <inputs>
+    <conditional name="ref">
+        <param name="flag" type="select" label="Do you have a reference sequence?">
+            <option value="yes">yes</option>
+            <option value="no" selected="true">no</option>
+        </param>
+        <when value="yes">
+            <param name="file" type="data" format="fasta" label="Select your reference sequence dataset"/>  
+        </when>
+        <when value="no"/> 
+    </conditional>     
+    <param name="bam_file" type="data" format="bam" label="Select your BAM dataset"/>
+    <conditional name="outputformat">
+        <param name="flag" type="select" label="Output format">
+            <option value="mpileup">mpileup format</option>
+            <option value="bcf" selected="true">bcf format</option>
+        </param>
+        <when value="mpileup"/>
+        <when value="bcf">
+            <param name="max_depth" type="integer" value="250" min="1" label="maximum per-sample depth (require bcf format)"/>
+	        <param name="gap_opening_error" type="integer" value="40" min="1" max="90" label="Phred-scaled gap open sequencing error probability (require bcf format)"/>
+	        <param name="gap_extension_error" type="integer" value="20" min="1" max="90" label="Phred-scaled gap extension seq error probability (require bcf format)"/>
+	        <param name="coeff_homopolymer_error" type="integer" value="100" min="1" max="100" label="coefficient for homopolymer errors (require bcf format)"/>
+	        <param name="min_gapped_reads_for_indel" type="integer" value="1" min="1"  label="minimum gapped reads for indel candidates (require bcf format)"/>
+	        <param name="min_frac_gapped_reads" type="float" value="0.002" min="0.001" max="1.0" label="minimum fraction of gapped reads for candidates (require bcf format)"/>
+            <param name="no_indel_calling" type="boolean" truevalue="-I" falsevalue="" checked="false" label="do not perform indel calling (require bcf format)"/>
+            <param name="per_sample_DP" type="boolean" truevalue="-D" falsevalue="" checked="false" label="output per-sample DP (require bcf format)"/>
+	        <param name="per_sample_SP" type="boolean" truevalue="-S" falsevalue="" checked="false" label="output per-sample SP (strand bias P-value, slow) (require bcf format)"/>
+        </when>	 
+    </conditional>
+    
+    <param name="anomalous" type="boolean" truevalue="-A" falsevalue="" checked="false" label="Use anomalous read pairs in SNP/INDEL calling" help="If your data are paired-end but with many singlets, use that option"/>
+    <param name="illumina3_encoding" type="boolean" truevalue="-6" falsevalue="" checked="true" label="Assume the quality is in the Illumina-1.3+ encoding"/>
+    <conditional name="exclusion">  
+      <param name="bool" type="select" label="Do you want to exclude some reads from the BAM file?">
+        <option value="Yes">Yes</option>
+        <option value="No" selected="true">No</option>
+      </param>
+      <when value="No"/>
+      <when value="Yes">
+	<param name="reads_to_exclude" type="data" format="text" label="Exclude reads listed in the following dataset"/>
+      </when> 
+    </conditional>
+    <conditional name="advanced_settings">
+      <param name="type_of_settings" type="select" label="Advanced Settings" help="If you want full control use Full Parameter List">
+        <option value="pre_set">Commonly Used</option>
+        <option value="full">Full Parameter List</option>
+      </param>
+      <when value="pre_set" />
+      <when value="full">
+    <param name="cap_mapping_quality" type="integer" value="60" min="0" max="64" label="cap mapping quality at"/>
+	<param name="min_base_quality" type="integer" value="13" min="0" max="64" label="minimum base quality"/>	
+	<param name="min_mapping_quality" type="integer" value="0" min="0" max="64" label="filter out alignment with mapping quality smaller than"/>
+	<param name="extended_BAQ" type="boolean" truevalue="-E" falsevalue="" checked="false" label="extended BAQ for higher sensitivity but lower specificity"/>	
+	<param name="disable_BAQ" type="boolean" truevalue="-B" falsevalue="" checked="false" label="disable BAQ computation"/>
+	
+      </when>
+    </conditional>        
+  </inputs>
+  <outputs>
+    <data format="mpileup" name="output_mpileup">
+        <filter>outputformat['flag'] == "mpileup"</filter>
+    </data>
+    <data format="bcf" name="output_bcf">
+        <filter>outputformat['flag'] == "bcf"</filter>
+    </data>
+  </outputs>
+<help>
+
+**What it does**
+
+Allows one to find sequence variants and/or sites covered by a specified number of reads with bases above a set quality threshold. The tool works on six and ten column pileup formats produced with *samtools pileup* command. However, it also allows you to specify columns in the input file manually. The tool assumes the following:
+
+- the quality scores follow phred33 convention, where input qualities are ASCII characters equal to the Phred quality plus 33.
+- the pileup dataset was produced by the *samtools pileup* command (although you can override this by setting column assignments manually).
+
+--------
+
+**Types of pileup datasets**
+
+The descriptions of the following pileup formats are largely based on information that can be found on the SAMTools_ documentation page. The 6- and 10-column variants are described below.
+
+.. _SAMTools: http://samtools.sourceforge.net/pileup.shtml
+
+**Six column pileup**::
+
+    1    2  3  4        5        6
+ ---------------------------------   
+ chrM  412  A  2       .,       II
+ chrM  413  G  4     ..t,     IIIH
+ chrM  414  C  4     ..Ta     III2
+ chrM  415  C  4     TTTt     III7
+   
+where::
+
+  Column Definition
+ ------- ----------------------------
+       1 Chromosome
+       2 Position (1-based)
+       3 Reference base at that position
+       4 Coverage (# reads aligning over that position)
+       5 Bases within reads
+       6 Quality values (phred33 scale, see Galaxy wiki for more)
+       
+**Ten column pileup**
+
+The `ten-column`__ pileup incorporates additional consensus information generated with the *-c* option of the *samtools pileup* command::
+
+
+    1    2  3  4   5   6   7   8       9       10
+ ------------------------------------------------
+ chrM  412  A  A  75   0  25  2       .,       II
+ chrM  413  G  G  72   0  25  4     ..t,     IIIH
+ chrM  414  C  C  75   0  25  4     ..Ta     III2
+ chrM  415  C  T  75  75  25  4     TTTt     III7
+
+where::
+
+  Column Definition
+ ------- ----------------------------
+       1 Chromosome
+       2 Position (1-based)
+       3 Reference base at that position
+       4 Consensus bases
+       5 Consensus quality
+       6 SNP quality
+       7 Maximum mapping quality
+       8 Coverage (# reads aligning over that position)
+       9 Bases within reads
+      10 Quality values (phred33 scale, see Galaxy wiki for more)
+
+
+.. __: http://samtools.sourceforge.net/cns0.shtml
+
+------
+
+**The output format**
+
+The tool modifies the input dataset in two ways:
+
+1. It appends five columns to the end of every reported line:
+
+- Number of **A** variants
+- Number of **C** variants
+- Number of **G** variants
+- Number of **T** variants
+- Number of read bases covering this position, where quality is equal to or higher than the value set by **Do not consider read bases with  quality lower than** option. 
+
+Optionally, if **Print total number of differences?** is set to **Yes**, the tool will append the sixth column with the total number of deviants (see below).
+
+2. If **Convert coordinates to intervals?** is set to **Yes**, the tool replaces the position column (typically the second column) with a pair of tab-delimited start/end values.
+
+For example, if you are calling variants with base quality above 20 on this dataset::
+
+ chrM  412  A  2       .,       II
+ chrM  413  G  4     ..t,     III2
+ chrM  414  C  4     ..Ta     III2
+ chrM  415  C  4     TTTt     III7
+
+you will get::
+
+ chrM  413  G  4  ..t,  IIIH  0  0  2  1  3
+ chrM  414  C  4  ..Ta  III2  1  1  0  1  3
+ chrM  415  C  4  TTTt  III7  0  0  0  4  4
+ 
+where::
+
+  Column Definition
+ ------- ----------------------------
+       1 Chromosome
+       2 Position (1-based)
+       3 Reference base at that position
+       4 Coverage (# reads aligning over that position)
+       5 Bases within reads where
+       6 Quality values (phred33 scale, see Galaxy wiki for more)
+       7 Number of A variants
+       8 Number of C variants
+       9 Number of G variants
+      10 Number of T variants
+      11 Quality adjusted coverage:
+      12 Number of read bases (i.e., # of reads) with quality above the set threshold
+      13 Total number of deviants (if Convert coordinates to intervals? is set to yes)
+         
+if **Print total number of differences?** is set to **Yes**, you will get::
+
+ chrM  413  G  4  ..t,  IIIH  0  0  2  1  3  1
+ chrM  414  C  4  ..Ta  III2  1  2  0  1  3  2
+ chrM  415  C  4  TTTt  III7  0  0  0  4  4  0 
+ 
+Note the additional column 13, that contains the number of deviant reads (e.g., there are two deviants, T and a, for position 414).
+
+ 
+Finally, if **Convert coordinates to intervals?** is set to **Yes**, you will get one additional column with the end coordinate::
+ 
+ chrM  412 413  G  4  ..t,  III2  0  0  2  1  3
+ chrM  414 415  C  4  ..Ta  III2  1  2  0  1  3
+ chrM  414 415  C  4  TTTt  III7  0  0  0  4  4
+ 
+where::
+
+  Column Definition
+ ------- ----------------------------
+       1 Chromosome
+       2 Start position (0-based)
+       3 End position (1-based)
+       4 Reference base at that position
+       5 Coverage (# reads aligning over that position)
+       6 Bases within reads
+       7 Quality values (phred33 scale, see Galaxy wiki for more)
+       8 Number of A variants
+       9 Number of C variants
+      10 Number of G variants
+      11 Number of T variants
+      12 Quality adjusted coverage
+      13 Total number of deviants (if Convert coordinates to intervals? is set to yes)
+
+
+</help>
+</tool>

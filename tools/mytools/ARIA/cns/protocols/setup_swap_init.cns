@@ -1,0 +1,72 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: setup_swap_init.cns,v $
+
+{ initially, no groups are swapped }
+display do (q = 0) (all)
+display do (store1 = 0) (all)
+{ nomenclature: store1=1 methylene/ nh2
+                store1=2 isopropyle
+                store1=3 guanidino
+}
+{ first define all floating groups; for isopropyls, just the hetero atoms }
+
+
+display   do (store1 = 2) (resn leu and name cd1)
+display   do (store1 = 2) (resn val and name cg1)
+display   do (store1 = 3) (resn arg and name nh1)
+
+for $id in id (not store1 and (
+  (resn gly and name ha2)
+  or (resn ile and name hg12)
+  or (resn leu and name hb2)
+  or (resn phe and name hb2)
+  or (resn pro and (name hb2 or name hg2 or name hd2))
+  or (resn met and (name hb2 or name hg2))
+  or (resn trp and name hb2)
+  or (resn cys and name hb2)
+  or (resn ser and name hb2)
+  or (resn asn and name hb2)
+  or (resn gln and (name hb2 or name hg2))
+  or (resn tyr and name hb2)
+  or (resn his and name hb2)
+  or (resn asp and name hb2)
+  or (resn glu and (name hb2 or name hg2))
+  or (resn lys and (name hb2 or name hg2 or name hd2 or name he2))
+  or (resn arg and (name hb2 or name hg2 or name hd2))))
+loop meth   
+   coor sele= (bondedto(bondedto(id $id)) and name h*) end
+   if ($select = 2) then
+     display do (store1 = 1) (id $id)
+   end if
+end loop meth
+
+
+for $id in id (not store1 and (resn gln and name he22))
+loop meth   
+   coor sele= (bondedto(bondedto(id $id)) and name h*) end
+   if ($select = 2) then
+      display do (store1 = 1) (id $id)
+   end if   
+end loop meth
+
+
+for $id in id (not store1 and (resn asn and name hd22))
+loop meth   
+   coor sele= (bondedto(bondedto(id $id)) and name h*) end
+   if ($select = 2) then
+      display do (store1 = 1) (id $id)
+   end if   
+end loop meth
+
+for $id in id (not store1 and (resn arg and (name hh12 or name hh22)))
+loop meth   
+   coor sele= (bondedto(bondedto(id $id)) and name h*) end
+   if ($select = 2) then
+      display do (store1 = 1) (id $id)
+   end if   
+end loop meth
+
+!ARIA2 @RUN:data/sequence/stereoassign.cns
+
+set echo off message off end

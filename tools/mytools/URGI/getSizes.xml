@@ -1,0 +1,135 @@
+<tool id="GetSizes" name="get sizes">
+	<description>Get the sizes of a set of genomic coordinates.</description>
+	<command interpreter="python">
+		../Java/Python/getSizes.py -i $formatType.inputFileName $formatType.FormatInputFileName
+	
+		#if $OptionQuery.OptionQ == 'NONE':
+			-q size
+		#else:
+			$OptionQuery.OptionQ
+		#end if
+
+		-o $outputFile
+
+		#if $OptionXMax.xMax == "Yes":
+			-x $OptionXMax.maxValue
+		#end if
+		#if $OptionX.xLab == "Yes":
+		        -a $OptionX.xLabValue
+		#end if
+                #if $OptionY.yLab == "Yes":
+		        -b $OptionY.yLabValue
+		#end if
+		$barPlot
+		$excel $excelOutput
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="-f bed">bed</option>
+				<option value="-f gff">gff</option>
+				<option value="-f gff2">gff2</option>
+				<option value="-f gff3">gff3</option>
+				<option value="-f sam">sam</option>
+				<option value="-f gtf">gtf</option>
+				<option value="-f fasta">fasta</option>
+				<option value="-f fastq">fastq</option>
+			</param>
+			<when value="-f bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="-f gff">
+				<param name="inputFileName" format="gff" type="data" label="Input gff File"/>
+			</when>
+			<when value="-f gff2">
+				<param name="inputFileName" format="gff" type="data" label="Input gff2 File"/>
+			</when>
+			<when value="-f gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input gff3 File"/>
+			</when>
+			<when value="-f sam">
+				<param name="inputFileName" format="sam" type="data" label="Input gff2 File"/>
+			</when>
+			<when value="-f gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input gff3 File"/>
+			</when>
+			<when value="-f fasta">
+				<param name="inputFileName" format="fasta" type="data" label="Input fasta File"/>
+			</when>
+			<when value="-f fastq">
+				<param name="inputFileName" format="fastq" type="data" label="Input fastq File"/>
+			</when>
+		</conditional>
+
+		<conditional name="OptionQuery">
+			<param name="OptionQ" type="select" label="mesure type">
+				<option value="-q size">size</option>
+				<option value="-q intron size">intron size</option>
+				<option value="-q exon size">exon size</option>
+				<option value="-q 1st exon size">1st exon size</option>
+				<option value="NONE" selected="true">NONE</option>
+			</param>
+			<when value="-q size">
+			</when>
+			<when value="-q intron size">
+			</when>
+			<when value="-q exon size">
+			</when>
+			<when value="-q 1st exon size">
+			</when>
+			<when value="NONE">
+			
+			</when>
+		</conditional>
+
+		<conditional name="OptionXMax">
+			<param name="xMax" type="select" label="maximum value on the x-axis to plot [format: int]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="maxValue" type="integer" value="1000"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionX">
+			 <param name="xLab" type="select" label="X label title">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="xLabValue" type="text" value="Size" label="Notice: The title should not have spaces. EX. Size_of_transcript"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionY">
+			<param name="yLab" type="select" label="Y label title">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="yLabValue" type="text" value="#_reads" label="Notice: The title should not have spaces. EX. Number_of_reads"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+
+
+		<param name="barPlot" type="boolean" truevalue="-B" falsevalue="" checked="false" label="use barplot representation"/>
+
+		<param name="excel" type="boolean" truevalue="-c" falsevalue="" checked="false" label="excel option" help="This option creates a csv file."/>
+	</inputs>
+	
+	<outputs>
+		<data name="outputFile" format="png" label="[Get size] Output file"/>
+		<data name="excelOutput" format="csv">
+			<filter>excel</filter>
+		</data>
+	</outputs>
+</tool>

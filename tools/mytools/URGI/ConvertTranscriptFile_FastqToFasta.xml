@@ -1,0 +1,15 @@
+<tool id="ConvertTranscriptFile_FastqToFasta" name="Fastq -> Fasta">
+  <description>Convert Fastq File to Fasta File.</description>
+  <command interpreter="python"> ../Java/Python/fastqToFasta.py -i $inputFile -o $outputFile 2>$logFile </command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="fastq"/>
+  </inputs>
+
+  <outputs>
+    <data format="fasta" name="outputFile" label="[fastq -> fasta] Output File"/>
+    <data format="txt" name="logFile" label="[fastq -> fasta] Log File"/>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

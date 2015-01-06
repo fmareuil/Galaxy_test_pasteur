@@ -1,0 +1,19 @@
+<tool id="colorGff" name="colorGff">
+	<description> Parses a DOOR report file and writes the information in a gff3 out file. </description>
+		<command interpreter="perl"> 
+			../bacteriaRegulatoryRegion_Detection/colorGff.pl -i $inputFile -c $RGBcode > $outputFile  
+		</command>
+
+	<inputs>
+		<param name="inputFile" type="data" label="Input File" format="gff"/>
+		<param name="RGBcode" type="text" value="250 128 114" help="RGB code is necessary for choosing the color."/>
+	</inputs>
+
+	<outputs>
+		<data format="gff3" name="outputFile" label="[colorGff] Output File"/>
+	</outputs>
+
+	<help>
+		Command example: perl colorGff.pl -i trans_covUp5_nbEUp10_lgUp50.gff3 -c "250 128 114" > trans_covUp5_nbEUp10_lgUp50_c.gff3
+	</help>
+</tool>

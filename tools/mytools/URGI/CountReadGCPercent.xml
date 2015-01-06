@@ -1,0 +1,16 @@
+<tool id="CountReadGCPercent" name="count read GCpercent">
+    <description>Count GC percent for each read against a genome.</description>
+    <command interpreter="python"> ../Java/Python/CountReadGCPercent.py -i $inputFastaFile -j $inputGffFile -o $outputFile</command>
+  <inputs>
+      <param name="inputFastaFile" type="data" label="Input reference fasta File" format="fasta"/>
+      <param name="inputGffFile" type="data" label="Input File" format="gff3"/>
+  </inputs>
+
+  <outputs>
+    <data format="gff3" name="outputFile" label="[CountReadGCPercent] Output File"/>
+   </outputs>
+
+  <help>
+  </help>
+</tool>
+

@@ -1,0 +1,32 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_l_reduced.cns,v $
+
+ident (store1) 
+((resn Gly  and name CA) or 
+ (resn Ala  and (name CA or name CB  )) or 
+ (resn Val  and (name CA or name CG1 )) or 
+ (resn Ile  and (name CA or name CG1 )) or
+ (resn Leu  and (name CA or name CD1 )) or
+ (resn Phe  and (name CA or name CD1 )) or
+ (resn Pro  and (name CA or name CG  )) or
+ (resn Met  and (name CA or name SD  )) or
+ (resn Trp  and (name CA or name CE2 )) or
+ (resn Cys  and (name CA or name SG  )) or
+ (resn Ser  and (name CA or name CB  )) or
+ (resn Thr  and (name CA or name CG2 )) or
+ (resn Asn  and (name CA or name CG  )) or
+ (resn Gln  and (name CA or name CD  )) or
+ (resn Tyr  and (name CA or name CD1 )) or
+ (resn His  and (name CA or name CD2 )) or
+ (resn Asp  and (name CA or name CG  )) or
+ (resn Glu  and (name CA or name CD  )) or
+ (resn Lys  and (name CA or name CD  )) or
+ (resn Arg  and (name CA or name CD  )) or
+ (resn CYT  and (name C1' or name C2 )) or
+ (resn THY  and (name C1' or name C2 )) or
+ (resn ADE  and (name C1' or name C6 )) or 
+ (resn GUA  and (name C1' or name C6 )) or
+ (resn PUR  and (name C1' or name C6 )) or
+ (resn URI  and (name C1' or name C2 )))
+

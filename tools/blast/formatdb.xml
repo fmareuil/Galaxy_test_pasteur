@@ -1,0 +1,55 @@
+<tool id="formatdb" name="Formatdb on fasta file" version="0.0.2">
+    <description>Create a blast database using a fasta file</description>
+    <command interpreter="python">
+## The command is a Cheetah template which allows some Python based syntax.
+## Lines starting hash hash are comments. Galaxy will turn newlines into spaces
+
+blast_wrapper.py --progName formatdb --i $input  
+
+#if $opts_selector.value == "protein":
+  --p T
+#else:
+  --p F
+#end if
+
+--n $out_prefix 
+
+    </command>
+    <inputs>
+        <param name="input" type="data" format="fasta" label="Your sequence fasta file"/> 
+        <param name="opts_selector" type="select" label="Type of sequences">
+          <option value="nucleotide" selected="True">Nucleotide sequences</option>
+          <option value="protein" >Protein sequences</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="out_prefix" format="formatdb" />
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+    
+.. class:: warningmark
+
+**Note**.  
+
+-----
+
+**What it does**
+
+Create a Blast database from a fasta file using formatdb for futur call of blastall with that database as subject database. 
+
+-----
+
+**Output format**
+
+One file but 3 hidden files.
+
+-------
+
+**References**
+
+
+
+    </help>
+</tool>

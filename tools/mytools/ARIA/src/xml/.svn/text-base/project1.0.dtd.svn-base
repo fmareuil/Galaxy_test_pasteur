@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT project (data,
+                   structure_generation,
+                   protocol,
+                   analysis,
+                   report)>
+
+<!ATTLIST project name CDATA "">
+<!ATTLIST project version CDATA "1.0">
+<!ATTLIST project author CDATA "">
+<!ATTLIST project date CDATA "">
+<!ATTLIST project description CDATA "">
+<!ATTLIST project comment CDATA "">
+<!ATTLIST project references CDATA "">
+<!ATTLIST project working_directory CDATA #REQUIRED>
+<!ATTLIST project temp_root CDATA #REQUIRED>
+<!ATTLIST project run CDATA "1">
+<!ATTLIST project file_root CDATA #REQUIRED>
+<!ATTLIST project cache (yes | no) "yes">
+<!ATTLIST project cleanup (yes | no) "yes">
+
+<!ELEMENT data (molecule,
+                spectrum+,
+                unambiguous_distance_restraints*,
+                ambiguous_distance_restraints*,
+                jcouplings*,
+                rdcs*,
+                hbonds*,
+                dihedrals*,
+                ssbonds?,
+                ssbridge*,
+                hispatch*,
+                template_structure*,
+                initial_structure,
+		symmetry)>
+
+  <!ELEMENT molecule (linkage_definition,
+                      topology_definition,
+                      parameter_definition)>
+
+  <!ATTLIST molecule file CDATA #REQUIRED>
+  <!ATTLIST molecule format (xml) "xml">
+ 
+    <!ELEMENT linkage_definition EMPTY>
+    <!ATTLIST linkage_definition name (automatic|user_defined|dna-rna.link|topallhdg.pep|topallhdg5.3.pep) "automatic">
+    <!ATTLIST linkage_definition filename CDATA "">
+
+    <!ELEMENT topology_definition EMPTY>
+    <!ATTLIST topology_definition name (automatic|user_defined|dna-rna-allatom.top|topallhdg5.0.pro|topallhdg5.1.pro|topallhdg5.2.pro|topallhdg5.3.pro) "automatic">
+    <!ATTLIST topology_definition filename CDATA "">
+
+    <!ELEMENT parameter_definition EMPTY>
+    <!ATTLIST parameter_definition name (automatic|user_defined|dna-rna-allatom.param|parallhdg5.0.pro|parallhdg5.1.pro|parallhdg5.2.pro|parallhdg5.3.pro) "automatic">
+    <!ATTLIST parameter_definition filename CDATA "">
+
+  <!ELEMENT spectrum (shifts,
+                      peaks)>
+  <!ATTLIST spectrum enabled (yes|no) "yes">
+  <!ATTLIST spectrum use_assignments (yes|no) "yes">
+  <!ATTLIST spectrum trust_assigned_peaks (yes|no) "no">
+
+    <!ELEMENT shifts EMPTY>
+    <!ATTLIST shifts file CDATA #REQUIRED>
+    <!ATTLIST shifts format (xml) "xml">
+    <!ATTLIST shifts default_shift_error CDATA "0.01">
+    
+    <!ELEMENT peaks (lower_bound_correction,
+                     upper_bound_correction)>
+
+    <!ATTLIST peaks file CDATA #REQUIRED>
+    <!ATTLIST peaks format (xml) "xml">
+    <!ATTLIST peaks peak_size (volume|intensity) "volume">
+    <!ATTLIST peaks freq_window_proton1 CDATA "0.04">
+    <!ATTLIST peaks freq_window_hetero1 CDATA "0.5">
+    <!ATTLIST peaks freq_window_proton2 CDATA "0.02">
+    <!ATTLIST peaks freq_window_hetero2 CDATA "0.5">
+
+      <!ELEMENT lower_bound_correction EMPTY>
+      <!ATTLIST lower_bound_correction value CDATA "0.">
+      <!ATTLIST lower_bound_correction enabled (yes|no) "no">
+                                    
+      <!ELEMENT upper_bound_correction EMPTY>
+      <!ATTLIST upper_bound_correction value CDATA "6.">
+      <!ATTLIST upper_bound_correction enabled (yes|no) "no">
+                                    
+  <!ELEMENT unambiguous_distance_restraints EMPTY>
+  <!ATTLIST unambiguous_distance_restraints file CDATA #REQUIRED>
+  <!ATTLIST unambiguous_distance_restraints format (tbl) "tbl">
+  <!ATTLIST unambiguous_distance_restraints enabled (yes|no) "yes">
+
+  <!ELEMENT ambiguous_distance_restraints EMPTY>
+  <!ATTLIST ambiguous_distance_restraints file CDATA #REQUIRED>
+  <!ATTLIST ambiguous_distance_restraints format (tbl) "tbl">
+  <!ATTLIST ambiguous_distance_restraints enabled (yes|no) "yes">
+
+  <!ELEMENT jcouplings EMPTY>
+  <!ATTLIST jcouplings file CDATA #REQUIRED>
+  <!ATTLIST jcouplings format (tbl) "tbl">
+  <!ATTLIST jcouplings parameter_class (1 | 2 | 3 | 4 | 5) "1">
+  <!ATTLIST jcouplings enabled (yes|no) "yes">
+  
+  <!ELEMENT rdcs EMPTY>
+  <!ATTLIST rdcs file CDATA #REQUIRED>
+  <!ATTLIST rdcs format (tbl) "tbl">
+  <!ATTLIST rdcs parameter_class (1 | 2 | 3 | 4 | 5) "1">
+  <!ATTLIST rdcs enabled (yes|no) "yes">
+
+  <!ELEMENT hbonds EMPTY>
+  <!ATTLIST hbonds file CDATA #REQUIRED>
+  <!ATTLIST hbonds format (tbl) "tbl">
+  <!ATTLIST hbonds data_type (standard | csi) "standard">
+  <!ATTLIST hbonds enabled (yes|no) "yes">
+
+  <!ELEMENT dihedrals EMPTY>
+  <!ATTLIST dihedrals file CDATA #REQUIRED>
+  <!ATTLIST dihedrals format (tbl) "tbl">
+  <!ATTLIST dihedrals data_type (standard | talos | csi) "standard">
+  <!ATTLIST dihedrals enabled (yes|no) "yes">
+
+  <!ELEMENT ssbonds EMPTY>
+  <!ATTLIST ssbonds file CDATA #REQUIRED>
+  <!ATTLIST ssbonds format (tbl) "tbl">
+  <!ATTLIST ssbonds enabled (yes|no) "yes">
+
+  <!ELEMENT ssbridge EMPTY>
+  <!ATTLIST ssbridge residue1 CDATA #REQUIRED>
+  <!ATTLIST ssbridge segid1 CDATA "">
+  <!ATTLIST ssbridge residue2 CDATA #REQUIRED>
+  <!ATTLIST ssbridge segid2 CDATA "">
+
+  <!ELEMENT hispatch EMPTY>
+  <!ATTLIST hispatch residue CDATA #REQUIRED>
+  <!ATTLIST hispatch segid CDATA "">
+  <!ATTLIST hispatch proton (HISD|HISE) "HISD">
+
+  <!ELEMENT template_structure EMPTY>
+    <!ATTLIST template format (iupac | cns | dyana) "iupac">
+    <!ATTLIST template file CDATA #REQUIRED>
+    <!ATTLIST template enabled (yes|no) "yes">
+
+  <!ELEMENT initial_structure EMPTY>
+    <!ATTLIST initial_structure format (iupac | cns | dyana) "iupac">
+    <!ATTLIST initial_structure file CDATA #REQUIRED>
+    <!ATTLIST initial_structure enabled (yes|no) "yes">
+
+  <!ELEMENT symmetry #REQUIRED>
+    <!ATTLIST symmetry enabled (yes|no) "no">
+    <!ATTLIST symmetry n_monomers CDATA "2">
+    <!ATTLIST symmetry symmetry_type (1|2) "1">
+    <!ATTLIST symmetry ncs_enabled (yes|no) "yes">
+    <!ATTLIST symmetry packing_enabled (yes|no) "yes">
+
+<!ELEMENT structure_generation (cns,
+                                job_manager)>
+
+  <!ATTLIST structure_generation engine (cns) "cns">
+
+  <!ELEMENT job_manager (host+)>
+  <!ATTLIST job_manager default_command CDATA "csh -f">
+
+  <!ELEMENT host EMPTY>
+  <!ATTLIST host enabled (yes|no) "yes">
+  <!ATTLIST host command CDATA "default">
+  <!ATTLIST host executable CDATA "default">
+  <!ATTLIST host n_cpu CDATA "1">
+  <!ATTLIST host use_absolute_path CDATA (yes|no) "yes">
+
+  <!ELEMENT cns (annealing_parameters,
+                 md_parameters)>
+
+  <!ATTLIST cns local_executable CDATA #REQUIRED>  
+  <!ATTLIST cns keep_output (yes|gzip|no) "yes">
+  <!ATTLIST cns keep_restraint_files (yes|no|gzip) "yes">
+  <!ATTLIST cns create_psf_file (yes|no|always) "yes">
+  <!ATTLIST cns generate_template (yes|no|always) "yes">
+  <!ATTLIST cns nonbonded_parameters
+  (PROLSQ|PARMALLH6|PARALLHDG|OPSLX) "PROLSQ">
+
+      <!ELEMENT annealing_parameters (unambiguous_restraints,
+                                      ambiguous_restraints,
+                                      hbond_restraints,
+                                      dihedral_restraints,
+                                      karplus_restraints+,
+                                      rdc_restraints+,
+                                      flat_bottom_harmonic_wall)>
+
+        <!ELEMENT unambiguous_restraints EMPTY> 
+        <!ATTLIST unambiguous_restraints first_iteration CDATA "0">
+        <!ATTLIST unambiguous_restraints k_hot CDATA "10">
+        <!ATTLIST unambiguous_restraints k_cool1_initial CDATA "10">
+        <!ATTLIST unambiguous_restraints k_cool1_final CDATA "50">
+        <!ATTLIST unambiguous_restraints k_cool2 CDATA "50">
+        <!ATTLIST unambiguous_restraints averaging (sum) "sum">
+
+        <!ELEMENT ambiguous_restraints EMPTY> 
+        <!ATTLIST ambiguous_restraints first_iteration CDATA "0">
+        <!ATTLIST ambiguous_restraints k_hot CDATA "10">
+        <!ATTLIST ambiguous_restraints k_cool1_initial CDATA "10">
+        <!ATTLIST ambiguous_restraints k_cool1_final CDATA "50">
+        <!ATTLIST ambiguous_restraints k_cool2 CDATA "50">
+        <!ATTLIST ambiguous_restraints averaging (sum) "sum">
+
+        <!ELEMENT hbond_restraints EMPTY>
+        <!ATTLIST hbond_restraints first_iteration CDATA "0">
+        <!ATTLIST hbond_restraints k_hot CDATA "10">
+        <!ATTLIST hbond_restraints k_cool1_initial CDATA "10">
+        <!ATTLIST hbond_restraints k_cool1_final CDATA "50">
+        <!ATTLIST hbond_restraints k_cool2 CDATA "50">
+        <!ATTLIST hbond_restraints averaging (sum) "sum">
+
+        <!ELEMENT dihedral_restraints EMPTY>
+        <!ATTLIST dihedral_restraints k_hot CDATA "5">
+        <!ATTLIST dihedral_restraints k_cool1 CDATA "25">
+        <!ATTLIST dihedral_restraints k_cool2 CDATA "200">
+
+        <!ELEMENT karplus_restraints EMPTY>
+        <!ATTLIST karplus_restraints parameter_class (1|2|3|4|5) "1">
+        <!ATTLIST karplus_restraints a CDATA "6.98">
+        <!ATTLIST karplus_restraints b CDATA "-1.38">
+        <!ATTLIST karplus_restraints c CDATA "1.72">
+        <!ATTLIST karplus_restraints d CDATA "-60.0">
+        <!ATTLIST karplus_restraints k_hot CDATA "0.0">
+        <!ATTLIST karplus_restraints k_cool1 CDATA "0.2">
+        <!ATTLIST karplus_restraints k_cool2 CDATA "1.0">
+
+        <!ELEMENT rdc_restraints EMPTY>
+        <!ATTLIST rdc_restraints parameter_class (1|2|3|4|5) "1">
+        <!ATTLIST rdc_restraints method (SANI|VANGLE) "SANI">
+        <!ATTLIST rdc_restraints first_iteration CDATA "0">
+        <!ATTLIST rdc_restraints k_hot CDATA "0.0">
+        <!ATTLIST rdc_restraints k_cool1 CDATA "0.2">
+        <!ATTLIST rdc_restraints k_cool2 CDATA "1.0">
+        <!ATTLIST rdc_restraints r CDATA "0.4">
+        <!ATTLIST rdc_restraints d CDATA "8.0">
+        <!ATTLIST rdc_restraints border_hot_initial CDATA "0.1">
+        <!ATTLIST rdc_restraints border_hot_final CDATA "40.0">
+        <!ATTLIST rdc_restraints border_cool1_initial CDATA "40.0">
+        <!ATTLIST rdc_restraints border_cool1_final CDATA "40.0">
+        <!ATTLIST rdc_restraints border_cool2_initial CDATA "40.0">
+        <!ATTLIST rdc_restraints border_cool2_final CDATA "40.0">
+        <!ATTLIST rdc_restraints center_hot_initial CDATA "0.1">
+        <!ATTLIST rdc_restraints center_hot_final CDATA "0.1">
+        <!ATTLIST rdc_restraints center_cool1_initial CDATA "10.0">
+        <!ATTLIST rdc_restraints center_cool1_final CDATA "10.0">
+        <!ATTLIST rdc_restraints center_cool2_initial CDATA "10.0">
+        <!ATTLIST rdc_restraints center_cool2_final CDATA "10.0">
+
+        <!ELEMENT flat_bottom_harmonic_wall EMPTY>
+        <!ATTLIST flat_bottom_harmonic_wall m_rswitch_hot CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall m_rswitch_cool1 CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall m_rswitch_cool2 CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall rswitch_hot CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall rswitch_cool1 CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall rswitch_cool2 CDATA "0.5">
+        <!ATTLIST flat_bottom_harmonic_wall m_asymptote_hot CDATA "-1.0">
+        <!ATTLIST flat_bottom_harmonic_wall m_asymptote_cool1 CDATA "-1.0">
+        <!ATTLIST flat_bottom_harmonic_wall m_asymptote_cool2 CDATA "-0.1">
+        <!ATTLIST flat_bottom_harmonic_wall asymptote_hot CDATA "1.0">
+        <!ATTLIST flat_bottom_harmonic_wall asymptote_cool1 CDATA "1.0">
+        <!ATTLIST flat_bottom_harmonic_wall asymptote_cool2 CDATA "0.1">
+
+      <!ELEMENT md_parameters EMPTY>
+      <!ATTLIST md_parameters dynamics (cartesian|torsion) "torsion">
+      <!ATTLIST md_parameters random_seed CDATA "89764443">
+      <!ATTLIST md_parameters tad_temp_high CDATA "10000">
+      <!ATTLIST md_parameters tad_timestep_factor CDATA "9">
+      <!ATTLIST md_parameters cartesian_temp_high CDATA "2000">
+      <!ATTLIST md_parameters cartesian_first_iteration CDATA "0">
+      <!ATTLIST md_parameters timestep CDATA "0.003">
+      <!ATTLIST md_parameters temp_cool1_final CDATA "1000">
+      <!ATTLIST md_parameters temp_cool2_final CDATA "50">
+      <!ATTLIST md_parameters steps_high CDATA "10000">
+      <!ATTLIST md_parameters steps_refine CDATA "4000">
+      <!ATTLIST md_parameters steps_cool1 CDATA "5000">
+      <!ATTLIST md_parameters steps_cool2 CDATA "4000">
+
+<!ELEMENT protocol (iteration+,
+                    water_refinement)>
+
+<!ATTLIST protocol floating_assignment (yes|no) "yes">
+
+  <!ELEMENT water_refinement EMPTY>
+    <!ATTLIST water_refinement solvent (water|dmso) "water">
+    <!ATTLIST water_refinement n_structures CDATA "10">
+    <!ATTLIST water_refinement enabled (yes|no) "yes">
+    <!ATTLIST water_refinement write_solvent_molecules (yes|no) "no">
+
+<!ELEMENT iteration (assignment,
+                     merging,
+                     calibration,
+                     violation_analysis,
+                     partial_assignment)>
+
+<!ATTLIST iteration number CDATA #REQUIRED>
+<!ATTLIST iteration n_structures CDATA "20">
+<!ATTLIST iteration sort_criterion (total_energy) "total_energy">
+<!ATTLIST iteration n_best_structures CDATA "7">
+
+  <!ELEMENT assignment EMPTY>
+  <!ELEMENT merging EMPTY>
+  <!ATTLIST merging method (standard) "standard">
+
+  <!ELEMENT calibration EMPTY>
+  <!ATTLIST calibration distance_cutoff CDATA "6.0">
+  <!ATTLIST calibration estimator (ratio_of_averages) "ratio_of_averages">
+
+  <!ELEMENT violation_analysis EMPTY>
+  <!ATTLIST violation_analysis violation_tolerance CDATA "1.0">
+  <!ATTLIST violation_analysis violation_threshold CDATA "0.5">
+
+  <!ELEMENT partial_assignment EMPTY>
+  <!ATTLIST partial_assignment weight_threshold CDATA "0.8">
+  <!ATTLIST partial_assignment max_contributions CDATA "20">
+
+<!ELEMENT analysis (structures_analysis,
+                    procheck,
+                    prosa,
+                    whatif)>
+
+  <!ELEMENT procheck EMPTY>
+  <!ATTLIST procheck enabled (yes | no) "yes"> 
+  <!ATTLIST procheck executable CDATA #REQUIRED>
+
+  <!ELEMENT procheckcomp EMPTY>
+  <!ATTLIST procheckcomp enabled (yes | no) "yes"> 
+  <!ATTLIST procheckcomp executable CDATA #REQUIRED>
+
+  <!ELEMENT whatif EMPTY>
+  <!ATTLIST whatif enabled (yes | no) "yes"> 
+  <!ATTLIST whatif executable CDATA #REQUIRED>
+
+  <!ELEMENT prosa EMPTY>
+  <!ATTLIST prosa enabled (yes | no) "yes"> 
+  <!ATTLIST prosa executable CDATA #REQUIRED>
+
+  <!ELEMENT structures_analysis EMPTY>
+  <!ATTLIST structures_analysis enabled (yes|no) "yes">
+
+<!ELEMENT report (ccpn,
+                  molmol,
+                  noe_restraint_list)>
+
+  <!ELEMENT ccpn enabled (yes|no) "yes">
+  <!ELEMENT molmol enabled (yes|no) "yes">
+
+  <!ELEMENT noe_restraint_list EMPTY>
+    <!ATTLIST noe_restraint_list pickle_output (yes|no) "no"> 
+    <!ATTLIST noe_restraint_list text_output (yes|no) "yes">
+    <!ATTLIST noe_restraint_list xml_output (yes|no) "yes">
+  

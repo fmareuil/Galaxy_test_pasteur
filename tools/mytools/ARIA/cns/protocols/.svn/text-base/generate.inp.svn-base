@@ -1,0 +1,244 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: generate.inp,v $
+
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+!============= aria2.0 ==============
+
+!evaluate ($iteration = $data.iteration)
+
+evaluate($prot_top_file_1= "RUN:toppar/" + $Toppar.prot_top_1)
+evaluate($prot_top_file_2= "")
+if ($Toppar.prot_top_2 ne "") then
+  evaluate($prot_top_file_2= "RUN:toppar/" + $Toppar.prot_top_2)
+end if
+evaluate($prot_link_file_1= "RUN:toppar/" + $Toppar.prot_link_1)
+evaluate($prot_link_file_2= "")
+if ($Toppar.prot_link_2 ne "") then
+  evaluate($prot_link_file_2= "RUN:toppar/" + $Toppar.prot_link_2)
+end if
+evaluate($sequence_file= "RUN:data/sequence/" + $Toppar.prot_coor_1)
+
+topology  
+   @@$prot_top_file_1
+   if ($prot_top_file_2 ne "") then
+	@@$prot_top_file_2
+   end if
+end
+
+!for the case, that you don't want a SEGID:
+if ($Toppar.prot_segid_1="") then
+   evaluate($Toppar.prot_segid_1="    ")
+end if
+
+segment
+   name=$Toppar.prot_segid_1
+   chain
+      separate-by-segid=true
+      @$prot_link_file_1
+      if ($prot_link_file_2 ne "") then
+         @$prot_link_file_2
+      end if
+      if ($Toppar.pdb_or_sequence="sequence") then
+         sequence @@$sequence_file END         !for sequence file
+      else
+         coor @@$sequence_file                 !for PDB file
+      end if
+   end
+end
+
+! BARDIAUX DNA DEOX patches
+evaluate ($counter=0)
+evaluate ($dna_counter=1)
+while ($dna_counter le $Toppar.dna_chains) loop dnac
+   for $id in id (name N1 and (segid $toppar.dna_segid_$dna_counter)) loop dna
+      evaluate ($counter=$counter+1)
+      show (segid) (id $id)
+      evaluate ($dna.segid.$counter=$result)
+      show (resid) (id $id)
+      evaluate ($dna.resid.$counter=$result)
+   end loop dna
+   evaluate ($dna_counter=$dna_counter + 1)
+end loop dnac
+evaluate ($dna.num=$counter)
+
+evaluate ($counter=0)
+while ($counter < $dna.num) loop dnap
+   evaluate ($counter=$counter+1)
+   patch deox reference=nil=(segid $dna.segid.$counter and resid $dna.resid.$counter) end
+end loop dnap
+! END DNA DEOX patches
+
+!for the DIANA-XEASY-nomenclature:
+if ($Toppar.xplortodiana=true) then
+   @@RUN:protocols/xplortodiana3.inp
+end if
+
+
+!for the disulfide bridge patches:
+
+evaluate($di_counter=1)
+
+while ($di_counter le $Toppar.ss_bridge) loop disulfide
+    patch disu reference=1=(resid $Toppar.ss_i_resid_$di_counter and
+                            segid $Toppar.ss_i_segid_$di_counter ) 
+               reference=2=(resid $Toppar.ss_j_resid_$di_counter and
+                            segid $Toppar.ss_j_segid_$di_counter ) end
+    evaluate($di_counter=$di_counter + 1)
+end loop disulfide
+
+!for the histidine patches:
+
+evaluate($hisd_counter=1)
+
+while ($hisd_counter le $Toppar.hisd_patches) loop hisd
+    patch hisd reference=nil=(resid $Toppar.hisd_resid_$hisd_counter and
+                              segid $Toppar.hisd_segid_$hisd_counter) end
+    evaluate($hisd_counter=$hisd_counter + 1)
+end loop hisd
+
+evaluate($hise_counter=1)
+
+while ($hise_counter le $Toppar.hise_patches) loop hise
+    patch hise reference=nil=(resid $Toppar.hise_resid_$hise_counter and
+                              segid $Toppar.hise_segid_$hise_counter) end
+    evaluate($hise_counter=$hise_counter + 1)
+end loop hise
+
+{* ZN patches BARDIAUX/BERNARD 02/11/2009*}
+
+evaluate($ssss_counter=1)
+while ($ssss_counter le $Toppar.ssss_patches) loop ssss
+    patch ssss reference=1=(resid $Toppar.ssss_1_resid_$ssss_counter and
+                            segid $Toppar.ssss_1_segid_$ssss_counter )
+               reference=2=(resid $Toppar.ssss_2_resid_$ssss_counter and
+                            segid $Toppar.ssss_2_segid_$ssss_counter ) 
+               reference=3=(resid $Toppar.ssss_3_resid_$ssss_counter and
+                            segid $Toppar.ssss_3_segid_$ssss_counter ) 
+               reference=4=(resid $Toppar.ssss_4_resid_$ssss_counter and
+                            segid $Toppar.ssss_4_segid_$ssss_counter ) 
+               reference=5=(resid $Toppar.ssss_5_resid_$ssss_counter and
+                            segid $Toppar.ssss_5_segid_$ssss_counter ) 
+    end
+    evaluate($ssss_counter=$ssss_counter + 1)
+end loop ssss
+
+evaluate($ssse_counter=1)
+while ($ssse_counter le $Toppar.ssse_patches) loop ssse
+    patch ssse reference=1=(resid $Toppar.ssse_1_resid_$ssse_counter and
+                            segid $Toppar.ssse_1_segid_$ssse_counter )
+               reference=2=(resid $Toppar.ssse_2_resid_$ssse_counter and
+                            segid $Toppar.ssse_2_segid_$ssse_counter ) 
+               reference=3=(resid $Toppar.ssse_3_resid_$ssse_counter and
+                            segid $Toppar.ssse_3_segid_$ssse_counter ) 
+               reference=4=(resid $Toppar.ssse_4_resid_$ssse_counter and
+                            segid $Toppar.ssse_4_segid_$ssse_counter )
+               reference=5=(resid $Toppar.ssse_5_resid_$ssse_counter and
+                            segid $Toppar.ssse_5_segid_$ssse_counter )
+     end
+    evaluate($ssse_counter=$ssse_counter + 1)
+end loop ssse
+
+evaluate($sssd_counter=1)
+while ($sssd_counter le $Toppar.sssd_patches) loop sssd
+    patch sssd reference=1=(resid $Toppar.sssd_1_resid_$sssd_counter and
+                            segid $Toppar.sssd_1_segid_$sssd_counter )
+               reference=2=(resid $Toppar.sssd_2_resid_$sssd_counter and
+                            segid $Toppar.sssd_2_segid_$sssd_counter ) 
+               reference=3=(resid $Toppar.sssd_3_resid_$sssd_counter and
+                            segid $Toppar.sssd_3_segid_$sssd_counter ) 
+               reference=4=(resid $Toppar.sssd_4_resid_$sssd_counter and
+                            segid $Toppar.sssd_4_segid_$sssd_counter )
+               reference=5=(resid $Toppar.sssd_5_resid_$sssd_counter and
+                            segid $Toppar.sssd_5_segid_$sssd_counter )
+     end
+    evaluate($sssd_counter=$sssd_counter + 1)
+end loop sssd
+
+
+{* cis-pro patches BARDIAUX 01/30/2007*}
+evaluate($cispro_counter=1)
+
+while ($cispro_counter le $Toppar.cispro_patches) loop cispro
+    evaluate($cispro_prev=$Toppar.cispro_resid_$cispro_counter - 1)
+    patch cipp 
+      reference=-=(resid $cispro_prev and 
+                   segid $Toppar.cispro_segid_$cispro_counter)
+      reference=+=(resid $Toppar.cispro_resid_$cispro_counter and 
+                   segid $Toppar.cispro_segid_$cispro_counter)
+    end
+    evaluate($cispro_counter=$cispro_counter + 1)
+end loop cispro
+
+{* cysteine patch DISN BARDIAUX 10/23/2007*}
+!for the DISN patches:
+
+evaluate($cys_counter=1)
+
+while ($cys_counter le $Toppar.cyspatches) loop cysp
+    patch disn reference=1=(resid $Toppar.cyspatch_i_resid_$cys_counter and
+                            segid $Toppar.cyspatch_i_segid_$cys_counter ) 
+   	       reference=2=(resid $Toppar.cyspatch_j_resid_$cys_counter and
+                            segid $Toppar.cyspatch_j_segid_$cys_counter ) 
+    end
+
+    evaluate($cys_counter=$cys_counter + 1)
+end loop cysp
+
+{*
+! Added by benjamin bardiaux for dimers ; 22/10/04
+! if dimer
+if ($Toppar.symmetry ne "1") then
+               
+	evaluate ($segidcount = 2)
+	while ($segidcount le $Toppar.mononum) loop segs
+   		evaluate ($segid = $Toppar.prot_segid_$segidcount)
+   		duplicate sele=(segid $Toppar.prot_segid_1) segid= $segid end
+   		evaluate ($segidcount = $segidcount + 1)
+	end loop segs
+end if
+
+!End of modification
+*}
+!write psf file:
+
+evaluate ($structure_file = "RUN:begin/" + $Filenames.structure)
+write structure output=$structure_file end
+
+
+!make table with equivalent protons and swapped protons:
+
+set display RUN:begin/methyls.tbl end
+@RUN:protocols/define_methyls_ini.cns
+
+close RUN:begin/methyls.tbl end
+@RUN:protocols/define_methyls_all.cns
+
+set display RUN:begin/setup_swap_list.tbl end
+if ($toppar.float eq true) then
+   @RUN:protocols/setup_swap_init.cns
+else
+   display do (store1 = 0) (all)
+end if
+
+
+stop

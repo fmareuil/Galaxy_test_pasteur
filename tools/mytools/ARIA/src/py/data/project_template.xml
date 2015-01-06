@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "project1.0.dtd">
+
+<!--
+
+Authors: Wolfgang Rieping
+         Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) 2003 Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<project name="" version="1.0" author="" date="" description="" comment="" references="" working_directory="" temp_root="" run="1" file_root="" cache="yes" cleanup="yes">
+  <data>
+    <ccpn_model filename=""/>
+    <molecule file="" format="xml">
+      <linkage_definition name="automatic" filename=""/>
+      <topology_definition name="automatic" filename=""/>
+      <parameter_definition name="automatic" filename=""/>
+    </molecule>
+    <initial_structure file="" format="iupac" enabled="no"/>
+    <symmetry enabled="no" n_monomers="1" symmetry_type="None" ncs_enabled="no" packing_enabled="no"/>
+  </data>
+  <structure_generation engine="cns">
+    <cns keep_output="yes" create_psf_file="yes" generate_template="yes" local_executable="" nonbonded_parameters="PROLSQ">
+      <annealing_parameters>
+        <unambiguous_restraints first_iteration="0" k_hot="10.0" k_cool2="50.0" k_cool1_initial="10.0" k_cool1_final="50.0"/>
+        <ambiguous_restraints first_iteration="0" k_hot="10.0" k_cool2="50.0" k_cool1_initial="10.0" k_cool1_final="50.0"/>
+        <hbond_restraints first_iteration="0" k_hot="10.0" k_cool2="50.0" k_cool1_initial="10.0" k_cool1_final="50.0"/>
+        <dihedral_restraints k_hot="5.0" k_cool2="200.0" k_cool1="25.0"/>
+        <karplus_restraints parameter_class="1" k_hot="0.0" k_cool2="1.0" k_cool1="0.2" a="6.98" b="-1.38" c="1.72" d="-60.0"/>
+        <karplus_restraints parameter_class="2" k_hot="0.0" k_cool2="1.0" k_cool1="0.2" a="6.98" b="-1.38" c="1.72" d="-60.0"/>
+        <karplus_restraints parameter_class="3" k_hot="0.0" k_cool2="1.0" k_cool1="0.2" a="6.98" b="-1.38" c="1.72" d="-60.0"/>
+        <karplus_restraints parameter_class="4" k_hot="0.0" k_cool2="1.0" k_cool1="0.2" a="6.98" b="-1.38" c="1.72" d="-60.0"/>
+        <karplus_restraints parameter_class="5" k_hot="0.0" k_cool2="1.0" k_cool1="0.2" a="6.98" b="-1.38" c="1.72" d="-60.0"/>
+        <rdc_restraints parameter_class="1" method="SANI" first_iteration="0" k_hot="0.0" k_cool1="0.2" k_cool2="1.0"
+        r="0.4" d="8.0" border_hot_initial="0.1" border_hot_final="40.0" border_cool1_initial="40.0" border_cool1_final="40.0" border_cool2_initial="40.0" border_cool2_final="40.0" center_hot_initial="0.1" center_hot_final="0.1" center_cool1_initial="10.0" center_cool1_final="10.0" center_cool2_initial="10.0" center_cool2_final="10.0" />
+        <rdc_restraints parameter_class="2" method="SANI"
+        first_iteration="0" k_hot="0.0" k_cool1="0.2" k_cool2="1.0"
+        r="0.4" d="8.0" border_hot_initial="0.1" border_hot_final="40.0" border_cool1_initial="40.0" border_cool1_final="40.0" border_cool2_initial="40.0" border_cool2_final="40.0" center_hot_initial="0.1" center_hot_final="0.1" center_cool1_initial="10.0" center_cool1_final="10.0" center_cool2_initial="10.0" center_cool2_final="10.0" />
+        <rdc_restraints parameter_class="3" method="SANI"
+        first_iteration="0" k_hot="0.0" k_cool1="0.2" k_cool2="1.0"
+        r="0.4" d="8.0" border_hot_initial="0.1" border_hot_final="40.0" border_cool1_initial="40.0" border_cool1_final="40.0" border_cool2_initial="40.0" border_cool2_final="40.0" center_hot_initial="0.1" center_hot_final="0.1" center_cool1_initial="10.0" center_cool1_final="10.0" center_cool2_initial="10.0" center_cool2_final="10.0" />
+        <rdc_restraints parameter_class="4" method="SANI"
+        first_iteration="0" k_hot="0.0" k_cool1="0.2" k_cool2="1.0"
+        r="0.4" d="8.0" border_hot_initial="0.1" border_hot_final="40.0" border_cool1_initial="40.0" border_cool1_final="40.0" border_cool2_initial="40.0" border_cool2_final="40.0" center_hot_initial="0.1" center_hot_final="0.1" center_cool1_initial="10.0" center_cool1_final="10.0" center_cool2_initial="10.0" center_cool2_final="10.0" />
+        <rdc_restraints parameter_class="5" method="SANI"
+        first_iteration="0" k_hot="0.0" k_cool1="0.2" k_cool2="1.0"
+        r="0.4" d="8.0" border_hot_initial="0.1" border_hot_final="40.0" border_cool1_initial="40.0" border_cool1_final="40.0" border_cool2_initial="40.0" border_cool2_final="40.0" center_hot_initial="0.1" center_hot_final="0.1" center_cool1_initial="10.0" center_cool1_final="10.0" center_cool2_initial="10.0" center_cool2_final="10.0" />
+        <flat_bottom_harmonic_wall m_rswitch_hot="0.5"
+        m_rswitch_cool1="0.5" m_rswitch_cool2="0.5" rswitch_hot="0.5"
+        rswitch_cool1="0.5" rswitch_cool2="0.5" m_asymptote_hot="-1.0"
+        m_asymptote_cool1="-1.0" m_asymptote_cool2="-0.1"
+        asymptote_hot="1.0" asymptote_cool1="1.0" asymptote_cool2="0.1"/>
+        <symmetry_restraints k_packing_hot="15.0" k_packing_cool1="10.0"  k_packing_cool2="5.0" k_ncs="50.0"/>
+      </annealing_parameters>
+      <md_parameters dynamics="torsion" random_seed="89764443" tad_temp_high="10000.0" tad_timestep_factor="9.0" cartesian_temp_high="2000.0" cartesian_first_iteration="0" timestep="0.003" temp_cool1_final="1000.0" temp_cool2_final="50.0" steps_high="10000" steps_refine="4000" steps_cool1="5000" steps_cool2="4000"/>
+    </cns>
+    <job_manager default_command="LOCAL" job_management="Asynchro">
+        <host enabled="yes" submit_command="csh -f" state_command="no" output_command="no" executable="" n_cpu="1" use_absolute_path="yes"/>
+    </job_manager>
+  </structure_generation>
+  <protocol floating_assignment="yes">
+    <iteration sort_criterion="total_energy" number="0" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging method="standard"/>
+      <calibration estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="1000.0"/>
+      <partial_assignment weight_threshold="1.0" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="1" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="5.0"/>
+      <partial_assignment weight_threshold="0.9999" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="2" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="3.0"/>
+      <partial_assignment weight_threshold="0.999" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="3" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="1.0"/>
+      <partial_assignment weight_threshold="0.99" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="4" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="1.0"/>
+      <partial_assignment weight_threshold="0.98" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="5" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="1.0"/>
+      <partial_assignment weight_threshold="0.96" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="6" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="0.1"/>
+      <partial_assignment weight_threshold="0.93" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="7" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging  method="standard"/>
+      <calibration  estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="0.1"/>
+      <partial_assignment weight_threshold="0.9" max_contributions="20"/>
+    </iteration>
+    <iteration sort_criterion="total_energy" number="8" n_structures="20" n_best_structures="7">
+      <assignment/>
+      <merging method="standard"/>
+      <calibration estimator="ratio_of_averages" distance_cutoff="6.0"/>
+      <violation_analysis sigma_mode="fix" violation_threshold="0.5" violation_tolerance="0.1"/>
+      <partial_assignment weight_threshold="0.8" max_contributions="20"/>
+    </iteration>
+    <water_refinement solvent="water" n_structures="10" enabled="yes" write_solvent_molecules="no"/>
+      </protocol>
+  <analysis>
+    <structures_analysis enabled="yes"/>
+    <procheck executable="procheck" enabled="yes"/>
+    <whatif executable="whatif" enabled="yes"/>
+    <prosa executable="prosa" enabled="yes"/>
+  </analysis>
+  <report>
+    <ccpn export_assignments="no" export_noe_restraint_list="no" export_structures="no"/>
+    <molmol enabled="yes"/>
+    <noe_restraint_list ccpn_output="no" pickle_output="no" text_output="yes" xml_output="no"/>
+    <spectra write_assigned="no" write_assigned_force="no" iteration="last"/>
+  </report>
+</project>

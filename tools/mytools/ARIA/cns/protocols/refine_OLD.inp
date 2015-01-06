@@ -1,0 +1,298 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: refine_OLD.inp,v $
+
+remarks Author: Michael Nilges, Jens Linge
+remarks Cartesian or torsion angle simulated annealing protocol
+
+!the next line is only for testing:
+set abort off end
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+filenames =$filenames;
+spectra   =$spectra;
+Data      =$Data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;)
+
+evaluate ($iteration = $Data.iteration)
+evaluate ($count = $Data.count)
+
+if ($Data.rdc1_firstIt > $iteration) then
+  evaluate ($Data.rdc1_hot = 0.0)
+  evaluate ($Data.rdc1_cool1 = 0.0)
+  evaluate ($Data.rdc1_cool2 = 0.0)
+end if
+if ($Data.rdc2_firstIt > $iteration) then
+  evaluate ($Data.rdc2_hot = 0.0)
+  evaluate ($Data.rdc2_cool1 = 0.0)
+  evaluate ($Data.rdc2_cool2 = 0.0)
+end if
+if ($Data.rdc3_firstIt > $iteration) then
+  evaluate ($Data.rdc3_hot = 0.0)
+  evaluate ($Data.rdc3_cool1 = 0.0)
+  evaluate ($Data.rdc3_cool2 = 0.0)
+end if
+if ($Data.rdc4_firstIt > $iteration) then
+  evaluate ($Data.rdc4_hot = 0.0)
+  evaluate ($Data.rdc4_cool1 = 0.0)
+  evaluate ($Data.rdc4_cool2 = 0.0)
+end if
+if ($Data.rdc5_firstIt > $iteration) then
+  evaluate ($Data.rdc5_hot = 0.0)
+  evaluate ($Data.rdc5_cool1 = 0.0)
+  evaluate ($Data.rdc5_cool2 = 0.0)
+end if
+
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+!read the .psf files:
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+
+!read all the experimental Data:
+@@RUN:protocols/read_data.cns(Iteration=$Iteration; Data=$Data)
+
+!!!! BARDIAUX new for aria 2.2
+if ($Data.crossvalidate eq TRUE) then
+   evaluate ($partition = mod($count,10) + 1)
+   noe cv $partition end
+end if
+
+!set the rdc coefficients:
+!syntax: sani coeff <0.0> <magnitude> <rhombicity> end
+if ($Data.rdc1_choice eq "SANI") then
+  sani class rdc1 coeff 0.0 $Data.rdc1_d $Data.rdc1_r end
+end if
+if ($Data.rdc2_choice eq "SANI") then
+  sani class rdc2 coeff 0.0 $Data.rdc2_d $Data.rdc2_r end
+end if
+if ($Data.rdc3_choice eq "SANI") then
+  sani class rdc3 coeff 0.0 $Data.rdc3_d $Data.rdc3_r end
+end if
+if ($Data.rdc4_choice eq "SANI") then
+  sani class rdc4 coeff 0.0 $Data.rdc4_d $Data.rdc4_r end
+end if
+if ($Data.rdc5_choice eq "SANI") then
+  sani class rdc5 coeff 0.0 $Data.rdc5_d $Data.rdc5_r end
+end if
+
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+if ($Data.flags.sani = true) then
+  parameter @@RUN:toppar/par_axis.pro end
+end if
+
+!for refinement with ambigous SS-bridges:
+if ($toppar.ss_ambigunambig eq	"ambigous") then
+  parameter  nbfix S  S  462  13.6  462  13.6 end
+end if
+parameter
+  bond (name sg) (name sg) 0.0 TOKEN
+  angle (all) (name sg) (name sg)  0.0 TOKEN
+end
+
+
+!for the free R factor refinement, read the modify list:
+
+
+
+
+! define methyl groups and swapped protons
+@RUN:protocols/define_methyls_all.cns
+@RUN:begin/setup_swap_list.tbl
+! we need to store this list in store9 since store1 is overwritten.
+do (store9=store1)(all)
+do (fbeta=$Saprotocol.fbeta) (all)    
+do (mass=$Saprotocol.mass) (all) 
+do (mass=1000) (resname ani)
+
+!XXX evaluate ($end_count = $iterations.ini_count + $iterations.structures - 1)
+
+evaluate ($nreassign = 0)
+evaluate ($seed = max($Data.iteration,1)*$count*$Saprotocol.iniseed)
+set seed $seed end
+
+coor init end
+  
+coor @@$Data.initial_pdb
+
+!XXX if ($Data.use_template = false) then
+!XXX    eval ($floatfile = $Data.initial_pdb - ".pdb" + ".float")
+!XXX    fileexist $floatfile end  eval ($qfloatfile = $result)
+!XXX    if ($qfloatfile eq true) then aria @@$floatfile end end if
+!XXX    evaluate ($high_steps = $Saprotocol.RefineSteps)
+
+if ($Data.flags.sani = true) then
+   coor @@RUN:toppar/tensor.pdb
+end if
+evaluate ($high_steps = $Saprotocol.InitioSteps)
+
+if ($Data.randomize_mainchain eq true) then
+   @RUN:protocols/sa_l_randomchain.cns
+end if
+      
+!XXX if ($count le $Iterations.KeepStruct) then
+!XXX    coor @@$Data.file
+!XXX    eval ($floatfile = $Data.file - ".pdb" + ".float")
+!XXX    fileexist $floatfile end  eval ($qfloatfile = $result)
+!XXX    if ($qfloatfile eq true) then aria @@$floatfile end end if
+!XXX    evaluate ($high_steps = $Saprotocol.RefineSteps)
+!XXX else
+!XXX    evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+!XXX    coor @@$templatefile
+!XXX    if ($Data.flags.sani = true) then
+!XXX       coor @@RUN:toppar/tensor.pdb
+!XXX    end if
+!XXX    evaluate ($high_steps = $Saprotocol.InitioSteps)
+!XXX    @RUN:protocols/sa_l_randomchain.cns
+!XXX end if
+
+if ($Data.flags.sani = true) then
+   coor select (not known and resn ani) end
+   if ($select gt 0) then coor @@RUN:toppar/tensor.pdb end if
+   do (refx=x) (all)
+   do (refy=y) (all)
+   do (refz=z) (all)
+   do (harmonic=20.0)(resname ANI and name OO)
+   do (harmonic=0.0) (resname ANI and name Z )
+   do (harmonic=0.0) (resname ANI and name X )
+   do (harmonic=0.0) (resname ANI and name Y )
+   do (harmonic=0.0) (not resname ANI)
+   restraints harmonic exponent=2 end
+end if
+
+
+! get initial energy
+energy end
+
+
+evaluate ($ini_flt = 5.0)
+    
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+
+if ($Data.whichMD = "cartesian") then
+  flags exclude dihed end
+  @@RUN:protocols/sa_l_reduced.cns  { defines store1 }
+  @RUN:protocols/sa_l_hightemp.cns(nstep=$high_steps;SaProtocol=$SaProtocol; Data=$Data;)
+         
+      
+  
+  
+  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       
+else  !torsion angle dynamics
+
+   @RUN:protocols/torsiontop.cns
+   
+  {* 1 ======================================= high temperature dynamics *}
+   parameter
+           bond (name sg) (name sg) 0.0 TOKEN
+           angle (all) (name sg) (name sg)  0.0 TOKEN
+           bond (name C1') (name C2') 5.0 TOKEN
+   end
+   @@RUN:protocols/sa_l_reduced.cns  { defines store1 }
+   flags exclude dihed end
+   @RUN:protocols/sa_ltad_hightemp4.cns
+      (nstep=$high_steps;SaProtocol=$SaProtocol;Data=$Data;)
+     
+   {* 2 ============================================ cooling 1 *}
+     
+   @RUN:protocols/sa_ltad_cool1.cns(SaProtocol=$SaProtocol;Data=$Data;Toppar=$Toppar;)
+end if
+
+{* 3 ============================================ cooling 2 *}
+    
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! planarity restraints for base pairs in RNA or DNA
+! set echo on message on end
+! @@RUN:data/hbonds/rna_planar.tbl
+! set echo off message off end
+! flags include plane end
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+if ($saprotocol.cart_firstit le $iteration) then
+   @RUN:protocols/sa_l_cool1.cns(SaProtocol=$SaProtocol;Data=$Data;Toppar=$Toppar;) 
+   if ($Data.flags.dihed eq TRUE) then flags include dihed end end if
+
+   @RUN:protocols/sa_ls_cool2.cns(SaProtocol=$SaProtocol;Data=$Data;Toppar=$Toppar;)
+end if
+{* 4 =========================== final minimization *}
+
+parameter                          
+   nbonds
+      repel=$Toppar.repel_radius                     
+      rexp=$Toppar.repel_rexpo irexp=$Toppar.repel_irexp rcon=$Toppar.repel_rcons
+      nbxmod=5                
+      wmin=0.01 
+      cutnb=6.0 ctonnb=2.99 ctofnb=3. 
+      tolerance=1.0
+{*      ?*}
+   end
+end
+igroup 
+        interaction  (all) (all) weights * 1 vdw 1.0 elec 0 end 
+end
+
+evaluate ($swap = 1.0)
+inline @RUN:protocols/swap.cns
+minimize powell nstep=200 drop=10.0 nprint=25 end
+   
+   
+{* 5 =========================== write out the final structure *}
+
+evaluate ($filename=$filenames.outdir + "/" + $Filenames.fileroot + "_" + encode($count) + ".pdb")
+@@RUN:protocols/print_coorheader.cns
+coor sele= (not name h* and not resn ani) orient end
+write coordinates sele= (all) output =$filename end
+
+evaluate ($filename=$filenames.outdir + "/" + $Filenames.fileroot + "_" + encode($count) + ".float")
+set print $filename end
+aria float store end end
+
+stop

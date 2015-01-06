@@ -1,0 +1,122 @@
+<tool id="clean_ngs" name="Clean NGS" version="0.7">
+  <description>Use adapters definition file ADAPTER.txt and remove the adapters from the input read files. The program writes out the cleansed reads and the rejected reads. Nucleotides are also removed based on quality thresholds from the 5' and 3'.</description>
+  <requirement type="package">clean_ngs</requirement>
+  <stdio>
+        <exit_code range="0" level="warning" description="Description message" />
+        <exit_code range="1:" level="fatal" />
+   </stdio>
+  <command>
+  clean_ngs
+     -if1 '$input_file'
+     -of1 '$output_file'
+     -rf1 '$rejectedFQ'
+     -adf '$adapterSeqs'
+     --min-len '$minLen'
+     --max-len '$maxLen'
+     --qual-thresh3 '$qTh3'
+     --qual-thresh5 '$qTh5'
+     #if $pairedEnd.selected == "paired" :
+         -if2 '$pairedEnd.input_file2'
+         -of2 '$output_file2'
+         -rf2 '$rejectedFQ2'
+     #end if
+  </command>
+  <inputs>
+      <conditional name="pairedEnd">   
+          <param name="selected" type="select" label="Experiment is paired-End" >
+              <option value="single" selected="True">Single Read</option>
+              <option value="paired">Paired End</option>
+          </param>
+          <when value="paired">
+              <param name="input_file" type="data" format="fastq" label="1st FASTQ file to convert" />
+              <param name="input_file2" type="data" format="fastq" label="2nd FASTQ file to convert" />
+         </when>
+         <when value="single">
+             <param name="input_file" type="data" format="fastq" label="FASTQ file to convert" />
+         </when>
+      </conditional>
+      <param name="minLen" value="0" type="integer" help="minimum length of sequences [1..], def: 0 (off) (default: 0)" />
+      <param name="maxLen" value="0" type="integer" help="maximum length of sequences [1..], def: 0 (off) (default: 0)" />
+      <param name="qTh3" value="-1" type="integer" help="quality threshold for 3 prime trimming [0..], def: -1 (off) (default: -1)" />
+      <param name="qTh5" value="-1" type="integer" help="quality threshold for 5 prime trimming [0..], def: -1 (off) (default: -1)" />
+      <param name="adapterSeqs" type="data" format="txt" label="Adapter definition file" help="See section Adapters File Format below for more information."/>
+  </inputs>
+  <outputs>
+    <data name="output_file" format="input" label="${tool.name} on ${on_string}: filtered forward sequences"/>
+    <data name="output_file2" format="input" label="${tool.name} on ${on_string}: filtered reverse sequences">
+        <filter>pairedEnd['selected'] == "paired"</filter>
+    </data>
+    <data name="rejectedFQ"  format="input" label="${tool.name} on ${on_string}: rejected forward sequences"/>
+    <data name="rejectedFQ2"  format="input" label="${tool.name} on ${on_string}: rejected reverse sequences">
+        <filter>pairedEnd['selected'] == "paired"</filter>
+    </data>
+  </outputs>
+  <help>
+**SYNOPSIS**
+
+	- clean_ngs [OPTIONS] -adf ADAPTER.txt  -if1 IN.fq-of1 OUT.fq
+	- clean_ngs [OPTIONS] -adf ADAPTER.txt -if1 IN_1.fq -if2 IN_2.fq -of1 OUT_1.fq -of2 OUT_2.fq
+
+------
+
+**DESCRIPTION**
+
+Use adapters definition file ADAPTER.txt and remove the adapters from the
+input readfiles. The program writes out the cleansed reads and the rejected reads.
+
+    -  -h, --help
+    -      Displays this help message.
+    -  --version
+    -      Display version information
+    -  -v, --verbose
+    -      Verbose mode.
+    -  -vv, --vverbose
+    -      Very verbose mode.
+
+Input / Output Parameters:
+
+    -adf, --adapter-file FILE
+          Adapter definition file. See section Adapters File Format below for more information. Valid filetype is: txt.
+    -if1, --input-file1 FILE
+          Input file 1. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+    -if2, --input-file2 FILE
+          Input file 2. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+    -of1, --output-file1 FILE
+          Output file 1. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+    -of2, --output-file2 FILE
+          Output file 2. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+    -rf1, --rejected-file1 FILE
+          Rejected file 1. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+    -rf2, --rejected-file2 FILE
+          Rejected file 2. Valid filetypes are: fastq, fq, fastq.gz, fq.gz, txt, and txt.gz.
+
+Optional Parameters:
+
+     -    -l, --min-len NUM
+     -     Minimal length of sequencing. Set to 0 to turn offminimal length filter. In range [0..inf]. Default: 0.
+     -    -L, --max-len NUM
+     -     Maximal length of sequencing. Set to 0 to turn offmaximal length filter. In range [0..inf]. Default: 0.
+     -    -q3, --qual-thresh3 NUM
+     -     Quality threshold for 3-prime trimming. Set to 0 to turn off 3-prime trimming. In range [0..inf]. Default: 0.
+     -    -q5, --qual-thresh5 NUM
+     -     Quality threshold for 5-prime trimming. Set to 0 to turn off 5-prime trimming. In range [0..inf]. Default: 0.
+
+------
+
+**ADAPTER DEFINITION FILE FORMAT**
+
+The adapter sequences are defined in an adapter definition file with the extension ".txt"comment lines start with "#".Each non-comment(non-empty)
+line is tab delimitedand has 7 fields (columns):
+
+    -    1. name of the sequence
+    -    2. sequence (N's are allowed and match any nucleotide, useful for multiplexing)
+    -    3. fraction of identity between adapter sequence and target sequence (threshold)
+    -    4. quality threshold
+    -    5. minimum length of overlap between adapter and target sequence
+    -    6. if set to >0 perform comparison with truncated adapter sequences (very time consuming)
+    -    7. if set to 1 this is a leader sequence
+    
+  </help>
+</tool>
+            
+    

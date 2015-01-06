@@ -1,0 +1,59 @@
+<tool id="ptaxoptimizer" name="ptaxoptimizer">
+  <description> Retrieves taxonomy using tabulate blast results </description>
+  <command> 
+    ptaxoptimizer 
+    #if $adv_opts.adv_opts_selector=="advanced":
+    -c $adv_opts.colNum -s $adv_opts.separator  $adv_opts.e 
+   
+    #if $adv_opts.db.dbNametag == "define":
+     -d $adv_opts.db.dbName
+    #end if
+    #end if    
+    #if $f:
+    $f $outputNoTaxo 
+    #end if
+    -i $input -o $output 
+
+  </command>
+  
+  <inputs>
+    <param name="input" type="data" format="tabular" label="Tabulated file"/>
+    <param name="f" type="boolean" truevalue="-f" falsevalue=" " checked="false" label="Outputs data without taxonomy info"/>
+    <conditional name="adv_opts">
+            <param name="adv_opts_selector" type="select" label="Advanced Options">
+              <option value="basic" selected="True">Hide Advanced Options</option>
+              <option value="advanced">Show Advanced Options</option>
+            </param>
+            <when value="basic"/>
+            <when value="advanced">
+                 <param name="colNum" type="integer" size="4" value="2"  min="1" label="Column number to parse (default second column: 2)" />
+                 <param name="separator" value="|" type="text" label="Separator character (default '|')" /> 
+		 <conditional name="db">
+                   <param name="dbNametag" type="select" label="Define database to limit the taxonomy search">
+                      <option value="define">define one database</option>
+                      <option value="nodefine" selected="True">not define</option>
+		   </param>
+		   <when value="define">
+		     <param name="dbName" type="text" label="Database"/>
+		   </when> 
+		   <when value="nodefine"/>
+		 </conditional>
+                 <param name="e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="Extract description from database Entry" />
+            </when>
+    </conditional>
+ </inputs>
+  <outputs>
+    <data name="output" format="tabular" label="Output Ptaxoptimizer on contigs/reads"/>
+    <data name="outputNoTaxo" format="tabular" label="Output containing contig/read with NO taxonomy info">
+      <filter>f==True</filter>  
+    </data>
+
+  
+  </outputs>
+ 
+  <tests>
+  </tests>
+
+  <help>
+  </help>
+</tool>  

@@ -1,0 +1,126 @@
+<tool id="COV2HTML" name="COV2HTML" version="1.0">
+    <description>convert mapping</description>
+    <command interpreter="python">map2cov.py 
+    #if $reference.flag == "EMBL": 
+        -e $file_embl
+    #end if
+    #if $reference.flag == "GenBank": 
+        -g $file_gbk    
+    #end if
+    #if $reference.flag == "Custom": 
+    	-f $file_fasta
+    	-c $file_CDS
+    #end if
+    #if $alignment.flag == "SAM/BAM": 
+        -s $file_sam
+    #end if
+    #if $alignment.flag == "WIG": 
+        -w $file_wig  
+    #end if  
+    #if $alignment.flag == "ELAND": 
+    	-i $file_eland
+    #end if    
+    #if $type.flag == "RNA": 
+        -t RNA
+    #end if
+    #if $type.flag == "TSS": 
+        -t TSS  
+    #end if  
+    #if $type.flag == "CHIP": 
+        -t CHIP
+    #end if
+    #if $type.flag == "DNA": 
+        -t DNA    
+    #end if
+    #if $confidential.flag == "yes": 
+        -a YES
+    #end if
+    #if $confidential.flag == "no": 
+        -a NO
+    #end if
+    #if $stranded.flag == "yes": 
+        -b YES
+    #end if
+    #if $stranded.flag == "no": 
+        -b NO
+    #end if 
+    #if $readlength.flag == "yes": 
+        -l $num
+    #end if
+    -v $covstyle
+    -o map2cov
+    </command>
+    <inputs>
+       <conditional name="reference">
+            <param name="flag" type="select" label="Annotated reference sequence: EMBL, GenBank or Custom (Fasta reference sequence + Gff3 annotation file)">
+	        	<option value="EMBL" selected="True" > EMBL </option>
+	        	<option value="GenBank" > GenBank </option>
+	        	<option value="Custom" > Custom </option>
+            </param>
+	    <when value="EMBL">
+	       <param name="file_embl" type="data" format="txt, embl" label=">EMBL"/>
+	    </when>  
+	    <when value="GenBank">
+	       <param name="file_gbk" type="data" format="txt, gbk, genbank"  label=">GenBank"/>
+	    </when>  
+	    <when value="Custom">
+	       <param name="file_fasta" type="data" format="fasta"  label=">Reference (Fasta)"/>
+	       <param name="file_CDS" type="data" format="gff3" label=">Annotation (GFF3)"/>
+	    </when>  
+        </conditional>
+        <conditional name="alignment">
+            <param name="flag" type="select" label="Alignment file: SAM/BAM, WIG or ELAND">
+	        	<option value="SAM/BAM" selected="True" > SAM/BAM </option>
+	        	<option value="WIG" > WIG </option>
+	        	<option value="ELAND" > ELAND </option>
+            </param>
+	    <when value="SAM/BAM">
+	       <param name="file_sam" type="data" format="sam, bam" label=">SAM/BAM"/>     
+	    </when>
+	    <when value="WIG">
+	       <param name="file_wig" type="data" format="wig, txt" label=">WIG"/>	      
+	    </when>
+	    <when value="ELAND">
+	       <param name="file_eland" type="data" format="eland, txt" label=">ELAND"/>	      
+	    </when>
+        </conditional> 
+        <conditional name="type">
+            <param name="flag" type="select" label="RNA-seq (RNA), TSS-seq (TSS), ChIP-seq (CHIP) or DNA-seq (DNA) data">
+	        	<option value="RNA" selected="True" > RNA </option>
+	        	<option value="TSS" > TSS </option>
+	        	<option value="CHIP" > CHIP </option>
+	        	<option value="DNA" > DNA </option>
+            </param>
+        </conditional>
+        <conditional name="confidential">
+            <param name="flag" type="select" label="Export data confidentially: CDS names are replaced by anonymous identifiers">
+	        	<option value="yes" > yes </option>
+	        	<option value="no" selected="True"> no </option>
+            </param>
+        </conditional>
+        <conditional name="stranded">
+            <param name="flag" type="select" label="Perform a strand-specific processing, two output files are generated: one for each strand (extention _plus.txt.bz2 and _minus.txt.bz2)">
+	        	<option value="yes" > yes </option>
+	        	<option value="no" selected="True"> no </option>
+            </param>
+        </conditional>
+        <conditional name="readlength">
+            <param name="flag" type="select" label="Ignore reads shorter than fixed threshold">
+	        	<option value="20" > yes </option>
+	        	<option value="no" selected="True"> no </option>
+            </param>
+	    <when value="20">
+	       <param name="num" type="integer" size="3" value="20" label=">default: 20 (0 to disable)" />
+	    </when>
+	</conditional>
+        <param name="covstyle" type="select" label="Genetic Elements Coverage style: Raw COUNTS or MEAN coverage">
+	        <option value="COUNTS" selected="True" > COUNTS </option>
+	       <option value="MEAN"> MEAN </option>
+        </param>
+        <param name="prefix" type="text" value="map2cov" size="20" label="Choose the prefix for the output text file automatically compressed in bz2 format (default: map2cov)">
+        </param>
+    </inputs>
+    <outputs>
+      <data name="output" format="bz2"  label="${prefix}.txt.bz2" from_work_dir="map2cov.txt.bz2"/>
+    </outputs>
+</tool>

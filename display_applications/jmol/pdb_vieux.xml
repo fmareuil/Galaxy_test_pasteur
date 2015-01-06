@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<display id="jmol_pdb" version="1.0.0" name="display at ">
+    <link id="Jmol" name="Jmol">
+        <url>$jmol_rien</url>
+        <param type="data" name="pdb_file"/>
+        <param type="template" name="jmol" viewable="True" strip="False">
+            sh /home/fmareuil/workspace/jmol/jmol/jmol.sh $pdb_file
+        </param>
+        <param type="template" name="jmol_rien" strip="True"/>
+    </link>
+</display>

@@ -1,0 +1,317 @@
+<tool id="aria_convert" name="ARIA_convert" version="2.3" force_history_refresh="True">
+  <description>Convert data for ARIA</description>
+  <command interpreter="python">
+  aria_convert.py --output_convertor=$output_convertor --name=$name --type=$type --segid=$segid --first_resid=$first_resid --seq_input=$seq_input --format_seq=$format_seq --seq_output=$seq_output 
+  --spectrums="
+  #for $spec in $spectrums:
+    --spectrum_name=$spec.spectrum_name --spectrum_typ=$spec.spectrum.spectrum_typ --ambig_typ=$spec.ambig_typ --chemical_shift_input=$spec.chemical_shift_input 
+    --format_chemical_shift=$spec.format_chemical_shift --file_cross_peaks=$spec.file_cross_peaks 
+    --format_cross_peaks=$spec.format_cross_peaks
+    #if $spec.spectrum.spectrum_typ == "noesy.hh":
+      --num_P1=$spec.spectrum.num_P1 --num_H1=$spec.spectrum.num_H1
+    #elif $spec.spectrum.spectrum_typ == "noesy_hsqc_HCH.hhc" or $spec.spectrum.spectrum_typ == "noesy_hsqc_HNH.hhn":
+      --num_P1=$spec.spectrum.num_P1 --num_H1=$spec.spectrum.num_H1 --num_P2=$spec.spectrum.num_P2
+    #else:
+      --num_P1=$spec.spectrum.num_P1 --num_H1=$spec.spectrum.num_H1 --num_P2=$spec.spectrum.num_P2 --num_H2=$spec.spectrum.num_H2
+    #end if
+    #if $spec.assignment.assign_tag == "YES":   
+      --assign_input=$spec.assignment.assign_input
+    #end if 
+    #if $spec.ambiguity.ambig_tag == "YES":
+      --assign_peak_ambig=$spec.ambiguity.assign_peak_ambig
+    #end if
+    ,
+  #end for
+  "
+  --output_chemical_shift1=$output_chemical_shift1 --output_cross_peaks1=$output_cross_peaks1 --output_chemical_shift2=$output_chemical_shift2 --output_cross_peaks2=$output_cross_peaks2
+  --output_chemical_shift3=$output_chemical_shift3 --output_cross_peaks3=$output_cross_peaks3 --output_chemical_shift4=$output_chemical_shift4 --output_cross_peaks4=$output_cross_peaks4
+  --output_chemical_shift5=$output_chemical_shift5 --output_cross_peaks5=$output_cross_peaks5
+ </command>
+ 
+  <inputs>
+  ==================== Molecule definition =========================== 
+      <param name="name" label="Name of the project" type="text" size="50"/>
+      <param name="type" label="Molecule Type" type="select">
+        <option value="PROTEIN" selected="True">PROTEIN</option>
+        <option value="DNA">DNA</option>
+        <option value="RNA">RNA</option>
+      </param>
+      <param name="segid" label="Molecule Segid, When working on symmetric multimeric protein, you can specify the segids of each monomer by seprating the segid by an '/'. Example molecule_segid='A/B'" type="text" size="20" value=""/>
+      <param name="first_resid" label="First residue number" type="integer" size="5" value="1"/>
+      <param format="seq, pdb" name="seq_input" label="Seq_input supported input formats are 'seq' (a sequence of three letter codes) or 'pdb'" type="data"/>
+      <param name="format_seq" label="Format sequence" type="select">
+        <option value="seq" selected="True">seq format</option>
+        <option value="pdb">pdb format</option>
+      </param> 
+   ==================== Spectrum definition ===========================   
+    <param name="numberspect" label="Number of spectrum between 1 to 5" type="select">
+        <option value="1" selected="True"></option>
+        <option value="2"></option>
+	<option value="3"></option>
+	<option value="4"></option>
+	<option value="5"></option>
+    </param>
+    <repeat name="spectrums" title="Additional spectrum" min="1" max="5">
+      <param name="spectrum_name" label="Name of the spectre" type="text" size="50"/>
+      <param name="ambig_typ" label="spectrum ambiguity" type="select">
+        <option value="intra" selected="True">noes involving atoms from one monomer only</option>
+        <option value="inter">noes involving atoms atoms from different monomers</option>
+	<option value="all">no known information, all noes are ambigous in terms of monomer</option>
+      </param>  
+      <param format="prot" name="chemical_shift_input" label="chemical shift filename" type="data"/>
+      <param name="format_chemical_shift" label="Format chemical shift" type="select">
+        <option value="Ansig">For Ansig format</option>
+        <option value="NmrView">For NmrView format</option>
+	<option value="Pronto">For Pronto format</option>
+        <option value="Sparky">For Sparky format</option>
+	<option value="XEasy" selected="True">For XEasy format</option>
+      </param>     
+      <param format="peaks" name="file_cross_peaks" label="file cross peaks filename" type="data"/>
+      <param name="format_cross_peaks" label="Format cross peaks" type="select">
+        <option value="Ansig">For Ansig format</option>
+        <option value="NmrView">For NmrView format</option>
+	<option value="Pronto">For Pronto format</option>
+        <option value="Sparky">For Sparky format</option>
+	<option value="XEasy" selected="True">For XEasy format</option>
+      </param>
+      <conditional name="spectrum">
+        <param name="spectrum_typ" label="Type of the spectre" type="select">
+          <option value="noesy.hh" selected="True">2D homonuclear noesy</option>
+          <option value="noesy_hsqc_HCH.hhc">3D noesy (carbon)</option>
+          <option value="noesy_hsqc_HNH.hhn">3D noesy (nitrogen)</option>
+	  <option value="noesy_hsqc_HCCH.hhcc">4D noesy (carbon)</option>
+          <option value="noesy_hsqc_HNNH.hhnn">4D noesy (nitrogen)</option>
+          <option value="noesy_hsqc_HCNH.hhcn">4D noesy (carb/nitr)</option>
+          <option value="noesy_hsqc_HNCH.hhnc">4D noesy (nitr/carb)</option>	 
+        </param>      
+      <when value="noesy.hh">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>      
+        <param name="num_H1" label="Column heteroatom1"  type="integer" size="2" value=""/>
+      </when>
+      <when value="noesy_hsqc_HCH.hhc">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>      
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/> 
+      </when>
+      <when value="noesy_hsqc_HNH.hhn">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>      
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/> 
+      </when>
+      <when value="noesy_hsqc_HCCH.hhcc">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>      
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/>
+	<param name="num_H2" label="Column heteroatom2" type="integer" size="2" value=""/> 
+      </when>
+      <when value="noesy_hsqc_HNNH.hhnn">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>	 
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/>
+	<param name="num_H2" label="Column heteroatom2" type="integer" size="2" value=""/> 
+      </when>      
+      <when value="noesy_hsqc_HCNH.hhcn">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>	 
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/>
+	<param name="num_H2" label="Column heteroatom2" type="integer" size="2" value=""/> 
+      </when>      
+      <when value="noesy_hsqc_HNCH.hhnc">
+        <param name="num_P1" label="Column protonatom1" type="integer" size="2" value=""/>	 
+        <param name="num_H1" label="Column heteroatom1" type="integer" size="2" value=""/>
+	<param name="num_P2" label="Column protonatom2" type="integer" size="2" value=""/>
+	<param name="num_H2" label="Column heteroatom2" type="integer" size="2" value=""/> 
+      </when>
+      </conditional>
+      <conditional name="assignment">
+        <param name="assign_tag" label="assignment data" type="select">
+          <option value="YES"> YES</option>
+          <option value="NO" selected="True"> NO</option>
+	</param>
+      <when value="YES">
+        <param format="txt" name="assign_input" label="assignment filename optionnal" type="data"/>
+      </when>
+      <when value="NO">
+      </when>
+      </conditional>      
+      <conditional name="ambiguity">
+        <param name="ambig_tag" label="ambiguity data" type="select">
+          <option value="YES"> YES</option>
+          <option value="NO" selected="True"> NO</option>
+	</param>
+      <when value="YES">
+        <param format="txt" name="assign_peak_ambig" label="peaks ambiguity optionnal" type="data"/>
+      </when>
+      <when value="NO">
+      </when>
+      </conditional>
+    </repeat> 
+  </inputs>
+  <outputs>
+      <data format="xml" name="output_convertor" label="XML convertor of ${seq_input.name}, chemical_shift_inputs and file_cross_peaks"/>
+      <data format="xml" name="seq_output" label="${seq_input.name} XML"/>
+      <data format="xml" name="output_chemical_shift1" type="xml" label="Chemical shift XML for spectrum 1"/>
+      <data format="xml" name="output_cross_peaks1" type="xml" label="Cross peaks XML for spectrum 1"/>
+      
+      <data format="xml" name="output_chemical_shift2" type="xml" label="Chemical shift XML for spectrum 2">
+         <filter> numberspect == "2" or numberspect == "3" or numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_chemical_shift3" type="xml" label="Chemical shift XML for spectrum 3">
+         <filter> numberspect == "3"or numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_chemical_shift4" type="xml" label="Chemical shift XML for spectrum 4">
+         <filter> numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_chemical_shift5" type="xml" label="Chemical shift XML for spectrum 5">
+         <filter> numberspect == "5"</filter>
+      </data>
+
+      <data format="xml" name="output_cross_peaks2" type="xml" label="Cross peaks XML for spectrum 2">
+         <filter> numberspect == "2" or numberspect == "3" or numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_cross_peaks3" type="xml" label="Cross peaks XML for spectrum 3">
+         <filter> numberspect == "3"or numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_cross_peaks4" type="xml" label="Cross peaks XML for spectrum 4">
+         <filter> numberspect == "4" or numberspect == "5"</filter>
+      </data>
+      <data format="xml" name="output_cross_peaks5" type="xml" label="Cross peaks XML for spectrum 5">
+         <filter> numberspect == "5"</filter>
+      </data>
+
+  </outputs>
+  <help>
+This tool run ARIA with input xml project and prepare the project.
+--===================== Conversion ==================================
+
+  Template XML file for converting NMR data from various formats into
+  ARIA XML format. Fill in the fields between the quotation marks "".
+  Leave optional fields unchanged.
+
+  ARIAs conversion routines supports the following formats:
+
+  Ansig, NMRView, XEasy
+
+  If data conversion is performed with the CCPNMR software suite (in this case
+  use the ARIA command line option "convert_ccpn" instead of "convert" to
+  launch the conversion) the following formats are supported:
+
+  Ansig, NmrView, Pronto, Sparky, XEasy
+
+-->  
+--==================== Project definition ===========================
+
+  If you want ARIA to automatically create a project XML file, specify the
+  desired filename and the name of your project in the fields "filename" and
+  "name", respectively. During the conversion process, your data files
+  are converted into ARIA XML format (the original files still exist after
+  conversion) and referenced by the project file. Use ARIAs graphical user
+  interface (GUI), an XML editor, or a text editor to edit the project file.
+
+  Alternatively, you may also leave the fields empty and create an empty
+  project XML file by yourself by invoking ARIA from the command line. 
+
+  Optional fields:
+
+  - filename
+
+-->  
+--=================== Molecule definition ===========================
+
+  Supported input formats are "seq" (a sequence of three letter codes) or
+  "pdb". If your sequence is in PDB format, a naming convention for the
+  residues and atoms needs to be specified; ARIA supports "iupac", "dyana",
+  and "cns" format. Furthermore, the "molecule_segid" entry will be ignored
+  and instead read from the PDB file. The type of the molecule can
+  be set to "PROTEIN", "DNA" or "RNA". The additional attribute
+  "first_residue_number" specifies where the residue numbering starts
+  (in case of SEQ format). Fill in the attribute "molecule_name" only if you
+  want to use CCPNMR conversion.
+
+  Optional fields:
+
+  - molecule_type        (in case of PDB input files)
+  - molecule_name        
+  - molecule_segid       (in case of PDB input files)
+  - first_residue_number (in case of PDB input files)
+  
+  Conversion via CCPNMR:
+
+  Supported formats are "Ansig", "Fasta", "NmrStar", "NmrView", 
+                        "Pdb", "Sparky", "XEasy"
+
+  When working on symmetric multimeric protein, you can specify the segids of each
+  monomer by seprating the segid by an "/". Example molecule_segid="A/B"
+
+-->
+--=================== Spectrum definition ===========================
+
+  Each spectrum is defined by a list of chemical shifts,
+  and a list of NOESY cross peaks. For converting the cross peaks, you need
+  to specify the dimensions that correspond to the resonances. The entry for
+  the 1st and the 2nd proton dimension must be a number (1, 2, 3, or 4).
+  Specify the dimension of the linked heavy nuclei in "hetero1" and "hetero2",
+  respectively. If you want to specify the segment(s) for which you have
+  chemical shifts or cross-peaks assignments, use the "segid"-field in the
+  header of the spectrum-block. In case of multiple segments the corresponding
+  segids are separated by a slash (e.g., segids="A" or segids="A/B").
+
+  Optional fields:
+
+  - spectrum_name
+  - segids
+
+  Data conversion via CCPNMR
+
+  If you want to use the CCPNMR software suite and the format converter for
+  data conversion, you need to specify the type of your NOESY experiment.
+  The following experiments are supported:
+
+  spectrum_type:  2D homonuclear noesy: noesy.hh
+                  3D noesy (carbon):    noesy_hsqc_HCH.hhc
+                  3D noesy (nitrogen):  noesy_hsqc_HNH.hhn
+                  4D noesy (carbon):    noesy_hsqc_HCCH.hhcc
+                  4D noesy (nitrogen):  noesy_hsqc_HNNH.hhnn
+                  4D noesy (carb/nitr): noesy_hsqc_HCNH.hhcn
+                  4D noesy (nitr/carb): noesy_hsqc_HNCH.hhnc
+                  
+  Otherwise, leave the field empty. Also, the format of chemical shifts and
+  cross-peaks must be identical.
+
+  Symmetric dimer:
+  
+  When working on symmetric dimers, you can specify the ambiguity level of
+  your NOESY experiment. For example, if your NOESY spectrum comes from an
+  asymmetric labeling experiment, you must specify spectrum_ambiguity as
+  "inter". ARIA will then consider all the noes from this spectrum as intre-
+  molecular ones.
+  This field is not compatible with the conversion via CCPNMR.
+
+  If the spectrum_ambiguity is set ton "inter" or "all" you must sepecify
+  the segids of the involved monomers.(e.g., segids="A/B").
+  
+  If you are working on a monomeric protein, you can just leave this field empty
+  (spectrum_ambiguity set to "intra" by default)
+  
+  spectrum_ambiguity:  intra    (noes involving atoms from one monomer only)
+                       inter    (noes involving atoms atoms from different monomers)
+                       all      (no known information, all noes are ambigous in terms of monomer)
+
+                       
+
+
+  
+  Supported formats: "Ansig", "NmrView", "Pronto", "Sparky", "XEasy"
+
+  For XEasy you may specify your cross peak assignments in a separate
+  ".assign" file. In that case specify the filename (attribute "filename" in
+  element "assignments"). Set filename to "" for all other cases.
+
+--> 
+
+
+Il manque segids dans spectrum et naming convention dans molecule.
+  </help>
+
+</tool>
+

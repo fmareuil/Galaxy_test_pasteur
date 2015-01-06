@@ -1,0 +1,81 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: rotares.cns,v $
+
+remarks rotares.cns
+remarks rotates symmetric sidechains to minimize rms
+remarks Author: M. Nilges
+remarks
+remarks 09-09-1999 MN remove flips (val,leu,arg) since floating assignment changed
+remarks 17-02-1998 MN + JL: corrected H atom flips 11-11, 21-21, 31-31
+remarks 26-06-1996 MN corrected error for ASP and GLU
+remarks 15-01-1997 MN changed ARG to floating from rotating
+
+set message off echo off end
+
+evaluate ($reject = 0)
+evaluate ($oldrms=0)
+evaluate ($newrms=0)
+
+for $id in id ( (resn TYR or resn PHE or resn ASP) and name ca ) loop main
+
+   show element (resid) ( id $id )
+   evaluate ($resid = $result)
+
+   coor rms end
+   evaluate ($oldrms=$result)
+
+   coor rotate sele= (resid $resid and
+      (name %G* or name %D* or name %E* or name %H*))
+      center (head (resid $resid and name cg) )
+      axis (head (resid $resid and name cg)
+      tail (resid $resid and name cb)) 180
+   end
+
+   coor rms end
+   evaluate ($newrms=$result)
+
+   if ($newrms > $oldrms) then
+      coor rotate sele= (resid $resid and
+         (name %G* or name %D* or name %E* or name %H*))
+         center (head (resid $resid and name cg) )
+         axis (head (resid $resid and name cg)
+         tail (resid $resid and name cb)) 180
+      end
+      evaluate ($reject =$reject+1)
+   end if
+
+end loop main
+
+for $id in id ( (resn GLU) and name ca ) loop main
+
+   show element (resid) ( id $id )
+   evaluate ($resid = $result)
+
+   coor rms end
+   evaluate ($oldrms=$result)
+
+   coor rotate sele= (resid $resid and (name %D* or name %E*))
+      center (head (resid $resid and name cd) )
+      axis (head (resid $resid and name cd)
+      tail (resid $resid and name cg)) 180
+   end
+
+
+   coor rms end
+   evaluate ($newrms=$result)
+
+   if ($newrms > $oldrms) then
+      coor rotate sele= (resid $resid and (name %D* or name %E*))
+         center (head (resid $resid and name cd) )
+         axis (head (resid $resid and name cd)
+         tail (resid $resid and name cg)) 180
+      end
+      evaluate ($reject =$reject+1)
+   end if
+
+end loop main
+
+set message on echo on end
+
+

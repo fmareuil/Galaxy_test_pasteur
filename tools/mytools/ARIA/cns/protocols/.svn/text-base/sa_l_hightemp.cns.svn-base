@@ -1,0 +1,118 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_l_hightemp.cns,v $
+
+! module sa_l_hightemp.cns
+! cartesian dynamics high temperature phase
+
+module(nstep; SaProtocol; Data)
+
+evaluate ($ncycle=10)
+evaluate ($nstep1=int(&nstep / $ncycle )+1 ) 
+
+do (vx = maxwell(&SaProtocol.carinit_t)) (all)
+do (vy = maxwell(&SaProtocol.carinit_t)) (all)
+do (vz = maxwell(&SaProtocol.carinit_t)) (all)
+
+evaluate ($ini_noe = 10.0)         evaluate ($fin_noe = 50.0)
+evaluate ($ini_amb =  1.0)
+evaluate ($k_noe = $ini_noe)
+evaluate ($noe_fac = ($fin_noe/$ini_noe)^(1/$ncycle))
+   
+noe 
+   rswitch ambi 1.0 rswitch dist 1.0 
+   mrswitch ambi 1.0 mrswitch dist 1.0 
+   asymptote ambi 2.0 asymptote dist 2.0 
+   masym ambi -2.0  masym dist -2.0 
+end
+
+parameter nbonds 
+   atom cutnb 12 tolerance 4 repel=1.25 wmin 0.5
+   rexp=4 irexp=1 rcon=1. nbxmod 4 ctonnb 0.9 ctofnb 1.0
+end end
+
+!for the vean statement:
+evaluate( $k_cen_1 = &Data.ini_cen_hot_1)
+evaluate( $cen_fac_1 = ( &Data.fin_cen_hot_1 / &Data.ini_cen_hot_1)^( 1 / $ncycle))
+evaluate( $k_bor_1 = &Data.ini_bor_hot_1)
+evaluate( $bor_fac_1 = ( &Data.fin_bor_hot_1 / &Data.ini_bor_hot_1)^( 1 / $ncycle))
+
+evaluate( $k_cen_2 = &Data.ini_cen_hot_2)
+evaluate( $cen_fac_2 = ( &Data.fin_cen_hot_2 / &Data.ini_cen_hot_2)^( 1 / $ncycle))
+evaluate( $k_bor_2 = &Data.ini_bor_hot_2)
+evaluate( $bor_fac_2 = ( &Data.fin_bor_hot_2 / &Data.ini_bor_hot_2)^( 1 / $ncycle))
+
+evaluate( $k_cen_3 = &Data.ini_cen_hot_3)
+evaluate( $cen_fac_3 = ( &Data.fin_cen_hot_3 / &Data.ini_cen_hot_3)^( 1 / $ncycle))
+evaluate( $k_bor_3 = &Data.ini_bor_hot_3)
+evaluate( $bor_fac_3 = ( &Data.fin_bor_hot_3 / &Data.ini_bor_hot_3)^( 1 / $ncycle))
+
+evaluate( $k_cen_4 = &Data.ini_cen_hot_4)
+evaluate( $cen_fac_4 = ( &Data.fin_cen_hot_4 / &Data.ini_cen_hot_4)^( 1 / $ncycle))
+evaluate( $k_bor_4 = &Data.ini_bor_hot_4)
+evaluate( $bor_fac_4 = ( &Data.fin_bor_hot_4 / &Data.ini_bor_hot_4)^( 1 / $ncycle))
+
+evaluate( $k_cen_5 = &Data.ini_cen_hot_5)
+evaluate( $cen_fac_5 = ( &Data.fin_cen_hot_5 / &Data.ini_cen_hot_5)^( 1 / $ncycle))
+evaluate( $k_bor_5 = &Data.ini_bor_hot_5)
+evaluate( $bor_fac_5 = ( &Data.fin_bor_hot_5 / &Data.ini_bor_hot_5)^( 1 / $ncycle))
+
+igroup
+   interaction (all) (not store1) weights * 1 angl 1.0 impr 1.0 vdw 0.0 elec 0 end
+   interaction (store1) (store1)  weights * 1 angl 1.0 impr 1.0 vdw 0.1 elec 0 end
+end
+
+restraints dihedral   scale=&Data.dihedrals_hot   end
+flags exclude noe end
+minimize powell nstep=500 drop=10.  nprint=25 end
+flags include noe end
+
+evaluate ($hightemp_count = 0)
+while ($hightemp_count < $ncycle) loop anne  
+   evaluate ($hightemp_count = $hightemp_count + 1)
+   evaluate ($k_noe = $k_noe * $noe_fac)
+
+   !for the vean statement:
+   evaluate ($k_bor_1 = $k_bor_1 * $bor_fac_1)
+   evaluate ($k_bor_2 = $k_bor_2 * $bor_fac_2)
+   evaluate ($k_bor_3 = $k_bor_3 * $bor_fac_3)
+   evaluate ($k_bor_4 = $k_bor_4 * $bor_fac_4)
+   evaluate ($k_bor_5 = $k_bor_5 * $bor_fac_5)
+
+   evaluate ($k_cen_1 = $k_cen_1 * $cen_fac_1)
+   evaluate ($k_cen_2 = $k_cen_2 * $cen_fac_2)
+   evaluate ($k_cen_3 = $k_cen_3 * $cen_fac_3)
+   evaluate ($k_cen_4 = $k_cen_4 * $cen_fac_4)
+   evaluate ($k_cen_5 = $k_cen_5 * $cen_fac_5)
+
+   vean class vea1 force $k_bor_1 $k_cen_1 end
+   vean class vea2 force $k_bor_2 $k_cen_2 end
+   vean class vea3 force $k_bor_3 $k_cen_3 end
+   vean class vea4 force $k_bor_4 $k_cen_4 end
+   vean class vea5 force $k_bor_5 $k_cen_5 end
+   noe scale dist $k_noe scale ambi $ini_amb scale hbon $ini_amb end
+
+   evaluate ($k_vdw = $k_noe * 0.002)
+   igroup
+      interaction (all) (not store1) weights * 1 angl 1.0 impr 1.0 vdw   0.0 elec 0 end
+      interaction (store1) (store1)  weights * 1 angl 1.0 impr 1.0 vdw $k_vdw elec 0 end
+   end
+     
+   evaluate ($swap = 1.0)
+   inline @RUN:protocols/swap.cns
+   dynamics  cartesian
+      nstep=$nstep1   timestep=&SaProtocol.timestep
+      tcoupling=true  temperature=&Saprotocol.carinit_t  nprint=50 
+      ntrfrq=9999  cmremove=true  cmperiodic=0
+   end
+
+   evaluate ($critical=$temp/&Saprotocol.carinit_t)
+   if ($critical > 1.5) then
+      mini powell nstep 100 end
+      do (vx=maxwell(&Saprotocol.carinit_t)) ( all )
+      do (vy=maxwell(&Saprotocol.carinit_t)) ( all )
+      do (vz=maxwell(&Saprotocol.carinit_t)) ( all )
+   end if
+
+end loop anne
+

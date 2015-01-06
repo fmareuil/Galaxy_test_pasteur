@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT spectrum (peak*)>
+<!ATTLIST spectrum name CDATA "None">
+
+  <!ELEMENT peak (volume, 
+                  intensity,
+                  proton1?, 
+                  proton2?, 
+                  hetero1?,
+                  hetero2?)>
+
+  <!ATTLIST peak number CDATA #REQUIRED>
+  <!ATTLIST peak reliable (yes|no) "no">
+
+    <!ELEMENT volume EMPTY>
+    <!ATTLIST volume value CDATA "">
+    <!ATTLIST volume error CDATA "">
+
+    <!ELEMENT intensity EMPTY>
+    <!ATTLIST intensity value CDATA "">
+    <!ATTLIST intensity error CDATA "">
+
+    <!ELEMENT hetero1 (shift, assignment*)>
+    <!ELEMENT proton1 (shift, assignment*)>
+    <!ELEMENT hetero2 (shift, assignment*)>
+    <!ELEMENT proton2 (shift, assignment*)>
+    
+      <!ELEMENT shift EMPTY>
+      <!ATTLIST shift value CDATA "">
+      <!ATTLIST shift error CDATA "">
+    
+      <!ELEMENT assignment (atom+)>
+      <!ATTLIST assignment_type (manual|automatic) "manual">
+
+        <!ELEMENT atom EMPTY>
+        <!ATTLIST atom segid CDATA #REQUIRED>
+        <!ATTLIST atom residue CDATA #REQUIRED>
+        <!ATTLIST atom name CDATA #REQUIRED>
+

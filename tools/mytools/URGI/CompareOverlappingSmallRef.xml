@@ -1,0 +1,116 @@
+<tool id="CompareOverlappingSmallRef" name="Compare Overlapping Small Reference">
+	<description>Provide the queries that overlap with a reference, when the reference is small.</description>  
+	<command interpreter="python">
+		/share/apps/galaxy-dist/tools/repet_pipe/SMART/Java/Python/CompareOverlappingSmallQuery.py -i $formatType.inputFileName1 
+		#if $formatType.FormatInputFileName1 == 'bed':  
+		-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+		        -f gtf
+		#end if
+		-o $outputFileGff 
+		#if $OptionDistance.Dist == 'Yes':
+			-d $OptionDistance.distance
+		#end if
+		$InvertMatch
+		$NotOverlapping
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input Query File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="sam">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File 1"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File 1"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File 1"/>
+								                        </when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input Reference File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="sam">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="Input File 2"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="Input File 2"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="Input File 2"/>
+			</when>
+		</conditional>
+		<conditional name="OptionDistance">
+			<param name="Dist" type="select" label="Maximum Distance between two reads">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="distance" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		<param name="InvertMatch" type="boolean" truevalue="-x" falsevalue="" checked="false" label="Invert match"/>
+		<param name="NotOverlapping" type="boolean" truevalue="-O" falsevalue="" checked="false" label="When there is no overlapping, the number of Overlapping will be set to 0 by defalt."/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3"/>
+	</outputs> 
+</tool>

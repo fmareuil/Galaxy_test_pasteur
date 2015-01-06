@@ -1,0 +1,190 @@
+module(Toppar; Data;)
+
+! symmetry setup for symmetric oligomer
+! 1) sets up distance symmertry restraints 
+! 2) sets up packing restraints
+! 3) sets up non-crystallographic symmetry restraints
+! cite: Nilges, M. (1993) Proteins 
+!       O'Donoghue et al (1995) J Biomolec NMR
+!       O'Donoghue and Nilges (1999) 
+
+set message off echo off end
+coor select (not resn ani and not resn tip3) end
+evaluate ($Natoms = $select) 
+
+noe class symm end
+
+if (&Toppar.symmetry eq "2") then
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+elseif (&Toppar.symmetry eq "3") then
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_3)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_3) 
+    evaluate ($segid2 = &Toppar.prot_segid_1)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+elseif (&Toppar.symmetry eq "4") then
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_3)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_4)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_3) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_4) 
+    evaluate ($segid2 = &Toppar.prot_segid_1)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+elseif (&Toppar.symmetry eq "222") then
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_3) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_3)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_3)
+    evaluate ($segid4 = &Toppar.prot_segid_4)
+    @RUN:protocols/write_symnoe2.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    evaluate ($segid4 = &Toppar.prot_segid_4)
+    @RUN:protocols/write_symnoe2.cns
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    evaluate ($segid4 = &Toppar.prot_segid_3)
+    @RUN:protocols/write_symnoe2.cns
+elseif (&Toppar.symmetry eq "5") then
+    evaluate ($segid1 = &Toppar.prot_segid_1) 
+    evaluate ($segid2 = &Toppar.prot_segid_2)
+    evaluate ($segid3 = &Toppar.prot_segid_3)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_2) 
+    evaluate ($segid2 = &Toppar.prot_segid_3)
+    evaluate ($segid3 = &Toppar.prot_segid_4)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_3) 
+    evaluate ($segid2 = &Toppar.prot_segid_4)
+    evaluate ($segid3 = &Toppar.prot_segid_5)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_4) 
+    evaluate ($segid2 = &Toppar.prot_segid_5)
+    evaluate ($segid3 = &Toppar.prot_segid_1)
+    @RUN:protocols/write_symnoe.cns
+    evaluate ($segid1 = &Toppar.prot_segid_5) 
+    evaluate ($segid2 = &Toppar.prot_segid_1)
+    evaluate ($segid3 = &Toppar.prot_segid_2)
+    @RUN:protocols/write_symnoe.cns
+end if
+
+                                 
+
+noe
+  potential  symm symmetry
+  scale      symm 1.0
+  sqconstant symm 1.0
+  sqexponent symm 2
+  soexponent symm 1
+  rswitch    symm 0.5
+  sqoffset   symm 0.0
+  asymptote  symm 1.0
+end
+
+
+if (&Toppar.mononum gt 1) then
+
+
+ if (&data.packing.on = true) then
+
+  noe
+     class pack   
+     evaluate ($isegid = 0)
+     evaluate ($k_pack = &Data.packing_hot)
+     while ($isegid < &Toppar.mononum) loop pack
+        evaluate ($isegid = $isegid + 1)
+        assign (segid &Toppar.prot_segid_$isegid and name ca) 
+               (not segid &Toppar.prot_segid_$isegid and name ca) 1.0 1.0 0.0
+     end loop pack
+
+     potential  pack soft
+     average    pack cent    
+     scale      pack 50.0 
+     sqconstant pack 1.0
+     sqexponent pack 2
+     soexponent pack 1
+     rswitch    pack 1
+     asymptote  pack 2.0
+   end
+
+ end if
+
+ if (&data.ncs.on = true) then
+   evaluate( $k_ncs = &Data.ncs_k)
+   ncs restraints
+     initialize
+     group 
+        evaluate ($isegid = 1)
+        while ($isegid <= &Toppar.mononum) loop ncs
+           equi (segid &Toppar.prot_segid_$isegid)
+           evaluate ($isegid = $isegid + 1)
+        end loop ncs
+        weight = $k_ncs
+     end
+     ?
+   end
+ end if
+end if
+
+
+
+
+
+
+
+
+
+
+

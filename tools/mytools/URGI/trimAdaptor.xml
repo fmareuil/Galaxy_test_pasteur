@@ -1,0 +1,39 @@
+<tool id="trimAdaptor" name="trim adaptors">
+  <description>Remove the 3' adaptor of a list of reads.</description>
+  <command interpreter="python"> ../Java/Python/trimAdaptor.py -i $inputFile -f fastq
+  	-a $adaptor
+  	#if $OptionError.Error == "Yes":
+		-e $OptionError.ErrorVal
+	#end if	
+  	$noAdaptor $noAdaptorFile
+  	-o $outputFile  
+  </command>
+  
+  
+  <inputs>
+    <param name="inputFile" type="data" label="Input fastq File" format="fastq"/>
+	<param name="adaptor" type="text" value="None" label="adaptor [compulsory option]"/> 
+	<conditional name="OptionError">
+		<param name="Error" type="select" label="number of errors in percent">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="ErrorVal" type="integer" value="0" />
+		</when>
+		<when value="No">
+		</when>
+	</conditional>	
+	<param name="noAdaptor" type="boolean" truevalue="-n" falsevalue="" checked="false" label="log option" help="file name where to print sequences with no adaptor"/>
+  </inputs>
+
+  <outputs>
+    <data format="fastq" name="outputFile" label="[trimAdaptor] Output File"/>
+	<data name="noAdaptorFile" format="fastq" label="[trimAdaptor] Log File">
+		<filter>noAdaptor</filter>
+	</data>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

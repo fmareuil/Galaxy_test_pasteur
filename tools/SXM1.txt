@@ -1,0 +1,154 @@
+Usage: saxs_merge.py [options] file [file ...]
+
+Perform a statistical merge of the given SAXS curves  file is a 3-column file
+that contains SAXS data. To specify the number of repetitions of this
+experiment, use the syntax file.txt=20 indicating that datain file.txt is an
+average of 20 experiments. Default is 10. Note that in the case of different
+number of repetitions, the minimum is taken for the final fitting step (Step
+5).
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase verbosity. Can be repeated up to 3 times for
+                        more output.
+
+  general:
+    --mergename=SUFFIX  filename suffix for output (default is merged.dat)
+    --sumname=NAME      File to which the merge summary will be written.
+                        Default is summary.txt
+    --destdir=DIR       Destination folder in which files will be written
+    --header            First line of output files is a header (default False)
+    --outlevel=OUTLEVEL
+                        Set the output level, 'sparse' is for q,I,err columns
+                        only, 'normal' adds eorigin, eoriname and eextrapol
+                        (default), and 'full' outputs all flags.
+    --allfiles          Output data files for parsed input files as well
+                        (default is only to output merge and summary files).
+    --stop=STOP         stop after the given step, one of cleanup, fitting,
+                        rescaling, classification, merging (default: merging)
+    --postpone_cleanup  Cleanup step comes after rescaling step (default is
+                        False)
+    --npoints=NUM       Number of points to output for the mean function.
+                        Negative values signify to take the same q values as
+                        the first data file. In that case extrapolation flags
+                        are ignored, and extrapolation is performed when the
+                        data file's q values fall outside of the range of
+                        accepted data points. Default is NUM=200 points.
+    --lambdamin=MIN     lower bound for lambda parameter in steps 2 and 5
+
+  Cleanup (Step 1):
+    Discard or keep SAXS curves' points based on their SNR. Points with an
+    error of zero are discarded as well
+
+    --aalpha=ALPHA      type I error (default 1e-7)
+    --acutoff=CUT       when a value after CUT is discarded, the rest of the
+                        curve is discarded as well (default is 0.1)
+
+  Fitting (Step 2):
+    Estimate the mean function and the noise level of each SAXS curve.
+
+    --bd=D              Initial value for d (default 4)
+    --bs=S              Initial value for s (default 0)
+    --boptimize=BOPTIMIZE
+                        Which mean parameters are optimized. One of Flat (the
+                        offset parameter A is optimized), Simple (default,
+                        optimizes A, G and Rg), Generalized (optimizes G, Rg
+                        and d), Full (optimizes G, Rg, d and s)
+    --bcomp             Perform model comparison, which allows to choose a
+                        mean function that does not overfit the data. If
+                        --bcomp is given, --boptimize is taken to be the most
+                        complex model. Default: don't perform it.
+    --baverage          Average over all possible parameters instead of just
+                        taking the most probable set of parameters. Default is
+                        not to perform the averaging.
+    --blimit_fitting=NUM
+                        To save resources, set the maximum number of points
+                        used inthe fitting step. Dataset will be subsampled if
+                        it is bigger than NUM. If NUM=-1 (default), all points
+                        will be used.
+    --blimit_hessian=NUM
+                        To save resources, set the maximum number of points
+                        used in the Hessian calculation (options --baverage,
+                        --bcomp and --berror). Dataset will be subsampled if
+                        it is bigger than NUM. If NUM=-1 (default), all points
+                        will be used.
+    --berror            Compute error bars on all parameters even in case
+                        where model comparison was disabled. Involves the
+                        computation of a Hessian. Default: no extra
+                        computation.
+
+  Rescaling (Step 3):
+    Find the most probable scaling factor of all curves wrt the first
+    curve.
+
+    --creference=CREFERENCE
+                        Define which input curve the other curves will be
+                        rescaled to. Options are first or last (default is
+                        last)
+    --cmodel=CMODEL     Which rescaling model to use to calculate gamma.
+                        'normal-offset' (default) for a normal model with
+                        offset, 'normal' for a normal model with zero offset
+                        and 'lognormal' for a lognormal model.
+    --cnpoints=NUM      Number of points to use to compute gamma (default 200)
+
+  Classification (Step 4):
+    Classify the mean curves by comparing them using a two-sided two-
+    sample student t test
+
+    --dalpha=ALPHA      type I error (default 0.05)
+
+  Merging (Step 5):
+    Collect compatible data and produce best estimate of mean function
+
+    --eextrapolate=NUM  Extrapolate NUM percent outside of the curve's bounds.
+                        Example: if NUM=50 and the highest acceptable data
+                        point is at q=0.3, the mean will be estimated up to
+                        q=0.45. Default is 0 (just extrapolate at low angle).
+    --enoextrapolate    Don't extrapolate at all, even at low angle (default
+                        False)
+    --eoptimize=EOPTIMIZE
+                        Which mean parameters are optimized. See --boptimize.
+                        Default is Generalized
+    --ecomp             Perform model comparison, see --bcomp. Default is not
+                        to perform it.
+    --eaverage          Average over all possible parameters instead of just
+                        taking the most probable set of parameters. Default is
+                        not to perform the averaging.
+    --elimit_fitting=NUM
+                        To save resources, set the maximum number of points
+                        used inthe fitting step. Dataset will be subsampled if
+                        it is bigger than NUM. If NUM=-1 (default), all points
+                        will be used.
+    --elimit_hessian=NUM
+                        To save resources, set the maximum number of points
+                        used in the Hessian calculation (options --eaverage,
+                        --ecomp and --eerror). Dataset will be subsampled if
+                        it is bigger than NUM. If NUM=-1 (default), all points
+                        will be used.
+    --eerror            Compute error bars on all parameters even in case
+                        where model comparison was disabled. Involves the
+                        computation of a Hessian. Default: no extra
+                        computation.
+Output file legend:
+
+Cleanup
+    agood     (bool)   : True if SNR is high enough
+    apvalue   (float)  : p-value of the student t test
+Rescaling
+    cgood     (bool)   : True if data point is both valid (wrt SNR) and in the
+                         validity domain of the gamma reference curve (the last
+                         curve)
+Classification
+    drefnum   (int)    : number of the reference profile for this point
+    drefname  (string) : associated filename
+    dgood     (bool)   : True if this point is compatible with the reference and
+                         False otherwise. Undefined if 'agood' is False for that
+                         point.
+    dselfref  (bool)   : True if this curve was it's own reference, in which
+                         case dgood is also True
+    dpvalue   (float)  : p-value for the classification test
+Merging
+    eorigin   (int)    : profile index from which this point originates
+    eoriname  (string) : associated filename
+    eextrapol (bool)   : True if mean function is being extrapolated.

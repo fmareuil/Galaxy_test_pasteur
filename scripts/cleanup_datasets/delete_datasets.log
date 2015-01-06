@@ -1,0 +1,11 @@
+==== Log opened: 2013-10-30T14:12:00.110468 ============================
+==== Log closed: 2013-10-30T14:12:00.110899 ============================
+psycopg2 egg successfully loaded for postgres dialect
+##########################################
+
+# 2013-10-30 14:15:40 - Handling stuff older than 60 days
+Datasets will be removed from disk.
+
+Examined 0 datasets, marked 0 datasets and 0 dataset instances (HDA) as deleted
+Total elapsed time:  0.0108799934387
+##########################################

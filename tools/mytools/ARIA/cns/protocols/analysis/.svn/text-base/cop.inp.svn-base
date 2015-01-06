@@ -1,0 +1,249 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: cop.inp,v $
+
+! cop.inp
+! circular order parameter and ramachandran plot
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+!!!@SPECTRUM:spectrum.cns(spectrum=$spectrum;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+
+evaluate ($structurefile = "RUN:" + "begin/" + $filenames.structure)
+structure @@$structurefile end
+
+do (store1 = 0) (all)
+do (store2 = 0) (all)
+do (store3 = 0) (all)
+
+evaluate ($nstruc1 = 0)
+
+set display ANALYSIS:cop.disp end
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 1)
+evaluate ($TotalNstruct = 0)
+while ($count le $iterations.Assignstruct) loop main
+   evaluate ($file = $filenames.bestfile_$count)
+!   if ($file ne "") then
+      evaluate ($TotalNstruct = $TotalNstruct + 1)
+!   end if
+   evaluate ($count=$count+1)
+end loop main
+
+if ($Iterations.Assignstruct > $TotalNstruct) then
+  evaluate ($Iterations.Assignstruct = $TotalNstruct)
+end if
+
+
+evaluate ($count = 1)
+evaluate ($nstruc1 = 0)
+while ($count le $Iterations.Assignstruct) loop file
+   evaluate ($file = $filenames.bestfile_$count)
+   evaluate ($count = $count + 1)
+!   display $file
+   coor init end
+   if ($file ne "") then
+      coor @@$file
+      evaluate ($nstruc1 = $nstruc1 + 1)
+   end if
+
+   {* initialize atom numbers *}
+   evaluate ($N_atom_id = 0)             
+   evaluate ($atom_id = 0)   
+   
+   {* loop over all residues *}
+   for $C_atom_id in id ( name ca ) loop main
+      evaluate ($phi = 360)
+      evaluate ($psi = 360)
+	     
+      if ( $atom_id > 0 ) then
+         if ( $N_atom_id > 0 ) then
+	  
+	  pick  dihedral                                          
+	     ( byresidue ( id $N_atom_id ) and name C  )
+	     ( byresidue ( id $atom_id ) and name N  )
+	     ( byresidue ( id $atom_id ) and name CA  )
+	     ( byresidue ( id $atom_id ) and name C  )
+	  geometry
+	  evaluate ($phi=$result)
+	  
+	  do (store1 = store1 + sin($phi))
+	     (byres(id $atom_id) and name N)
+	  do (store2 = store2 + cos($phi))
+	     (byres(id $atom_id) and name N)
+	  do (store3 = store3 + 1)
+	     (byres(id $atom_id) and name N)
+	  
+         end if
+      
+      
+         if ( $C_atom_id > 0 ) then
+	  
+	  pick  dihedral                                          
+	     ( byresidue ( id $atom_id ) and name N  )
+	     ( byresidue ( id $atom_id ) and name CA  )
+	     ( byresidue ( id $atom_id ) and name C  )
+	     ( byresidue ( id $C_atom_id ) and name N  )
+	  geometry
+	  evaluate ($psi=$result)
+	  
+	  do (store1 = store1 + sin($psi)) 
+	     (byres(id $atom_id) and name C)
+	  do (store2 = store2 + cos($psi))
+	     (byres(id $atom_id) and name C)
+	  do (store3 = store3 + 1)
+	     (byres(id $atom_id) and name C)
+	  
+         end if
+      end if
+
+      evaluate ($N_atom_id = $atom_id) 
+      evaluate ($atom_id = $C_atom_id)
+   
+   end loop main
+
+   pick  dihedral                                          
+      ( byresidue ( id $N_atom_id ) and name C  )
+      ( byresidue ( id $atom_id ) and name N  )
+      ( byresidue ( id $atom_id ) and name CA  )
+      ( byresidue ( id $atom_id ) and name C  )
+   geometry
+   evaluate ($phi=$result)
+   
+   do (store1 = store1 + sin($phi))
+      (byres(id $atom_id) and name N)
+   do (store2 = store2 + cos($phi))
+      (byres(id $atom_id) and name N)
+   do (store3 = store3 + 1)
+      (byres(id $atom_id) and name N)
+
+   set message on echo on end
+end loop file
+
+
+
+do (store3 = max(store3, 1)) (all)
+do (store4 = sqrt((store1/store3)**2 + (store2/store3)**2)) (name N or name C)
+do (store5 = asin(store1 / store3)) (name C or name N)
+do (store6 = acos(store2 / store3)) (name C or name N)
+
+show element (store1) (name c or name n)
+show element (store2) (name c or name n)
+show element (store3) (name c or name n)
+show element (store4) (name c or name n)
+
+display #circular order parameter
+display #residue	phi	psi	avphi	avpsi
+for $id in id (tag) loop disp
+   show element (resid) (id $id)
+   evaluate ($resid = $result)
+   show element (store4) (byres(id $id) and name N)
+   evaluate ($phi = $result)
+   show element (store4) (byres(id $id) and name C)
+   evaluate ($psi = $result)
+   show element (store5) (byres(id $id) and name N)
+   evaluate ($avphi = $result)
+   show element (store6) (byres(id $id) and name C)
+   evaluate ($avpsi = $result)
+   display $resid	$phi	$psi	$avphi	$avpsi
+end loop disp
+
+
+set display ANALYSIS:ramachandran.disp end
+display #ramachandran plot
+display #reskey	result	phi	psi 
+
+evaluate ($count = 1)
+evaluate ($nstruc1 = 0)
+while ($count le $Iterations.Assignstruct) loop file
+   evaluate ($file = $filenames.bestfile_$count)
+   evaluate ($count = $count + 1)
+   display $file
+   coor init end
+   if ($file ne "") then
+      coor @@$file
+      evaluate ($nstruc1 = $nstruc1 + 1)
+   end if
+
+   {* initialize atom numbers *}
+   evaluate ($N_atom_id = 0)             
+   evaluate ($atom_id = 0)   
+   
+   {* loop over all residues *}
+   for $C_atom_id in id ( name ca ) loop main
+      evaluate ($phi = 360)
+      evaluate ($psi = 360)
+	     
+      if ( $atom_id > 0 ) then
+         show element ( resname ) 
+            ( byresidue ( id $atom_id ) and name ca ) 
+         evaluate ( $resname=$result ) 
+
+if ( $N_atom_id > 0 ) then	  
+	    pick  dihedral                                          
+		( byresidue ( id $N_atom_id ) and name C  )
+		( byresidue ( id $atom_id ) and name N  )
+		( byresidue ( id $atom_id ) and name CA  )
+		( byresidue ( id $atom_id ) and name C  )
+	    geometry
+	    evaluate ($phi=$result)
+	end if
+	if ( $C_atom_id > 0 ) then
+	    pick  dihedral                                          
+		( byresidue ( id $atom_id ) and name N  )
+		( byresidue ( id $atom_id ) and name CA  )
+		( byresidue ( id $atom_id ) and name C  )
+		( byresidue ( id $C_atom_id ) and name N  )
+	    geometry
+	    evaluate ($psi=$result)
+	end if
+
+        if ($resname eq "GLY") then
+           evaluate ($reskey = 0)
+        else
+           evaluate ($reskey = 1)
+        end if
+
+	show min ( store4 ) 
+	    ( byresidue ( id $atom_id ) and (name C or name N))
+        display $reskey	$result	$phi	$psi 
+      end if
+
+      evaluate ($N_atom_id = $atom_id) 
+      evaluate ($atom_id = $C_atom_id)
+   
+   end loop main
+   set message on echo on end
+end loop file
+
+stop

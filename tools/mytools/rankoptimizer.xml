@@ -1,0 +1,16 @@
+<tool id="rankoptimizer" name="rankoptimizer for ptaxoptimizer" version="2.3">
+  <description></description>
+  <command>rankoptimizer -i $input $output_type $output -u $u</command>
+  <inputs>
+    <param name="input" type="data" format="tabular" label="taxoptimizer output file (format: blast m8 OC taxonomy DE )"/>
+    <param name="output_type" type="select" label="Select your output format">
+            <option value="-k">xml krona format</option> 
+            <option value="-t">text representation</option>
+            <option value="-v" selected="True">html krona format</option>
+    </param>   
+    <param name="u" type="text" size="50" value="http://krona.sourceforge.net" label="url"/>
+  </inputs>
+  <outputs>
+    <data name="output" format="text" label="rankoptimizer output of $input.name"/>
+  </outputs>
+</tool>

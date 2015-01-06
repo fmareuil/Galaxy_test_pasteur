@@ -1,0 +1,122 @@
+<tool id="SelectByTag" name="select by tag">
+	<description>Keeps the genomic coordinates such that a value of a given tag.</description>
+	<command interpreter="python">
+		../Java/Python/SelectByTag.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if
+
+		-g $Tag
+		#if $OptionValue.Value == "Yes":
+			-a $OptionValue.valeur
+		#end if	
+		#if $OptionMax.maximum == "Yes":
+			-M $OptionMax.max
+		#end if		
+		#if $OptionMin.minimum == "Yes":
+			-m $OptionMin.min
+		#end if	
+
+		#if $OptionDefault.default == "Yes":
+			-d $OptionDefault.defaultValue
+		#end if	
+				
+		-o $outputFileGff 
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input File"/>
+			</when>
+		</conditional>
+
+		<param name="Tag" type="text" value="None" label="tag option" help="A given tag, you must choose a tag."/>
+				
+		<conditional name="OptionValue">
+			<param name="Value" type="select" label="value of tag">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="valeur" type="integer" value="1" help="Be Careful! The value must be upper than 0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="OptionMax">
+			<param name="maximum" type="select" label="maximum value of tag">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="max" type="integer" value="1" help="Be Careful! The value must be upper than 0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="OptionMin">
+			<param name="minimum" type="select" label="minimum value of tag">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="min" type="integer" value="1" help="Be Careful! The value must be upper than 0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+		
+		<conditional name="OptionDefault">
+			<param name="default" type="select" label="gives this value if tag is not present">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="defaultValue" type="float" value="0" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>		
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3" label="[SelectByTag] Output File"/>
+	</outputs> 
+	
+</tool>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks
+END
+DelTrailingSlash.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/DelTrailingSlash.py
+END
+QualityChecks.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/QualityChecks.py
+END
+RunProsa.py
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/RunProsa.py
+END
+ReadCheckDB.py
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/ReadCheckDB.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/__init__.py
+END
+Descriptive.py
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/Descriptive.py
+END
+RunProcheck.py
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/RunProcheck.py
+END
+RunWhatif.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/legacy/QualityChecks/RunWhatif.py
+END

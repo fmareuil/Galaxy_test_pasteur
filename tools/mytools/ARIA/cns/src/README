@@ -1,0 +1,47 @@
+This is version 1.1 of aria routines for CNS; 22-09-1999, 07-01-2000; 21-08-2001
+
+22-09-1999
+**********
+
+The following new features have been implemented over the CNS0.9 standard release:
+
+
+1) I have started to separate the internal data bases for the NOE routine and ARIA 
+2) a relaxation matrix correction for the target distances can be used
+3) a problem with the countvio exclude command has been fixed 
+4) a new "list" file format has been implemented, which allows for improved conversion of aria format to the original peak list format
+
+Some known problems:
+
+1) the noe_higher array is (intentionally) overwritten by the calibration
+2) the noe print statement does not work from within the simulated annealing protocol. 
+3) the relaxation matrix algorithm needs sometimes too much memory
+
+
+
+07-01-2000 
+**********
+fixes: 
+
+1) the print statement works again
+2) the memory allocation for the relaxation algorithm has been modified
+
+
+10-04-2000
+**********
+-use of compound parameters, obliterating two pages of parameters to be passed to run.cns
+
+-refinement with residual dipolar couplings (up to 5 classes), either
+with Tjandra's method (SANI statement in CNS) or Griesinger's method (VEAN
+statement)
+
+-relaxation matrix refinement for different spectra with different parameters (kind of useful)
+
+-improved analysis scripts (writing their output to
+ structures/it8/analysis and /structures/it8/water/analysis)
+
+-some documentation has been added to the ARIA homepage (installation,
+ dataformat, tutorial, etc.
+
+
+********************************************************************************

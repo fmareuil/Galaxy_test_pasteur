@@ -1,0 +1,265 @@
+<tool id="plotCoverage" name="plot coverage">
+	<description>Plot the coverage of the first data with respect to the second one.</description>
+	<command interpreter="python">
+		../Java/Python/WrappPlotCoverage.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+			
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+			-g gtf
+		#end if
+
+
+		#if $optionRef.Ref == 'Yes':
+			-q $optionRef.inputSequenceFile
+		#end if
+
+		#if $optionwidth.width == 'Yes':
+			-w $optionwidth.widthVal
+		#end if
+		#if $optionheight.height == 'Yes':
+			-e $optionheight.heightVal
+		#end if
+		#if $optionXlab.Xlab == 'Yes':
+			-x $optionXlab.XlabVal
+		#end if
+		#if $optionYlab.Ylab == 'Yes':
+			-y $optionYlab.YlabVal
+		#end if
+		#if $optiontitle.title == 'Yes':
+			-t $optiontitle.titleVal
+		#end if	
+	
+		#if $optionplusColor.plusColor == 'Yes':
+			-p $optionplusColor.plusColorVal
+		#end if
+		#if $optionminusColor.minusColor == 'Yes':
+			-m $optionminusColor.minusColorVal
+		#end if
+
+		#if $optionsumColor.sumColor == 'Yes':
+			-s $optionsumColor.sumColorVal
+		#end if
+		#if $optionlineColor.lineColor == 'Yes':
+			-l $optionlineColor.lineColorVal
+		#end if	
+
+		$merge
+		-o $outputFile
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File Format 1">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File 1"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File 1"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File 1"/>
+			</when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input File Format 2">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="gff2">sam</option>
+				<option value="gff3">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="Input File 2"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="Input File 2"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="Input File 2"/>
+			</when>
+		</conditional>
+
+		<conditional name="optionRef">
+			<param name="Ref" type="select" label="reference sequence file">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="inputSequenceFile" format="fasta" type="data" value="None"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		
+
+
+		<conditional name="optionwidth">
+			<param name="width" type="select" label="width of the plots (in px)">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="widthVal" type="integer" value="1500"  />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionheight">
+			<param name="height" type="select" label="height of the plots (in px)">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="heightVal" type="integer" value="1000" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optiontitle">
+			<param name="title" type="select" label="title of the plots ">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="titleVal" type="text" value=" " />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionXlab">
+			<param name="Xlab" type="select" label="label on the x-axis">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="XlabVal" type="text" value=" "/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionYlab">
+			<param name="Ylab" type="select" label="label on the y-axis">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="YlabVal" type="text" value=" " />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionplusColor">
+			<param name="plusColor" type="select" label="color for the elements on the plus strand">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="plusColorVal" type="text" value="red"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionminusColor">
+			<param name="minusColor" type="select" label="color for the elements on the minus strand">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="minusColorVal" type="text" value="blue"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionsumColor">
+			<param name="sumColor" type="select" label="color for 2 strands coverage line">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="sumColorVal" type="text" value="black"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionlineColor">
+			<param name="lineColor" type="select" label="color for the lines">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="lineColorVal" type="text" value="black"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<param name="merge" type="boolean" truevalue="-1" falsevalue="" checked="false" label="merge the 2 plots in 1"/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFile" format="tar" label="[plotCoverage] tar out file" help="You can not see the results directly from galaxy, but you can download this tar output file."/>
+	</outputs> 
+	
+    <help>
+        This script gives a .tar out file, if you want to take look at the results, you have to download it.
+    </help>		
+</tool>

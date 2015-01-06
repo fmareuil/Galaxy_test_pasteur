@@ -1,0 +1,31 @@
+<tool id="fqseqname" name="fqseqname" version="1.0">
+   <description>"List names of sequences from FASTQ formatted files"</description>
+   <stdio>
+        <exit_code range="0" level="warning" description="Information message" />
+        <exit_code range="1:" level="fatal" />
+   </stdio>
+   <command>fqseqname
+   $notextract -o $output 
+   #for $inp in $inputs
+       $inp.input
+   #end for
+   </command>
+   <inputs>
+       <repeat name="inputs" title="Input file" min="1">
+           <param name="input" type="data" format="fastqsolexa,fastqillumina,fastq" label="FASTQ file"/>
+       </repeat>
+       <param name="notextract" type="boolean" checked="no" truevalue="-p" falsevalue="" label="Do not extract the pair member information, if available."/>
+   </inputs>
+   <outputs>
+       <data name="output" format="lst"/>
+   </outputs>
+   <help>
+**Description:**
+
+fqseqname is a small tool designed to list names of sequences, from FASTQ formatted sequence files.
+       
+**Contact:**
+       
+*Nicolas Joly (njoly@pasteur.fr), Institut Pasteur.*
+   </help>
+</tool>

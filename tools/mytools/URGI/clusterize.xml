@@ -1,0 +1,67 @@
+<tool id="MergingDataClusterize" name="Clusterize">
+	<description>Clusterizes the reads when their genomic intervals overlap.</description>
+	<command interpreter="python">
+		../Java/Python/clusterize.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'csv':
+			-f csv
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#end if
+		-o $outputFileGff 
+		$colinear
+		$normalize
+		-d $distance
+		$log $outputFileLog
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="csv">csv</option>
+				<option value="sam">sam</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="csv">
+				<param name="inputFileName" format="csv" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+		</conditional>
+
+		<param name="colinear" type="boolean" truevalue="-c" falsevalue="" checked="false" label="colinear option" help="This option clusterizes only the same strand reads"/>
+		<param name="normalize" type="boolean" truevalue="-n" falsevalue="" checked="false" label="normalize option for only GFF3 file format" help="This option normalize (attention!! Only for GFF3 file!!!!!)"/>
+		<param name="log" type="boolean" truevalue="-l" falsevalue="" checked="false" label="log option" help="This option create a log file"/>
+		<param name="distance" type="integer" value="0" label="distance option" help="Limit the maximum distance between two reads"/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3" label="[clusterize]output file"/>
+		<data name="outputFileLog" format="txt" label="[clusterize]output file">
+			<filter>log</filter>
+		</data>
+	</outputs> 
+</tool>

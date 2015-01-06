@@ -1,0 +1,17 @@
+<tool id="strictlyIncludeGff" name="strictly include Gff">
+  <description>Prints the elements which are strictly included in the template.</description>
+  <command interpreter="perl"> ../bacteriaRegulatoryRegion_Detection/strictlyIncludeGff.pl -i $inputFile -t $template > $outputFile  
+  </command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="gff"/>
+    <param name="template" type="data" label="template File" format="gff"/>
+  </inputs>
+
+  <outputs>
+    <data format="gff3" name="outputFile" label="[strictlyIncludeGff] Output File"/>
+  </outputs>
+
+  <help>
+	command example: perl strictlyIncludeGff.pl -i toSelect.gff3 -t template.gff -o result.gff3
+  </help>
+</tool>

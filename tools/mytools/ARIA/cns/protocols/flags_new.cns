@@ -1,0 +1,108 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: flags_new.cns,v $
+
+module(Iteration; Data; )
+
+
+
+if (&Data.cdih.on eq true) then
+   evaluate (&Data.flags.cdih =  true)
+end if
+if (&Data.cdihcsi.on eq true) then
+   evaluate (&Data.flags.cdih =  true)
+end if
+if (&Data.cdihtalos.on eq true) then
+   evaluate (&Data.flags.cdih =  true)
+end if
+
+
+if     (&Data.c1_on eq true) then
+  evaluate (&Data.flags.coup =  true)
+elseif (&Data.c2_on eq true) then
+  evaluate (&Data.flags.coup =  true)
+elseif (&Data.c3_on eq true) then
+  evaluate (&Data.flags.coup =  true)
+elseif (&Data.c4_on eq true) then
+  evaluate (&Data.flags.coup =  true)
+elseif (&Data.c5_on eq true) then
+  evaluate (&Data.flags.coup =  true)
+end if
+
+if (&Data.rdc1_choice eq "SANI") then
+  evaluate (&Data.flags.sani = true)
+elseif (&Data.rdc2_choice eq "SANI") then
+  evaluate (&Data.flags.sani = true)
+elseif (&Data.rdc3_choice eq "SANI") then
+  evaluate (&Data.flags.sani = true)
+elseif (&Data.rdc4_choice eq "SANI") then
+  evaluate (&Data.flags.sani = true)
+elseif (&Data.rdc5_choice eq "SANI") then
+  evaluate (&Data.flags.sani = true)
+end if
+
+if (&Data.flags.sani eq TRUE) then
+  evaluate (&Data.flags.harm = true)
+end if
+
+if (&Data.rdc1_choice eq "VANGLE") then 
+  evaluate (&Data.flags.vean = true)
+end if
+if (&Data.rdc2_choice eq "VANGLE") then 
+  evaluate (&Data.flags.vean = true)
+end if
+if (&Data.rdc3_choice eq "VANGLE") then 
+  evaluate (&Data.flags.vean = true)
+end if
+if (&Data.rdc4_choice eq "VANGLE") then 
+  evaluate (&Data.flags.vean = true)
+end if
+if (&Data.rdc5_choice eq "VANGLE") then 
+  evaluate (&Data.flags.vean = true)
+end if
+
+flags exclude * end
+if (&Data.flags.bonds = TRUE) then
+   flags include bonds end
+end if
+if (&Data.flags.angle = TRUE) then
+   flags include angle end
+end if 
+if (&Data.flags.impro = TRUE) then
+   flags include improper end
+end if 
+if (&Data.flags.dihed = TRUE) then
+   flags include dihedrals end
+end if 
+if (&Data.flags.vdw   = TRUE) then
+   flags include vdw end
+end if 
+if (&Data.flags.elec  = TRUE) then
+   flags include elec end
+end if 
+
+if (&Data.flags.noe  =  TRUE) then
+   flags include noe end
+end if 
+if (&Data.flags.cdih =  TRUE) then
+   flags include cdih end
+end if 
+if (&Data.flags.coup =  TRUE) then
+   flags include coup end
+end if 
+if (&Data.flags.vean =  TRUE) then
+   flags include vean end
+end if 
+if (&Data.flags.sani =  TRUE) then
+   flags include sani end
+end if 
+if (&Data.flags.dani =  TRUE) then
+   flags include dani end
+end if 
+
+if (&Data.flags.plan =  TRUE) then
+   flags include plan end
+end if 
+if (&Data.flags.ncs  =  TRUE) then
+   flags include ncs end
+end if

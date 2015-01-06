@@ -1,0 +1,801 @@
+#!/usr/bin/env python						#!/usr/bin/env python
+"""								"""
+pgcleanup.py - A script for cleaning up datasets in Galaxy ef	pgcleanup.py - A script for cleaning up datasets in Galaxy ef
+    bypassing the Galaxy model and operating directly on the 	    bypassing the Galaxy model and operating directly on the 
+    PostgreSQL 9.1 or greater is required.			    PostgreSQL 9.1 or greater is required.
+"""								"""
+
+import os							import os
+import sys							import sys
+import shutil							import shutil
+import logging							import logging
+import inspect							import inspect
+import datetime							import datetime
+from ConfigParser import ConfigParser				from ConfigParser import ConfigParser
+from optparse import OptionParser				from optparse import OptionParser
+
+galaxy_root = os.path.abspath(os.path.join(os.path.dirname(__	galaxy_root = os.path.abspath(os.path.join(os.path.dirname(__
+sys.path.insert(0, os.path.join(galaxy_root, 'lib'))		sys.path.insert(0, os.path.join(galaxy_root, 'lib'))
+
+from galaxy import eggs						from galaxy import eggs
+eggs.require('psycopg2')					eggs.require('psycopg2')
+eggs.require('SQLAlchemy')					eggs.require('SQLAlchemy')
+import psycopg2							import psycopg2
+from sqlalchemy.engine.url import make_url			from sqlalchemy.engine.url import make_url
+
+import galaxy.config						import galaxy.config
+
+from galaxy.exceptions import ObjectNotFound			from galaxy.exceptions import ObjectNotFound
+from galaxy.objectstore import build_object_store_from_config	from galaxy.objectstore import build_object_store_from_config
+from galaxy.util.bunch import Bunch				from galaxy.util.bunch import Bunch
+
+log = logging.getLogger()					log = logging.getLogger()
+
+class MetadataFile(Bunch):					class MetadataFile(Bunch):
+    pass							    pass
+
+class Dataset(Bunch):						class Dataset(Bunch):
+    pass							    pass
+
+class Cleanup(object):						class Cleanup(object):
+    def __init__(self):						    def __init__(self):
+        self.options = None					        self.options = None
+        self.args = None					        self.args = None
+        self.config = None					        self.config = None
+        self.conn = None					        self.conn = None
+        self.action_names = []					        self.action_names = []
+        self.logs = {}						        self.logs = {}
+        self.disk_accounting_user_ids = []			        self.disk_accounting_user_ids = []
+        self.object_store = None				        self.object_store = None
+
+        self.__cache_action_names()				        self.__cache_action_names()
+        self.__parse_args()					        self.__parse_args()
+        self.__setup_logging()					        self.__setup_logging()
+        self.__load_config()					        self.__load_config()
+        self.__connect_db()					        self.__connect_db()
+        self.__load_object_store()				        self.__load_object_store()
+
+    def __cache_action_names(self):				    def __cache_action_names(self):
+        for name, value in inspect.getmembers(self):		        for name, value in inspect.getmembers(self):
+            if not name.startswith('_') and inspect.ismethod(	            if not name.startswith('_') and inspect.ismethod(
+                self.action_names.append(name)			                self.action_names.append(name)
+
+    def __parse_args(self):					    def __parse_args(self):
+        default_config = os.path.abspath(os.path.join(galaxy_	        default_config = os.path.abspath(os.path.join(galaxy_
+
+        parser = OptionParser()					        parser = OptionParser()
+        parser.add_option('-c', '--config', dest='config', he	        parser.add_option('-c', '--config', dest='config', he
+        parser.add_option('-d', '--debug', action='store_true	        parser.add_option('-d', '--debug', action='store_true
+        parser.add_option('--dry-run', action='store_true', d	        parser.add_option('--dry-run', action='store_true', d
+        parser.add_option('--force-retry', action='store_true	        parser.add_option('--force-retry', action='store_true
+        parser.add_option('-o', '--older-than', type='int', d	        parser.add_option('-o', '--older-than', type='int', d
+        parser.add_option('-U', '--no-update-time', action='s	        parser.add_option('-U', '--no-update-time', action='s
+        parser.add_option('-s', '--sequence', dest='sequence'	        parser.add_option('-s', '--sequence', dest='sequence'
+							      >	        parser.add_option('-u', '--user', dest='user', help='
+        parser.add_option('-w', '--work-mem', dest='work_mem'	        parser.add_option('-w', '--work-mem', dest='work_mem'
+        ( self.options, self.args ) = parser.parse_args()	        ( self.options, self.args ) = parser.parse_args()
+
+        self.options.sequence = [ x.strip() for x in self.opt	        self.options.sequence = [ x.strip() for x in self.opt
+
+        if self.options.sequence == ['']:			        if self.options.sequence == ['']:
+            print "Error: At least one action must be specifi	            print "Error: At least one action must be specifi
+            parser.print_help()					            parser.print_help()
+            sys.exit(0)						            sys.exit(0)
+
+    def __setup_logging(self):					    def __setup_logging(self):
+        format = "%(funcName)s %(levelname)s %(asctime)s %(me	        format = "%(funcName)s %(levelname)s %(asctime)s %(me
+        if self.options.debug:					        if self.options.debug:
+            logging.basicConfig(level=logging.DEBUG, format=f	            logging.basicConfig(level=logging.DEBUG, format=f
+        else:							        else:
+            logging.basicConfig(level=logging.INFO, format=fo	            logging.basicConfig(level=logging.INFO, format=fo
+
+    def __load_config(self):					    def __load_config(self):
+        log.info('Reading config from %s' % self.options.conf	        log.info('Reading config from %s' % self.options.conf
+        config_parser = ConfigParser(dict(here = os.getcwd(),	        config_parser = ConfigParser(dict(here = os.getcwd(),
+                                          database_connection	                                          database_connection
+        config_parser.read(self.options.config)			        config_parser.read(self.options.config)
+
+        config_dict = {}					        config_dict = {}
+        for key, value in config_parser.items('app:main'):	        for key, value in config_parser.items('app:main'):
+            config_dict[key] = value				            config_dict[key] = value
+        config_dict['root_dir'] = galaxy_root			        config_dict['root_dir'] = galaxy_root
+
+        self.config = galaxy.config.Configuration(**config_di	        self.config = galaxy.config.Configuration(**config_di
+
+    def __connect_db(self):					    def __connect_db(self):
+        url = make_url(self.config.database_connection)		        url = make_url(self.config.database_connection)
+
+        log.info('Connecting to database with URL: %s' % url)	        log.info('Connecting to database with URL: %s' % url)
+        args = url.translate_connect_args()			        args = url.translate_connect_args()
+        args.update(url.query)					        args.update(url.query)
+							      >	##MAREUIL
+							      >	        args['user'] = args['username']
+							      >	        del(args['username'])
+							      >	##MAREUIL
+
+        assert url.get_dialect().name == 'postgresql', 'This 	        assert url.get_dialect().name == 'postgresql', 'This 
+
+        self.conn = psycopg2.connect(**args)			        self.conn = psycopg2.connect(**args)
+
+    def __load_object_store(self):				    def __load_object_store(self):
+        self.object_store = build_object_store_from_config(se	        self.object_store = build_object_store_from_config(se
+
+    def _open_logfile(self):					    def _open_logfile(self):
+        action_name = inspect.stack()[1][3]			        action_name = inspect.stack()[1][3]
+        logname = os.path.join(galaxy_root, 'scripts', 'clean	        logname = os.path.join(galaxy_root, 'scripts', 'clean
+
+        if self.options.dry_run:				        if self.options.dry_run:
+            log.debug('--dry-run specified, logging changes t	            log.debug('--dry-run specified, logging changes t
+            self.logs[action_name] = sys.stdout			            self.logs[action_name] = sys.stdout
+        else:							        else:
+            log.debug('Opening log file: %s' % logname)		            log.debug('Opening log file: %s' % logname)
+            self.logs[action_name] = open(logname, 'a')		            self.logs[action_name] = open(logname, 'a')
+
+        message = '==== Log opened: %s ' % datetime.datetime.	        message = '==== Log opened: %s ' % datetime.datetime.
+        self.logs[action_name].write(message.ljust(72, '='))	        self.logs[action_name].write(message.ljust(72, '='))
+        self.logs[action_name].write('\n')			        self.logs[action_name].write('\n')
+
+    def _log(self, message, action_name=None):			    def _log(self, message, action_name=None):
+        if action_name is None:					        if action_name is None:
+            action_name = inspect.stack()[1][3]			            action_name = inspect.stack()[1][3]
+        if not message.endswith('\n'):				        if not message.endswith('\n'):
+            message += '\n'					            message += '\n'
+        self.logs[action_name].write(message)			        self.logs[action_name].write(message)
+
+    def _close_logfile(self):					    def _close_logfile(self):
+        action_name = inspect.stack()[1][3]			        action_name = inspect.stack()[1][3]
+
+        message = '==== Log closed: %s ' % datetime.datetime.	        message = '==== Log closed: %s ' % datetime.datetime.
+        self.logs[action_name].write(message.ljust(72, '='))	        self.logs[action_name].write(message.ljust(72, '='))
+        self.logs[action_name].write('\n')			        self.logs[action_name].write('\n')
+
+        if self.options.dry_run:				        if self.options.dry_run:
+            log.debug('--dry-run specified, changes were logg	            log.debug('--dry-run specified, changes were logg
+        else:							        else:
+            log.debug('Closing log file: %s' % self.logs[acti	            log.debug('Closing log file: %s' % self.logs[acti
+            self.logs[action_name].close()			            self.logs[action_name].close()
+
+        del self.logs[action_name]				        del self.logs[action_name]
+
+    def _run(self):						    def _run(self):
+        ok = True						        ok = True
+        for name in self.options.sequence:			        for name in self.options.sequence:
+            if name not in self.action_names:			            if name not in self.action_names:
+                log.error('Unknown action in sequence: %s' % 	                log.error('Unknown action in sequence: %s' % 
+                ok = False					                ok = False
+        if not ok:						        if not ok:
+            log.critical('Exiting due to previous error(s)')	            log.critical('Exiting due to previous error(s)')
+            sys.exit(1)						            sys.exit(1)
+        for name in self.options.sequence:			        for name in self.options.sequence:
+            log.info('Calling %s' % name)			            log.info('Calling %s' % name)
+            self.__getattribute__(name)()			            self.__getattribute__(name)()
+            log.info('Finished %s' % name)			            log.info('Finished %s' % name)
+
+    def _create_event(self, message=None):			    def _create_event(self, message=None):
+        """							        """
+        Create a new event in the cleanup_event table.		        Create a new event in the cleanup_event table.
+        """							        """
+
+        if message is None:					        if message is None:
+            message = inspect.stack()[1][3]			            message = inspect.stack()[1][3]
+
+        sql = """						        sql = """
+            INSERT INTO cleanup_event				            INSERT INTO cleanup_event
+                        (create_time, message)			                        (create_time, message)
+                 VALUES (NOW(), %s)				                 VALUES (NOW(), %s)
+              RETURNING id;					              RETURNING id;
+        """							        """
+
+        log.debug("SQL is: %s" % sql % ("'" + message + "'"))	        log.debug("SQL is: %s" % sql % ("'" + message + "'"))
+
+        args = (message,)					        args = (message,)
+
+        cur = self.conn.cursor()				        cur = self.conn.cursor()
+
+        if self.options.dry_run:				        if self.options.dry_run:
+            sql = "SELECT MAX(id) FROM cleanup_event;"		            sql = "SELECT MAX(id) FROM cleanup_event;"
+            cur.execute(sql)					            cur.execute(sql)
+            max_id = cur.fetchone()[0]				            max_id = cur.fetchone()[0]
+            if max_id is None:					            if max_id is None:
+                # there has to be at least one event in the t	                # there has to be at least one event in the t
+                sql = "INSERT INTO cleanup_event (create_time	                sql = "INSERT INTO cleanup_event (create_time
+                cur.execute(sql)				                cur.execute(sql)
+                max_id = cur.fetchone()[0]			                max_id = cur.fetchone()[0]
+                self.conn.commit()				                self.conn.commit()
+                log.info("An event must exist for the subsequ	                log.info("An event must exist for the subsequ
+            else:						            else:
+                log.info("Not executing event creation (incre	                log.info("Not executing event creation (incre
+            return max_id					            return max_id
+
+        log.info("Executing SQL")				        log.info("Executing SQL")
+        cur.execute(sql, args)					        cur.execute(sql, args)
+        log.info('Database status: %s' % cur.statusmessage)	        log.info('Database status: %s' % cur.statusmessage)
+
+        return cur.fetchone()[0]				        return cur.fetchone()[0]
+
+    def _update(self, sql, args):				    def _update(self, sql, args):
+        if args is not None:					        if args is not None:
+            log.debug('SQL is: %s' % sql % args)		            log.debug('SQL is: %s' % sql % args)
+        else:							        else:
+            log.debug('SQL is: %s' % sql)			            log.debug('SQL is: %s' % sql)
+
+        cur = self.conn.cursor()				        cur = self.conn.cursor()
+
+        if self.options.work_mem is not None:			        if self.options.work_mem is not None:
+            log.info('Setting work_mem to %s' % self.options.	            log.info('Setting work_mem to %s' % self.options.
+            cur.execute('SET work_mem TO %s', (self.options.w	            cur.execute('SET work_mem TO %s', (self.options.w
+
+        log.info('Executing SQL')				        log.info('Executing SQL')
+        cur.execute(sql, args)					        cur.execute(sql, args)
+        log.info('Database status: %s' % cur.statusmessage)	        log.info('Database status: %s' % cur.statusmessage)
+
+        return cur						        return cur
+
+    def _flush(self):						    def _flush(self):
+        if self.options.dry_run:				        if self.options.dry_run:
+            self.conn.rollback()				            self.conn.rollback()
+            log.info("--dry-run specified, all changes rolled	            log.info("--dry-run specified, all changes rolled
+        else:							        else:
+            self.conn.commit()					            self.conn.commit()
+            log.info("All changes committed")			            log.info("All changes committed")
+
+    def _remove_metadata_file(self, id, object_store_id, acti	    def _remove_metadata_file(self, id, object_store_id, acti
+        metadata_file = MetadataFile(id=id, object_store_id=o	        metadata_file = MetadataFile(id=id, object_store_id=o
+
+        try:							        try:
+            filename = self.object_store.get_filename(metadat	            filename = self.object_store.get_filename(metadat
+            self._log('Removing from disk: %s' % filename, ac	            self._log('Removing from disk: %s' % filename, ac
+        except (ObjectNotFound, AttributeError), e:		        except (ObjectNotFound, AttributeError), e:
+            log.error('Unable to get MetadataFile %s filename	            log.error('Unable to get MetadataFile %s filename
+            return						            return
+
+        if not self.options.dry_run:				        if not self.options.dry_run:
+            try:						            try:
+                os.unlink(filename)				                os.unlink(filename)
+            except Exception, e:				            except Exception, e:
+                self._log('Removal of %s failed with error: %	                self._log('Removal of %s failed with error: %
+
+    def _update_user_disk_usage(self):				    def _update_user_disk_usage(self):
+        """							        """
+        Any operation that purges a HistoryDatasetAssociation	        Any operation that purges a HistoryDatasetAssociation
+        updating a user's disk usage.  Rather than attempt to	        updating a user's disk usage.  Rather than attempt to
+        copies at purge-time, simply maintain a list of users	        copies at purge-time, simply maintain a list of users
+        HDAs purged, and update their usages once all updates	        HDAs purged, and update their usages once all updates
+
+        This could probably be done more efficiently.		        This could probably be done more efficiently.
+        """							        """
+        log.info('Recalculating disk usage for users whose Hi	        log.info('Recalculating disk usage for users whose Hi
+
+        for user_id in self.disk_accounting_user_ids:		        for user_id in self.disk_accounting_user_ids:
+
+            # TODO: h.purged = false should be unnecessary on	            # TODO: h.purged = false should be unnecessary on
+            sql = """						            sql = """
+                   UPDATE galaxy_user				                   UPDATE galaxy_user
+                      SET disk_usage = (SELECT COALESCE(SUM(t	                      SET disk_usage = (SELECT COALESCE(SUM(t
+                                          FROM (  SELECT d.to	                                          FROM (  SELECT d.to
+                                                    FROM hist	                                                    FROM hist
+                                                         JOIN	                                                         JOIN
+                                                         JOIN	                                                         JOIN
+                                                   WHERE h.us	                                                   WHERE h.us
+                                                         AND 	                                                         AND 
+                                                         AND 	                                                         AND 
+                                                         AND 	                                                         AND 
+                                                         AND 	                                                         AND 
+                                                             	                                                             
+                                                GROUP BY d.id	                                                GROUP BY d.id
+                    WHERE id = %s				                    WHERE id = %s
+                RETURNING disk_usage;				                RETURNING disk_usage;
+            """							            """
+
+            args = (user_id, user_id)				            args = (user_id, user_id)
+            cur = self._update(sql, args)			            cur = self._update(sql, args)
+            self._flush()					            self._flush()
+
+            for tup in cur:					            for tup in cur:
+                # disk_usage might be None (e.g. user has pur	                # disk_usage might be None (e.g. user has pur
+                log.debug('Updated disk usage for user id %i 	                log.debug('Updated disk usage for user id %i 
+
+    def _shutdown(self):					    def _shutdown(self):
+        self.object_store.shutdown()				        self.object_store.shutdown()
+        self.conn.close()					        self.conn.close()
+        for handle in self.logs.values():			        for handle in self.logs.values():
+            message = '==== Log closed at shutdown: %s ' % da	            message = '==== Log closed at shutdown: %s ' % da
+            handle.write(message.ljust(72, '='))		            handle.write(message.ljust(72, '='))
+            handle.write('\n')					            handle.write('\n')
+            handle.close()					            handle.close()
+
+    def update_hda_purged_flag(self):				    def update_hda_purged_flag(self):
+        """							        """
+        The old cleanup script does not mark HistoryDatasetAs	        The old cleanup script does not mark HistoryDatasetAs
+        """							        """
+        log.info('Marking purged all HistoryDatasetAssociatio	        log.info('Marking purged all HistoryDatasetAssociatio
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        # update_time is intentionally left unmodified.		        # update_time is intentionally left unmodified.
+        sql = """						        sql = """
+                WITH purged_hda_ids				                WITH purged_hda_ids
+                  AS (     UPDATE history_dataset_association	                  AS (     UPDATE history_dataset_association
+                              SET purged = true			                              SET purged = true
+                             FROM dataset			                             FROM dataset
+                            WHERE history_dataset_association	                            WHERE history_dataset_association
+                                  AND dataset.purged		                                  AND dataset.purged
+                                  AND NOT history_dataset_ass	                                  AND NOT history_dataset_ass
+                        RETURNING history_dataset_association	                        RETURNING history_dataset_association
+                     hda_events					                     hda_events
+                  AS (INSERT INTO cleanup_event_hda_associati	                  AS (INSERT INTO cleanup_event_hda_associati
+                                  (create_time, cleanup_event	                                  (create_time, cleanup_event
+                           SELECT NOW(), %s, id			                           SELECT NOW(), %s, id
+                             FROM purged_hda_ids)		                             FROM purged_hda_ids)
+              SELECT id						              SELECT id
+                FROM purged_hda_ids				                FROM purged_hda_ids
+            ORDER BY id;					            ORDER BY id;
+        """							        """
+
+        args = (event_id,)					        args = (event_id,)
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked HistoryDatasetAssociation purge	            self._log('Marked HistoryDatasetAssociation purge
+        self._close_logfile()					        self._close_logfile()
+
+    def delete_userless_histories(self):			    def delete_userless_histories(self):
+        """							        """
+        Mark deleted all "anonymous" Histories (not owned by 	        Mark deleted all "anonymous" Histories (not owned by 
+        """							        """
+        log.info('Marking deleted all userless Histories olde	        log.info('Marking deleted all userless Histories olde
+        							        
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+                WITH deleted_history_ids			                WITH deleted_history_ids
+                  AS (     UPDATE history			                  AS (     UPDATE history
+                              SET deleted = true%s		                              SET deleted = true%s
+                            WHERE user_id is null		                            WHERE user_id is null
+                                  AND NOT deleted		                                  AND NOT deleted
+                                  AND update_time < (NOW() - 	                                  AND update_time < (NOW() - 
+                        RETURNING id),				                        RETURNING id),
+                     history_events				                     history_events
+                  AS (INSERT INTO cleanup_event_history_assoc	                  AS (INSERT INTO cleanup_event_history_assoc
+                                  (create_time, cleanup_event	                                  (create_time, cleanup_event
+                           SELECT NOW(), %s, id			                           SELECT NOW(), %s, id
+                             FROM deleted_history_ids)		                             FROM deleted_history_ids)
+              SELECT id						              SELECT id
+                FROM deleted_history_ids			                FROM deleted_history_ids
+            ORDER BY id;					            ORDER BY id;
+        """							        """
+
+        update_time_sql = ''					        update_time_sql = ''
+        if self.options.update_time:				        if self.options.update_time:
+            update_time_sql = """,				            update_time_sql = """,
+                                  update_time = NOW()"""	                                  update_time = NOW()"""
+
+        sql = sql % (update_time_sql, '%s', '%s')		        sql = sql % (update_time_sql, '%s', '%s')
+        args = (self.options.days, event_id)			        args = (self.options.days, event_id)
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked userless History deleted: %s' %	            self._log('Marked userless History deleted: %s' %
+        self._close_logfile()					        self._close_logfile()
+
+    def purge_deleted_hdas(self):				    def purge_deleted_hdas(self):
+        """							        """
+        Mark purged all HistoryDatasetAssociations currently 	        Mark purged all HistoryDatasetAssociations currently 
+        Mark deleted all MetadataFiles whose hda_id is purged	        Mark deleted all MetadataFiles whose hda_id is purged
+        Mark deleted all ImplicitlyConvertedDatasetAssociatio	        Mark deleted all ImplicitlyConvertedDatasetAssociatio
+        Mark purged all HistoryDatasetAssociations for which 	        Mark purged all HistoryDatasetAssociations for which 
+        """							        """
+        log.info('Marking purged all deleted HistoryDatasetAs	        log.info('Marking purged all deleted HistoryDatasetAs
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+              WITH purged_hda_ids				              WITH purged_hda_ids
+                AS (     UPDATE history_dataset_association	                AS (     UPDATE history_dataset_association
+                            SET purged = true%s			                            SET purged = true%s
+                          WHERE deleted%s			                          WHERE deleted%s
+                                AND update_time < (NOW() - in	                                AND update_time < (NOW() - in
+                      RETURNING id,				                      RETURNING id,
+                                history_id),			                                history_id),
+                   deleted_metadata_file_ids			                   deleted_metadata_file_ids
+                AS (     UPDATE metadata_file			                AS (     UPDATE metadata_file
+                            SET deleted = true%s		                            SET deleted = true%s
+                           FROM purged_hda_ids			                           FROM purged_hda_ids
+                          WHERE purged_hda_ids.id = metadata_	                          WHERE purged_hda_ids.id = metadata_
+                      RETURNING metadata_file.hda_id AS hda_i	                      RETURNING metadata_file.hda_id AS hda_i
+                                metadata_file.id AS id,		                                metadata_file.id AS id,
+                                metadata_file.object_store_id	                                metadata_file.object_store_id
+                   deleted_icda_ids				                   deleted_icda_ids
+                AS (     UPDATE implicitly_converted_dataset_	                AS (     UPDATE implicitly_converted_dataset_
+                            SET deleted = true%s		                            SET deleted = true%s
+                           FROM purged_hda_ids			                           FROM purged_hda_ids
+                          WHERE purged_hda_ids.id = implicitl	                          WHERE purged_hda_ids.id = implicitl
+                      RETURNING implicitly_converted_dataset_	                      RETURNING implicitly_converted_dataset_
+                                implicitly_converted_dataset_	                                implicitly_converted_dataset_
+                                implicitly_converted_dataset_	                                implicitly_converted_dataset_
+                   deleted_icda_purged_child_hda_ids		                   deleted_icda_purged_child_hda_ids
+                AS (     UPDATE history_dataset_association	                AS (     UPDATE history_dataset_association
+                            SET purged = true%s			                            SET purged = true%s
+                           FROM deleted_icda_ids		                           FROM deleted_icda_ids
+                          WHERE deleted_icda_ids.hda_id = his	                          WHERE deleted_icda_ids.hda_id = his
+                   hda_events					                   hda_events
+                AS (INSERT INTO cleanup_event_hda_association	                AS (INSERT INTO cleanup_event_hda_association
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM purged_hda_ids),		                           FROM purged_hda_ids),
+                   metadata_file_events				                   metadata_file_events
+                AS (INSERT INTO cleanup_event_metadata_file_a	                AS (INSERT INTO cleanup_event_metadata_file_a
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM deleted_metadata_file_ids),	                           FROM deleted_metadata_file_ids),
+                   icda_events					                   icda_events
+                AS (INSERT INTO cleanup_event_icda_associatio	                AS (INSERT INTO cleanup_event_icda_associatio
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM deleted_icda_ids),		                           FROM deleted_icda_ids),
+                   icda_hda_events				                   icda_hda_events
+                AS (INSERT INTO cleanup_event_hda_association	                AS (INSERT INTO cleanup_event_hda_association
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, hda_id		                         SELECT NOW(), %s, hda_id
+                           FROM deleted_icda_ids)		                           FROM deleted_icda_ids)
+            SELECT purged_hda_ids.id,				            SELECT purged_hda_ids.id,
+                   history.user_id,				                   history.user_id,
+                   deleted_metadata_file_ids.id,		                   deleted_metadata_file_ids.id,
+                   deleted_metadata_file_ids.object_store_id,	                   deleted_metadata_file_ids.object_store_id,
+                   deleted_icda_ids.id,				                   deleted_icda_ids.id,
+                   deleted_icda_ids.hda_id			                   deleted_icda_ids.hda_id
+              FROM purged_hda_ids				              FROM purged_hda_ids
+                   LEFT OUTER JOIN deleted_metadata_file_ids	                   LEFT OUTER JOIN deleted_metadata_file_ids
+                                   ON deleted_metadata_file_i	                                   ON deleted_metadata_file_i
+                   LEFT OUTER JOIN deleted_icda_ids		                   LEFT OUTER JOIN deleted_icda_ids
+                                   ON deleted_icda_ids.hda_pa	                                   ON deleted_icda_ids.hda_pa
+                   LEFT OUTER JOIN history			                   LEFT OUTER JOIN history
+                                   ON purged_hda_ids.history_	                                   ON purged_hda_ids.history_
+        """							        """
+
+        force_retry_sql = """					        force_retry_sql = """
+                                AND NOT purged"""		                                AND NOT purged"""
+        update_time_sql = ""					        update_time_sql = ""
+
+        if self.options.force_retry:				        if self.options.force_retry:
+            force_retry_sql = ""				            force_retry_sql = ""
+        else:							        else:
+            # only update time if not doing force retry (othe	            # only update time if not doing force retry (othe
+            if self.options.update_time:			            if self.options.update_time:
+                update_time_sql = """,				                update_time_sql = """,
+                              update_time = NOW()"""		                              update_time = NOW()"""
+
+        sql = sql % (update_time_sql, force_retry_sql, '%s', 	        sql = sql % (update_time_sql, force_retry_sql, '%s', 
+        args = (self.options.days, event_id, event_id, event_	        args = (self.options.days, event_id, event_id, event_
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked HistoryDatasetAssociations purg	            self._log('Marked HistoryDatasetAssociations purg
+            if tup[1] is not None and tup[1] not in self.disk	            if tup[1] is not None and tup[1] not in self.disk
+                self.disk_accounting_user_ids.append(int(tup[	                self.disk_accounting_user_ids.append(int(tup[
+            if tup[2] is not None:				            if tup[2] is not None:
+                self._log('Purge of HDA %s caused deletion of	                self._log('Purge of HDA %s caused deletion of
+                self._remove_metadata_file(tup[2], tup[3], in	                self._remove_metadata_file(tup[2], tup[3], in
+            if tup[4] is not None:				            if tup[4] is not None:
+                self._log('Purge of HDA %s caused deletion of	                self._log('Purge of HDA %s caused deletion of
+        self._close_logfile()					        self._close_logfile()
+
+    def purge_deleted_histories(self):				    def purge_deleted_histories(self):
+        """							        """
+        Mark purged all Histories marked deleted that are old	        Mark purged all Histories marked deleted that are old
+        Mark purged all HistoryDatasetAssociations in Histori	        Mark purged all HistoryDatasetAssociations in Histori
+        """							        """
+        log.info('Marking purged all deleted histories that a	        log.info('Marking purged all deleted histories that a
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+              WITH purged_history_ids				              WITH purged_history_ids
+                AS (     UPDATE history				                AS (     UPDATE history
+                            SET purged = true%s			                            SET purged = true%s
+                          WHERE deleted%s			                          WHERE deleted%s
+                                AND update_time < (NOW() - in	                                AND update_time < (NOW() - in
+                      RETURNING id,				                      RETURNING id,
+                                user_id),			                                user_id),
+                   purged_hda_ids				                   purged_hda_ids
+                AS (     UPDATE history_dataset_association	                AS (     UPDATE history_dataset_association
+                            SET purged = true%s			                            SET purged = true%s
+                           FROM purged_history_ids		                           FROM purged_history_ids
+                          WHERE purged_history_ids.id = histo	                          WHERE purged_history_ids.id = histo
+                                AND NOT history_dataset_assoc	                                AND NOT history_dataset_assoc
+                      RETURNING history_dataset_association.h	                      RETURNING history_dataset_association.h
+                                history_dataset_association.i	                                history_dataset_association.i
+                   deleted_metadata_file_ids			                   deleted_metadata_file_ids
+                AS (     UPDATE metadata_file			                AS (     UPDATE metadata_file
+                            SET deleted = true%s		                            SET deleted = true%s
+                           FROM purged_hda_ids			                           FROM purged_hda_ids
+                          WHERE purged_hda_ids.id = metadata_	                          WHERE purged_hda_ids.id = metadata_
+                      RETURNING metadata_file.hda_id AS hda_i	                      RETURNING metadata_file.hda_id AS hda_i
+                                metadata_file.id AS id,		                                metadata_file.id AS id,
+                                metadata_file.object_store_id	                                metadata_file.object_store_id
+                   deleted_icda_ids				                   deleted_icda_ids
+                AS (     UPDATE implicitly_converted_dataset_	                AS (     UPDATE implicitly_converted_dataset_
+                            SET deleted = true%s		                            SET deleted = true%s
+                           FROM purged_hda_ids			                           FROM purged_hda_ids
+                          WHERE purged_hda_ids.id = implicitl	                          WHERE purged_hda_ids.id = implicitl
+                      RETURNING implicitly_converted_dataset_	                      RETURNING implicitly_converted_dataset_
+                                implicitly_converted_dataset_	                                implicitly_converted_dataset_
+                                implicitly_converted_dataset_	                                implicitly_converted_dataset_
+                   deleted_icda_purged_child_hda_ids		                   deleted_icda_purged_child_hda_ids
+                AS (     UPDATE history_dataset_association	                AS (     UPDATE history_dataset_association
+                            SET purged = true%s			                            SET purged = true%s
+                           FROM deleted_icda_ids		                           FROM deleted_icda_ids
+                          WHERE deleted_icda_ids.hda_id = his	                          WHERE deleted_icda_ids.hda_id = his
+                   history_events				                   history_events
+                AS (INSERT INTO cleanup_event_history_associa	                AS (INSERT INTO cleanup_event_history_associa
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM purged_history_ids),		                           FROM purged_history_ids),
+                   hda_events					                   hda_events
+                AS (INSERT INTO cleanup_event_hda_association	                AS (INSERT INTO cleanup_event_hda_association
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM purged_hda_ids),		                           FROM purged_hda_ids),
+                   metadata_file_events				                   metadata_file_events
+                AS (INSERT INTO cleanup_event_metadata_file_a	                AS (INSERT INTO cleanup_event_metadata_file_a
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM deleted_metadata_file_ids),	                           FROM deleted_metadata_file_ids),
+                   icda_events					                   icda_events
+                AS (INSERT INTO cleanup_event_icda_associatio	                AS (INSERT INTO cleanup_event_icda_associatio
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, id			                         SELECT NOW(), %s, id
+                           FROM deleted_icda_ids),		                           FROM deleted_icda_ids),
+                   icda_hda_events				                   icda_hda_events
+                AS (INSERT INTO cleanup_event_hda_association	                AS (INSERT INTO cleanup_event_hda_association
+                                (create_time, cleanup_event_i	                                (create_time, cleanup_event_i
+                         SELECT NOW(), %s, hda_id		                         SELECT NOW(), %s, hda_id
+                           FROM deleted_icda_ids)		                           FROM deleted_icda_ids)
+            SELECT purged_history_ids.id,			            SELECT purged_history_ids.id,
+                   purged_history_ids.user_id,			                   purged_history_ids.user_id,
+                   purged_hda_ids.id,				                   purged_hda_ids.id,
+                   deleted_metadata_file_ids.id,		                   deleted_metadata_file_ids.id,
+                   deleted_metadata_file_ids.object_store_id,	                   deleted_metadata_file_ids.object_store_id,
+                   deleted_icda_ids.id,				                   deleted_icda_ids.id,
+                   deleted_icda_ids.hda_id			                   deleted_icda_ids.hda_id
+              FROM purged_history_ids				              FROM purged_history_ids
+                   LEFT OUTER JOIN purged_hda_ids		                   LEFT OUTER JOIN purged_hda_ids
+                                   ON purged_history_ids.id =	                                   ON purged_history_ids.id =
+                   LEFT OUTER JOIN deleted_metadata_file_ids	                   LEFT OUTER JOIN deleted_metadata_file_ids
+                                   ON deleted_metadata_file_i	                                   ON deleted_metadata_file_i
+                   LEFT OUTER JOIN deleted_icda_ids		                   LEFT OUTER JOIN deleted_icda_ids
+                                   ON deleted_icda_ids.hda_pa	                                   ON deleted_icda_ids.hda_pa
+        """							        """
+
+        force_retry_sql = """					        force_retry_sql = """
+                                AND NOT purged"""		                                AND NOT purged"""
+        update_time_sql = ""					        update_time_sql = ""
+
+        if self.options.force_retry:				        if self.options.force_retry:
+            force_retry_sql = ""				            force_retry_sql = ""
+        else:							        else:
+            if self.options.update_time:			            if self.options.update_time:
+                update_time_sql += """,				                update_time_sql += """,
+                                update_time = NOW()"""		                                update_time = NOW()"""
+
+        sql = sql % (update_time_sql, force_retry_sql, '%s', 	        sql = sql % (update_time_sql, force_retry_sql, '%s', 
+        args = (self.options.days, event_id, event_id, event_	        args = (self.options.days, event_id, event_id, event_
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked History purged: %s' % tup[0])	            self._log('Marked History purged: %s' % tup[0])
+            if tup[1] is not None and tup[1] not in self.disk	            if tup[1] is not None and tup[1] not in self.disk
+                self.disk_accounting_user_ids.append(int(tup[	                self.disk_accounting_user_ids.append(int(tup[
+            if tup[2] is not None:				            if tup[2] is not None:
+                self._log('Purge of History %s caused deletio	                self._log('Purge of History %s caused deletio
+            if tup[3] is not None:				            if tup[3] is not None:
+                self._log('Purge of HDA %s caused deletion of	                self._log('Purge of HDA %s caused deletion of
+                self._remove_metadata_file(tup[3], tup[4], in	                self._remove_metadata_file(tup[3], tup[4], in
+            if tup[5] is not None:				            if tup[5] is not None:
+                self._log('Purge of HDA %s caused deletion of	                self._log('Purge of HDA %s caused deletion of
+        self._close_logfile()					        self._close_logfile()
+
+    def delete_exported_histories(self):			    def delete_exported_histories(self):
+        """							        """
+        Mark deleted all Datasets that are derivative of JobE	        Mark deleted all Datasets that are derivative of JobE
+        """							        """
+        log.info('Marking deleted all Datasets that are deriv	        log.info('Marking deleted all Datasets that are deriv
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+                WITH deleted_dataset_ids			                WITH deleted_dataset_ids
+                  AS (     UPDATE dataset			                  AS (     UPDATE dataset
+                              SET deleted = true%s		                              SET deleted = true%s
+                             FROM job_export_history_archive	                             FROM job_export_history_archive
+                            WHERE job_export_history_archive.	                            WHERE job_export_history_archive.
+                                  AND NOT deleted		                                  AND NOT deleted
+                                  AND dataset.update_time <= 	                                  AND dataset.update_time <= 
+                        RETURNING dataset.id),			                        RETURNING dataset.id),
+                     dataset_events				                     dataset_events
+                  AS (INSERT INTO cleanup_event_dataset_assoc	                  AS (INSERT INTO cleanup_event_dataset_assoc
+                                  (create_time, cleanup_event	                                  (create_time, cleanup_event
+                           SELECT NOW(), %s, id			                           SELECT NOW(), %s, id
+                             FROM deleted_dataset_ids)		                             FROM deleted_dataset_ids)
+              SELECT id						              SELECT id
+                FROM deleted_dataset_ids			                FROM deleted_dataset_ids
+            ORDER BY id;					            ORDER BY id;
+        """							        """
+
+        update_time_sql = ""					        update_time_sql = ""
+        if self.options.update_time:				        if self.options.update_time:
+            update_time_sql += """,				            update_time_sql += """,
+                                  update_time = NOW()"""	                                  update_time = NOW()"""
+
+        sql = sql % (update_time_sql, '%s', '%s')		        sql = sql % (update_time_sql, '%s', '%s')
+        args = (self.options.days, event_id)			        args = (self.options.days, event_id)
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked Dataset deleted: %s' % tup[0])	            self._log('Marked Dataset deleted: %s' % tup[0])
+        self._close_logfile()					        self._close_logfile()
+
+    def delete_datasets(self):					    def delete_datasets(self):
+        """							        """
+        Mark deleted all Datasets whose associations are all 	        Mark deleted all Datasets whose associations are all 
+        """							        """
+        log.info('Marking deleted all Datasets whose associat	        log.info('Marking deleted all Datasets whose associat
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+                WITH deleted_dataset_ids			                WITH deleted_dataset_ids
+                  AS (     UPDATE dataset			                  AS (     UPDATE dataset
+                              SET deleted = true%s		                              SET deleted = true%s
+                            WHERE NOT deleted			                            WHERE NOT deleted
+                                  AND NOT EXISTS (SELECT true	                                  AND NOT EXISTS (SELECT true
+                                                    FROM libr	                                                    FROM libr
+                                                   WHERE (NOT	                                                   WHERE (NOT
+                                                          OR 	                                                          OR 
+                                                         AND 	                                                         AND 
+                                  AND NOT EXISTS (SELECT true	                                  AND NOT EXISTS (SELECT true
+                                                    FROM hist	                                                    FROM hist
+                                                   WHERE (NOT	                                                   WHERE (NOT
+                                                          OR 	                                                          OR 
+                                                         AND 	                                                         AND 
+                        RETURNING id),				                        RETURNING id),
+                     dataset_events				                     dataset_events
+                  AS (INSERT INTO cleanup_event_dataset_assoc	                  AS (INSERT INTO cleanup_event_dataset_assoc
+                                  (create_time, cleanup_event	                                  (create_time, cleanup_event
+                           SELECT NOW(), %s, id			                           SELECT NOW(), %s, id
+                             FROM deleted_dataset_ids)		                             FROM deleted_dataset_ids)
+              SELECT id						              SELECT id
+                FROM deleted_dataset_ids			                FROM deleted_dataset_ids
+            ORDER BY id;					            ORDER BY id;
+        """							        """
+
+        update_time_sql = ""					        update_time_sql = ""
+        if self.options.update_time:				        if self.options.update_time:
+            update_time_sql += """,				            update_time_sql += """,
+                                  update_time = NOW()"""	                                  update_time = NOW()"""
+
+        sql = sql % (update_time_sql, '%s', '%s', '%s')		        sql = sql % (update_time_sql, '%s', '%s', '%s')
+        args = (self.options.days, self.options.days, event_i	        args = (self.options.days, self.options.days, event_i
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked Dataset deleted: %s' % tup[0])	            self._log('Marked Dataset deleted: %s' % tup[0])
+        self._close_logfile()					        self._close_logfile()
+
+    def purge_datasets(self):					    def purge_datasets(self):
+        """							        """
+        Mark purged all Datasets marked deleted that are olde	        Mark purged all Datasets marked deleted that are olde
+        """							        """
+        log.info('Marking purged all Datasets marked deleted 	        log.info('Marking purged all Datasets marked deleted 
+
+        event_id = self._create_event()				        event_id = self._create_event()
+
+        sql = """						        sql = """
+                WITH purged_dataset_ids				                WITH purged_dataset_ids
+                  AS (     UPDATE dataset			                  AS (     UPDATE dataset
+                              SET purged = true%s		                              SET purged = true%s
+                            WHERE deleted%s			                            WHERE deleted%s
+                                  AND update_time < (NOW() - 	                                  AND update_time < (NOW() - 
+                        RETURNING id,				                        RETURNING id,
+                                  object_store_id),		                                  object_store_id),
+                     dataset_events				                     dataset_events
+                  AS (INSERT INTO cleanup_event_dataset_assoc	                  AS (INSERT INTO cleanup_event_dataset_assoc
+                                  (create_time, cleanup_event	                                  (create_time, cleanup_event
+                           SELECT NOW(), %s, id			                           SELECT NOW(), %s, id
+                             FROM purged_dataset_ids)		                             FROM purged_dataset_ids)
+              SELECT id,					              SELECT id,
+                     object_store_id				                     object_store_id
+                FROM purged_dataset_ids				                FROM purged_dataset_ids
+            ORDER BY id;					            ORDER BY id;
+        """							        """
+
+        force_retry_sql = """					        force_retry_sql = """
+                                  AND NOT purged"""		                                  AND NOT purged"""
+        update_time_sql = ""					        update_time_sql = ""
+
+        if self.options.force_retry:				        if self.options.force_retry:
+            force_retry_sql = ""				            force_retry_sql = ""
+        else:							        else:
+            if self.options.update_time:			            if self.options.update_time:
+                update_time_sql = """,				                update_time_sql = """,
+                                  update_time = NOW()"""	                                  update_time = NOW()"""
+
+        sql = sql % (update_time_sql, force_retry_sql, '%s', 	        sql = sql % (update_time_sql, force_retry_sql, '%s', 
+        args = (self.options.days, event_id)			        args = (self.options.days, event_id)
+        cur = self._update(sql, args)				        cur = self._update(sql, args)
+        self._flush()						        self._flush()
+
+        self._open_logfile()					        self._open_logfile()
+        for tup in cur:						        for tup in cur:
+            self._log('Marked Dataset purged: %s in Object St	            self._log('Marked Dataset purged: %s in Object St
+
+            # always try to remove the "object store path" - 	            # always try to remove the "object store path" - 
+            dataset = Dataset(id=tup[0], object_store_id=tup[	            dataset = Dataset(id=tup[0], object_store_id=tup[
+            try:						            try:
+                filename = self.object_store.get_filename(dat	                filename = self.object_store.get_filename(dat
+            except (ObjectNotFound, AttributeError), e:		            except (ObjectNotFound, AttributeError), e:
+                log.error('Unable to get Dataset %s filename:	                log.error('Unable to get Dataset %s filename:
+                continue					                continue
+
+            try:						            try:
+                extra_files_dir = self.object_store.get_filen	                extra_files_dir = self.object_store.get_filen
+            except (ObjectNotFound, AttributeError):		            except (ObjectNotFound, AttributeError):
+                extra_files_dir = None				                extra_files_dir = None
+
+            # don't check for existence of the dataset, it sh	            # don't check for existence of the dataset, it sh
+            self._log('Removing from disk: %s' % filename)	            self._log('Removing from disk: %s' % filename)
+            if not self.options.dry_run:			            if not self.options.dry_run:
+                try:						                try:
+                    os.unlink(filename)				                    os.unlink(filename)
+                except Exception, e:				                except Exception, e:
+                    self._log('Removal of %s failed with erro	                    self._log('Removal of %s failed with erro
+
+            # extra_files_dir is optional so it's checked fir	            # extra_files_dir is optional so it's checked fir
+            if extra_files_dir is not None and os.path.exists	            if extra_files_dir is not None and os.path.exists
+                self._log('Removing from disk: %s' % extra_fi	                self._log('Removing from disk: %s' % extra_fi
+                if not self.options.dry_run:			                if not self.options.dry_run:
+                    try:					                    try:
+                        shutil.rmtree(extra_files_dir)		                        shutil.rmtree(extra_files_dir)
+                    except Exception, e:			                    except Exception, e:
+                        self._log('Removal of %s failed with 	                        self._log('Removal of %s failed with 
+
+        self._close_logfile()					        self._close_logfile()
+							      >	##MAREUIL
+							      >	    def reset_user(self): 
+							      >	        log.info('Reset user.')
+							      >	        sql = """update galaxy_user set purged='f', deleted='
+							      >	        user=self.options.user
+							      >	        if user is None:
+							      >	             log.error('user is required')
+							      >	             sys.exit('user is required')
+							      >	        else:
+							      >	            sql = sql % user
+							      >	            cur = self._update(sql, None)
+							      >	            self._flush()
+							      >	            self._open_logfile()
+							      >	            self._log('User reset: %s' % user)
+							      >	            self._close_logfile()
+							      >	##MAREUIL
+							      >
+
+if __name__ == '__main__':					if __name__ == '__main__':
+    cleanup = Cleanup()						    cleanup = Cleanup()
+    try:							    try:
+        cleanup._run()						        cleanup._run()
+        if cleanup.disk_accounting_user_ids:			        if cleanup.disk_accounting_user_ids:
+            cleanup._update_user_disk_usage()			            cleanup._update_user_disk_usage()
+    except:							    except:
+        log.exception('Caught exception in run sequence:')	        log.exception('Caught exception in run sequence:')
+    cleanup._shutdown()						    cleanup._shutdown()

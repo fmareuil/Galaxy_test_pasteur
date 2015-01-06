@@ -1,0 +1,17 @@
+<tool id="" name="" version="">
+    <description></description>
+    <command>
+    </command>
+    <inputs>
+        <param name="" type="" format="" label=""/>
+    </inputs>
+    <outputs>
+        <data name="" format=""/>
+    </outputs>
+    <tests> 
+      <test>
+      </test>
+    </tests>     
+    <help>
+    </help>
+</tool>

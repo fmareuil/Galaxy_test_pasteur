@@ -1,0 +1,262 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: read_data.cns,v $
+
+
+module(Iteration; Data; Toppar;)
+
+!NOEs, hbonds, ssbonds:
+!! BARDIAUX araia 2. 2
+evaluate ($n_rest = $data.nrestraints)
+
+noe
+  reset
+  !nrestraints = 100000     ! allocate space for NOEs  
+  ! BARDIAUX aria2.2
+  nrestraints = $n_rest
+  ceiling 1000
+end
+
+set echo off message off end 
+display reading NEWIT:unambig.tbl in iteration &iteration with option &data.unamb_firstit
+
+
+if (&data.unamb_firstit le &iteration) then 
+     noe class dist @@NEWIT:unambig.tbl end 
+end if
+
+if (&data.amb_firstit le &iteration)   then 
+     noe class ambi @@NEWIT:ambig.tbl end 
+end if
+
+if (&data.ssbonds.on eq true) then
+    noe class hbon @@RUN:data/ssbonds/ssbonds.tbl end
+end if
+
+if (&data.hbond_firstit le &iteration) then
+   if (&data.hbonds_on eq true) then 
+      noe class hbon @@RUN:data/hbonds/hbonds.tbl end
+   end if
+end if
+if (&data.hbondscsi_on eq true) then
+   noe class hbon @@RUN:data/hbonds/hbonds_csi.tbl end
+end if
+set echo off message off end
+
+noe
+  averaging  * sum
+  potential  * soft
+  scale      * 1.0                           
+  sqconstant * 1.0
+  sqexponent * 2
+  soexponent * 1
+  rswitch    * 1.0
+  sqoffset   * 0.0
+  asymptote  * 2.0
+  msoexponent * 1
+  masymptote  * -0.1
+  mrswitch    * 1.0
+  avexpo hbond 20
+end
+
+!! test
+!noe
+!  monomers dist &toppar.mononum
+!  monomers ambi &toppar.mononum
+!end
+  
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!dihedral restraints:
+restraints dihedral 
+   nassign 2000 
+end
+if (&Data.cdih.on eq true) then
+  restraints dihedral
+    set echo off message off end
+    @@RUN:data/dihedrals/dihedrals.tbl
+    set echo off message off end
+  end
+end if
+if (&Data.cdihcsi.on eq true) then
+  restraints dihedral
+    set echo off message off end
+    @@RUN:data/dihedrals/dihedrals_csi.tbl
+    set echo off message off end
+  end
+end if
+if (&Data.cdihtalos.on eq true) then
+  restraints dihedral
+    set echo off message off end
+    @@RUN:data/dihedrals/dihedrals_talos.tbl
+    set echo off message off end
+  end
+end if
+
+restraints dihedral ? end
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!jcouplings:
+evaluate ($jcouplings_on = false)
+if (&data.c1_on eq true) then
+  evaluate($jcouplings_on = true)
+elseif (&data.c2_on eq true) then
+  evaluate($jcouplings_on = true)
+elseif (&data.c3_on eq true) then
+  evaluate($jcouplings_on = true)
+elseif (&data.c4_on eq true) then
+  evaluate($jcouplings_on = true)
+elseif (&data.c5_on eq true) then
+  evaluate($jcouplings_on = true)
+end if
+
+if ($jcouplings_on eq true) then
+  couplings
+    nres 500   !number of restraints for allocating memory
+    if (&data.c1_on eq true) then
+      class c1
+      potential harmonic
+      {degen 1}
+      force 1.0    !1 energy constant
+      coefficients &data.c1_karplusa &data.c1_karplusb &data.c1_karplusc &data.c1_karplusd
+      evaluate ($loadnow = "RUN:" + "data/jcouplings/c1.tbl")
+      @@$loadnow
+    end if
+    if (&data.c2_on eq true) then
+      class c2
+      potential harmonic
+      {degen 1}
+      force 1.0    !1 energy constant
+      coefficients &data.c2_karplusa &data.c2_karplusb &data.c2_karplusc &data.c2_karplusd
+      evaluate ($loadnow = "RUN:" + "data/jcouplings/c2.tbl")
+      @@$loadnow
+    end if    
+    if (&data.c3_on eq true) then
+      class c3
+      potential harmonic
+      {degen 1}
+      force 1.0    !1 energy constant
+      coefficients &data.c3_karplusa &data.c3_karplusb &data.c3_karplusc &data.c3_karplusd
+      evaluate ($loadnow = "RUN:" + "data/jcouplings/c3.tbl")
+      @@$loadnow
+    end if    
+    if (&data.c4_on eq true) then
+      class c4
+      potential harmonic
+      {degen 1}
+      force 1.0    !1 energy constant
+      coefficients &data.c4_karplusa &data.c4_karplusb &data.c4_karplusc &data.c4_karplusd
+      evaluate ($loadnow = "RUN:" + "data/jcouplings/c4.tbl")
+      @@$loadnow
+    end if    
+    if (&data.c5_on eq true) then
+      class c5
+      potential harmonic
+      {degen 1}
+      force 1.0    !1 energy constant
+      coefficients &data.c5_karplusa &data.c5_karplusb &data.c5_karplusc &data.c5_karplusd
+      evaluate ($loadnow = "RUN:" + "data/jcouplings/c5.tbl")
+      @@$loadnow
+    end if    
+  end
+end if
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!residual dipolar couplings:
+
+sani nres=5000 end
+vean nrestraints=10000 end
+
+if (&data.rdc1_on eq true) then
+  if (&data.rdc1_choice eq "SANI") then
+    sani
+      class rdc1
+      force 0.0
+      potential harmonic
+      @@RUN:data/rdcs/rdc1.tbl
+    end
+  end if
+
+  if (&data.rdc1_choice eq "VANGLE") then
+    vean
+      class vea1
+      force 0.0 0.0
+      @@RUN:data/rdcs/rdc1.tbl
+    end
+  end if
+end if
+
+if (&data.rdc2_on eq true) then
+  if (&data.rdc2_choice eq "SANI") then
+    sani
+      class rdc2
+      force 0.0
+      potential harmonic
+      @@RUN:data/rdcs/rdc2.tbl
+    end
+  end if
+  if (&data.rdc2_choice eq "VANGLE") then
+    vean
+      class vea2
+      force 0.0 0.0
+      @@RUN:data/rdcs/rdc2.tbl
+    end
+  end if
+end if
+
+if (&data.rdc3_on eq true) then
+  if (&data.rdc3_choice eq "SANI") then
+    sani
+      class rdc3
+      force 0.0
+      potential harmonic
+      @@RUN:data/rdcs/rdc3.tbl
+    end
+  end if
+
+  if (&data.rdc3_choice eq "VANGLE") then
+    vean
+      class vea3
+      force 0.0 0.0
+      @@RUN:data/rdcs/rdc3.tbl
+    end
+  end if
+end if
+
+if (&data.rdc4_on eq true) then
+  if (&data.rdc4_choice eq "SANI") then
+    sani
+      class rdc4
+      force 0.0
+      potential harmonic
+      @@RUN:data/rdcs/rdc4.tbl
+    end
+  end if
+
+  if (&data.rdc4_choice eq "VANGLE") then
+    vean
+      class vea4
+      force 0.0 0.0
+      @@RUN:data/rdcs/rdc4.tbl
+    end
+  end if
+end if
+
+if (&data.rdc5_on eq true) then
+  if (&data.rdc5_choice eq "SANI") then
+    sani
+      class rdc5
+      force 0.0
+      potential harmonic
+      @@RUN:data/rdcs/rdc5.tbl
+    end
+  end if
+
+  if (&data.rdc5_choice eq "VANGLE") then
+    vean
+      class vea5
+      force 0.0 0.0
+      @@RUN:data/rdcs/rdc5.tbl
+    end
+  end if
+end if

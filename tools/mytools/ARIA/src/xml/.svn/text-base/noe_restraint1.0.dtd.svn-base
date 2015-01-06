@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT noe_restraint_list (peak*)>
+
+  <!ELEMENT peak (reference_peak,
+                  contribution+,
+                  analysis)>
+
+    <!ATTLIST peak id CDATA #REQUIRED>
+    <!ATTLIST peak weight CDATA #REQUIRED>
+    <!ATTLIST peak distance CDATA #REQUIRED>
+    <!ATTLIST peak lower_bound CDATA #REQUIRED>
+    <!ATTLIST peak upper_bound CDATA #REQUIRED>
+    <!ATTLIST peak active (0|1) #REQUIRED>
+    <!ATTLIST peak merged (0|1) #REQUIRED>
+
+    <!ELEMENT reference_peak EMPTY>
+    <!ATTLIST reference_peak spectrum CDATA #REQUIRED>
+    <!ATTLIST reference_peak number CDATA #REQUIRED>
+
+    <!ELEMENT contribution (spin_system,
+                            spin_system,
+                            average_distance)>
+
+    <!ATTLIST contribution id CDATA #REQUIRED>  
+    <!ATTLIST contribution figure_of_merit CDATA "">
+    <!ATTLIST contribution weight CDATA #REQUIRED>
+
+      <!ELEMENT spin_system (atom+,
+                             chemical_shift+)>
+      <!ATTLIST spin_system averaging_method (FAST|SLOW|NONE) "NONE">
+     
+        <!ELEMENT atom EMPTY>
+        <!ATTLIST atom name CDATA #REQUIRED>
+        <!ATTLIST atom residue CDATA #REQUIRED>
+        <!ATTLIST atom segid CDATA #REQUIRED>
+                                      
+        <!ELEMENT chemical_shift EMPTY>
+        <!ATTLIST chemical_shift value CDATA #REQUIRED>
+        <!ATTLIST chemical_shift error CDATA #REQUIRED>
+
+    <!ELEMENT analysis (figure_of_merit, 
+                        average_distance, 
+                        lower_bound_violation,
+                        upper_bound_violation,
+                        model_peak_size)>
+
+    <!ATTLIST analysis degree_of_violation CDATA #REQUIRED>
+    <!ATTLIST analysis violated (0|1) #REQUIRED>
+
+      <!ELEMENT figure_of_merit EMPTY>
+      <!ATTLIST figure_of_merit value CDATA #REQUIRED> 
+      <!ATTLIST figure_of_merit error CDATA #REQUIRED> 
+
+      <!ELEMENT average_distance EMPTY>
+      <!ATTLIST average_distance value CDATA #REQUIRED>
+      <!ATTLIST average_distance error CDATA #REQUIRED>
+
+      <!ELEMENT lower_bound_violation EMPTY>
+      <!ATTLIST lower_bound_violation value CDATA #REQUIRED>
+      <!ATTLIST lower_bound_violation error CDATA #REQUIRED>
+
+      <!ELEMENT upper_bound_violation EMPTY>
+      <!ATTLIST upper_bound_violation value CDATA #REQUIRED>
+      <!ATTLIST upper_bound_violation error CDATA #REQUIRED>
+
+      <!ELEMENT model_peak_size EMPTY>
+      <!ATTLIST model_peak_size value CDATA #REQUIRED>
+      <!ATTLIST model_peak_size error CDATA #REQUIRED>
+

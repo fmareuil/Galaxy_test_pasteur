@@ -1,0 +1,363 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: refine_dmso.inp,v $
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+evaluate ($finomega = 100)
+
+remarks re_dmso.inp 
+remarks Author: adapted for DMSO A. Bonvin Jan. 2002
+
+set abort off end  !just for testing
+
+evaluate ($count = $data.count)
+evaluate ($file = $data.initial_pdb)
+evaluate ($iteration = $data.iteration)
+
+! read data
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+flags include elec end
+
+
+!read the .psf files:
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+!for the rdc restraints:
+if ($Data.flags.sani = true) then
+  topology @@RUN:toppar/top_axis.pro end
+  parameter @@RUN:toppar/par_axis.pro end
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+
+!load the topology files:
+evaluate ($loadnow = "RUN:toppar/" + $Toppar.prot_top)
+topology  
+    @@$loadnow
+    @@RUN:toppar/topallhdg5.3.sol
+end 
+
+!the dmso refinement uses a full Lenard-Jones potential:
+evaluate ($par_nonbonded = "OPLSX")
+!read the parameter files:
+!!!!!!!evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+parameter 
+  @@RUN:toppar/parallhdg5.3.sol
+  nbonds
+    nbxmod=5 atom cdiel shift 
+    cutnb=9.5 ctofnb=8.5 ctonnb=6.5 eps=1.0 e14fac=0.4 inhibit 0.25
+    wmin=0.5
+    tolerance  0.5
+  end
+end
+
+
+
+if ($toppar.ss_ambigunambig eq	"ambigous") then
+  parameter  nbfix S  S  462  13.6  462  13.6 end
+end if
+
+
+
+! read coordinate and copy to reference coordinate set
+coor @@$file
+
+do (refx = x) (all)
+do (refy = y) (all)
+do (refz = z) (all)
+
+! generate dmso layer
+do (segid = "PROT") (segid "    ")
+@RUN:protocols/generate_dmso.cns
+do (segid = "    ") (segid "PROT")
+
+if ($Data.rdc1_firstIt > $iteration) then
+  evaluate ($Data.rdc1_hot = 0.0)
+  evaluate ($Data.rdc1_cool1 = 0.0)
+  evaluate ($Data.rdc1_cool2 = 0.0)
+end if
+if ($Data.rdc2_firstIt > $iteration) then
+  evaluate ($Data.rdc2_hot = 0.0)
+  evaluate ($Data.rdc2_cool1 = 0.0)
+  evaluate ($Data.rdc2_cool2 = 0.0)
+end if
+if ($Data.rdc3_firstIt > $iteration) then
+  evaluate ($Data.rdc3_hot = 0.0)
+  evaluate ($Data.rdc3_cool1 = 0.0)
+  evaluate ($Data.rdc3_cool2 = 0.0)
+end if
+if ($Data.rdc4_firstIt > $iteration) then
+  evaluate ($Data.rdc4_hot = 0.0)
+  evaluate ($Data.rdc4_cool1 = 0.0)
+  evaluate ($Data.rdc4_cool2 = 0.0)
+end if
+if ($Data.rdc5_firstIt > $iteration) then
+  evaluate ($Data.rdc5_hot = 0.0)
+  evaluate ($Data.rdc5_cool1 = 0.0)
+  evaluate ($Data.rdc5_cool2 = 0.0)
+end if
+
+
+evaluate ($seed = ($count+1)*$Saprotocol.iniseed)
+set seed $seed end
+
+@@RUN:protocols/read_data.cns(Iteration = $Iteration; Data = $Data; )
+
+!set the rdc coefficients:
+!syntax: sani coeff <0.0> <magnitude> <rhombicity> end
+if ($Data.rdc1_choice eq "SANI") then
+  sani class rdc1 coeff 0.0 $Data.rdc1_d $Data.rdc1_r end
+end if
+if ($Data.rdc2_choice eq "SANI") then
+  sani class rdc2 coeff 0.0 $Data.rdc2_d $Data.rdc2_r end
+end if
+if ($Data.rdc3_choice eq "SANI") then
+  sani class rdc3 coeff 0.0 $Data.rdc3_d $Data.rdc3_r end
+end if
+if ($Data.rdc4_choice eq "SANI") then
+  sani class rdc4 coeff 0.0 $Data.rdc4_d $Data.rdc4_r end
+end if
+if ($Data.rdc5_choice eq "SANI") then
+  sani class rdc5 coeff 0.0 $Data.rdc5_d $Data.rdc5_r end
+end if
+
+
+evaluate ($k_unamb= $Data.unamb_cool2)
+evaluate ($k_amb= $Data.amb_cool2)
+evaluate ($k_hbond= $Data.hbond_cool2)
+
+noe 
+    rswitch ambi $Data.Rswi_cool2 
+    rswitch dist $Data.Rswi_cool2
+    rswitch hbon $Data.Rswi_cool2
+
+    mrswitch ambi $Data.mRswi_cool2 
+    mrswitch dist $Data.mRswi_cool2
+    mrswitch hbon $Data.mRswi_cool2
+
+    asym ambi $Data.asy_cool2
+    asym dist $Data.asy_cool2
+    asym hbon $Data.asy_cool2
+
+    masym ambi $Data.masy_cool2 
+    masym dist $Data.masy_cool2
+    masym hbon $Data.masy_cool2
+
+    scale ambi $Data.unamb_cool2 
+    scale dist $Data.amb_cool2
+    scale hbon $Data.hbond_cool2
+end
+
+restraints dihedral 
+      scale=200                      
+end 
+
+
+couplings class c1 force $data.c1_cool2 end
+couplings class c2 force $data.c2_cool2 end
+couplings class c3 force $data.c3_cool2 end
+couplings class c4 force $data.c4_cool2 end
+couplings class c5 force $data.c5_cool2 end
+sani class rdc1 force $data.rdc1_cool2 end
+sani class rdc2 force $data.rdc2_cool2 end
+sani class rdc3 force $data.rdc3_cool2 end
+sani class rdc4 force $data.rdc4_cool2 end
+sani class rdc5 force $data.rdc5_cool2 end
+vean class vea1 force $Data.fin_bor_cool2_1 $Data.fin_cen_cool2_1 end
+vean class vea2 force $Data.fin_bor_cool2_2 $Data.fin_cen_cool2_2 end
+vean class vea3 force $Data.fin_bor_cool2_3 $Data.fin_cen_cool2_3 end
+vean class vea4 force $Data.fin_bor_cool2_4 $Data.fin_cen_cool2_4 end
+vean class vea5 force $Data.fin_bor_cool2_5 $Data.fin_cen_cool2_5 end
+
+
+! define methyle groups and other equivalent groups - store in store2
+!    and assign as in the last iteration
+
+@RUN:protocols/define_methyls_all.cns
+@RUN:begin/setup_swap_list.tbl
+do (store2=store1)(all)
+do (store9=store1)(all)
+eval ($floatfile = $file - ".pdb" + ".float")
+fileexist $floatfile end  eval ($qfloatfile = $result)
+if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+! since we do not use SHAKe, increase the dmso bond angle energy constant
+parameter 
+   angle (resn dms) (resn dms) (resn dms) 500 TOKEN 
+end
+
+! reduce improper and angle force constant for some atoms
+evaluate ($kangle = 50)
+evaluate ($kimpro = 5)
+evaluate ($komega = 5)
+ident (store1) (store1 or resn dms)
+parameter
+   angle    (not resn dms)(not resn dms)(not resn dms) $kangle  TOKEN
+   improper (all)(all)(all)(all) $kimpro  TOKEN TOKEN
+end
+
+! fix the protein for initial minimization
+fix sele = (not resn dms) end
+minimize powell nstep=40 drop=100 end
+
+! release protein and restrain harmonically
+fix sele = (not all) end
+do (refx=x) (all)
+do (refy=y) (all)
+do (refz=z) (all)
+restraints harmonic 
+   exponent = 2
+end
+do (harm = 0)  (all)
+do (harm = 10) (not name h*)
+do (harmonic=20.0)(resname ANI and name OO)
+do (harmonic=0.0) (resname ANI and name Z )
+do (harmonic=0.0) (resname ANI and name X )
+do (harmonic=0.0) (resname ANI and name Y )
+
+
+igroup
+  interaction (not resname ANI) (not resname ANI)
+  interaction ( resname ANI) ( resname ANI)
+end
+
+
+minimize powell nstep=40 drop=10 end
+do (refx=x) (not resname ANI)
+do (refy=y) (not resname ANI)
+do (refz=z) (not resname ANI)
+minimize powell nstep=40 drop=10 end
+do (refx=x) (not resname ANI)
+do (refy=y) (not resname ANI)
+do (refz=z) (not resname ANI)
+
+
+do (mass = 100) (all)
+do (mass=1000) (resname ani)
+do (fbeta = 0) (all)
+do (fbeta = 20. {1/ps} ) (not resn ani)                
+evaluate ($kharm = 50) 
+! heat to 500 K
+for $bath in (100 200 300 400 500) loop heat
+   do (harm = $kharm) (not name h* and not resname ANI)
+   do (vx=maxwell($bath)) (all)
+   do (vy=maxwell($bath)) (all)
+   do (vz=maxwell($bath)) (all)  
+   do (store2  = store9) (all)
+   evaluate ($swap = 1.0)
+   inline   @RUN:protocols/swap.cns
+   dynamics cartesian
+      nstep=200 timest=0.003{ps}       
+      temperature=$bath  tcoupling = true
+      nprint=50 
+   end 
+   evaluate ($kharm = max(0, $kharm - 4))
+   do (refx=x) (not resname ANI)
+   do (refy=y) (not resname ANI)
+   do (refz=z) (not resname ANI)
+end loop heat
+
+igroup
+  interaction (not resname ANI) (not resname ANI) weights * 1 dihed 2 end
+  interaction ( resname ANI) ( resname ANI) weights * 1 end
+end
+
+do (harm = 0)  (not resname ANI)
+do (vx=maxwell($bath)) (all)
+do (vy=maxwell($bath)) (all)
+do (vz=maxwell($bath)) (all)  
+dynamics cartesian
+   nstep=1000 timest=0.004{ps}      
+   temperature=$bath  tcoupling = true
+   nprint=50 
+end 
+
+igroup
+  interaction (not resname ANI) (not resname ANI) weights * 1 dihed 3 end
+  interaction ( resname ANI) ( resname ANI) weights * 1  end
+end
+
+
+! cool 
+evaluate ($bath = 500)
+while ($bath ge 25) loop cool
+   evaluate ($swap = 1.0)
+   inline @RUN:protocols/swap.cns
+
+   evaluate ($kangle = min(500,$kangle * 1.2))
+   evaluate ($kimpro = min(500,$kimpro * 1.5))
+   evaluate ($komega = min($finomega,$komega * 1.5))
+
+   parameter
+      angle    (not resn dms)(not resn dms)(not resn dms) $kangle  TOKEN
+      improper (all)(all)(all)(all) $kimpro  TOKEN TOKEN
+      improper (name CA) (name C) (name N) (name CA) $komega TOKEN TOKEN
+   end
+
+   do (vx=maxwell($bath)) (all)
+   do (vy=maxwell($bath)) (all)
+   do (vz=maxwell($bath)) (all)
+   dynamics cartesian
+      nstep=100 timest=0.004{ps}      
+      temperature=$bath  tcoupling = true                       
+      nprint=50 
+   end 
+
+   evaluate ($bath = $bath - 25)
+end loop cool
+
+evaluate ($swap = 1.0)
+inline @RUN:protocols/swap.cns
+mini powell nstep 200 end
+
+igroup interaction 
+   (not resname dms and not resname ANI) 
+   (not resname dms and not resname ANI) 
+end
+
+energy end
+
+evaluate ($filename = $filenames.outdir + "/" + $Filenames.fileroot + "_" + encode($count) + "_dmso.pdb")
+
+@RUN:protocols/print_coorheader.cns
+
+do (q=1) (all)
+
+if ($refine.write_water eq true) then
+  write coordinates sele= (not resn ANI) output =$filename end
+else
+  write coordinates sele= (not resn DMS) output =$filename end
+end if
+      
+set print $filename end
+aria float store end end
+
+stop
+

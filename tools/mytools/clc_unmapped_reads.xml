@@ -1,0 +1,112 @@
+<tool id="clc_unmapped_reads" name="clc_unmapped_reads" version="4.010.83648">
+  <description> Outputs the unmapped reads  </description>
+  <command> 
+    clc_unmapped_reads -a $casFile
+    #if $minlenght_selector.flag_minlenght == "yes":
+        -l $minlenght_selector.minlenght
+	#if $minlenght_selector.unaligned_selector.flag_unaligned == "yes":
+	    -u
+	#end if
+    #end if
+    #if $minlenght_selector.flag_minlenght == "yes":
+        #if $minlenght_selector.unaligned_selector.flag_unaligned == "no":
+            #if $minlenght_selector.unaligned_selector.paired_selector.flag_paired == "yes":
+	        -p
+	    #end if
+	#end if    
+    #else:    
+        #if $minlenght_selector.paired_selector.flag_paired == "yes":
+	    -p
+	#end if
+    #end if
+    #if $output_format.value == "fastq":
+        -o unmapread.fastq
+    #else:
+        -o unmapread.fasta
+    #end if
+  </command>
+  <inputs>
+      <param name="casFile" type="data" label="Binary Assembly file"/>
+      <conditional name="minlenght_selector">
+          <param name="flag_minlenght" type="select" label="used minlenght (-l) option">
+	      <option value="yes">yes</option>
+              <option value="no" selected="True" >no</option>
+	  </param>
+	  <when value="yes">
+	      <param name="minlenght" type="integer" label=" Output only sequences with a certain minimum length." value="10" />
+	      <conditional name= "unaligned_selector">
+	          <param name="flag_unaligned" type="select" label="used unaligned (-u) option">
+		      <option value="yes">yes</option>
+                      <option value="no" selected="True" >no</option>
+	          </param>
+		  <when value="yes"/>
+		  <when value="no">
+		      <conditional name="paired_selector">
+                          <param name="flag_paired" type="select" label="treat the reads as paired?" help="Always treat the reads as paired, so if one read of a pair qualifies for reporting, report both reads. Cannot be used with the '-u' option.">
+	                      <option value="yes">yes</option>
+                              <option value="no" selected="True" >no</option>
+	                  </param>
+                      </conditional>
+		  </when>      
+	      </conditional>
+	  </when>
+	  <when value="no">
+	      <conditional name="paired_selector">
+                  <param name="flag_paired" type="select" label="treat the reads as paired?" help="Always treat the reads as paired, so if one read of a pair qualifies for reporting, report both reads. Cannot be used with the '-u' option.">
+	              <option value="yes">yes</option>
+                      <option value="no" selected="True" >no</option>
+	          </param>
+              </conditional>
+	  </when>
+      </conditional>
+      <param name="output_format" type="select" label="Type of output format">
+          <option value="fastq">Fastq Format</option>
+          <option value="fasta" selected="True" >Fasta Format</option>
+      </param>
+  </inputs>
+  <outputs>
+      <data name="output_fasta" format="fasta" label="unmapped_reads from ${casFile.name}" from_work_dir="unmapread.fasta" >
+          <filter>output_format == "fasta"</filter> 
+      </data> 
+      <data name="output_fastq" format="fastq" label="unmapped_reads from ${casFile.name}" from_work_dir="unmapread.fastq" >
+          <filter>output_format == "fastq"</filter> 
+      </data> 
+  </outputs> 
+  <tests>
+  </tests>
+  
+  <help>
+
+**usage**
+clc_unmapped_reads (options)
+
+**What it does:**
+Extract unmapped reads from a read mapping.
+
+----
+
+**Options:**
+
+-h : Display this message.
+
+-a (file) : Specify the input cas file (required).
+
+-o (file) : Specify the output fasta or fastq file (required).
+
+-l (n) : Output only sequences with a certain minimum length.
+
+-u : For matching reads with sufficiently long unaligned parts, output these parts as individual sequences. Two parts may be output if both ends are long enough. Must be used with the '-l' option.
+
+-p : Always treat the reads as paired, so if one read of a pair qualifies for reporting, report both reads. Cannot be used with the "-u" option.
+
+
+----
+
+**Example:**
+
+Make a fasta file with all the unmapped reads along with all read parts that were unaligned and has a length of at least 100 bp:
+  # unmapped_reads -a assembly.cas -o unmapped.fasta -l 100 -u
+
+
+  </help>
+</tool>

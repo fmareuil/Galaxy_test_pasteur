@@ -1,0 +1,36 @@
+pysqlite>=2 egg successfully loaded for sqlite dialect
+##########################################
+
+# 2013-10-30 11:06:24 - Handling stuff older than 10 days
+Datasets will NOT be removed from disk.
+
+Deleted 0 histories
+Elapsed time:  0.00592994689941
+##########################################
+pysqlite>=2 egg successfully loaded for sqlite dialect
+##########################################
+
+# 2013-10-30 11:07:32 - Handling stuff older than 10 days
+Datasets will NOT be removed from disk.
+
+Deleted 0 histories
+Elapsed time:  0.00605702400208
+##########################################
+pysqlite>=2 egg successfully loaded for sqlite dialect
+##########################################
+
+# 2013-10-30 11:07:50 - Handling stuff older than 60 days
+Datasets will NOT be removed from disk.
+
+Deleted 0 histories
+Elapsed time:  0.0060031414032
+##########################################
+psycopg2 egg successfully loaded for postgres dialect
+##########################################
+
+# 2013-10-30 14:15:50 - Handling stuff older than 60 days
+Datasets will NOT be removed from disk.
+
+Deleted 0 histories
+Elapsed time:  0.00881385803223
+##########################################

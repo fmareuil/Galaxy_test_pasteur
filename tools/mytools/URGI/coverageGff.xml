@@ -1,0 +1,17 @@
+<tool id="coverageGff" name="coverage Gff">
+  <description>Computes reads coverage form a "nbElements" tag and writes the calculated coverage in a gff3 out file.</description>
+  <command interpreter="perl"> ../bacteriaRegulatoryRegion_Detection/coverageGff.pl -i $inputFile -l $readSize > $outputFile  </command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="gff"/>
+    <param name="readSize" type="integer" value="38" help="The size of read, default: 38nt"/>
+
+  </inputs>
+
+  <outputs>
+    <data format="gff3" name="outputFile" label="[coveragePl] Output File"/>
+  </outputs>
+
+  <help>
+	command example: perl coverageGff.pl -i *_trans_inIG.gff > *_trans_inIG_cov.gff
+  </help>
+</tool>

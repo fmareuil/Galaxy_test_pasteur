@@ -1,0 +1,1 @@
+python GemReads.py -R Firmicutes -a Firmicutes.ab -n 1000 -l 100 -m ill100v5_s.gzip -q 33 -o GemReads_test

@@ -1,0 +1,43 @@
+HTTP_AUTHORIZATION:	Basic Zm1hcmV1aWw6UEFTVCsrODE=
+HTTP_X_FORWARDED_SERVER:	fee.sis.pasteur.fr
+HTTP_COOKIE:	galaxysession=c6ca0ddb55be603a88e7b87e32b4834cb875be6ff45f592079f6a026d9615dd91b2fa9e9b2026007
+HTTP_X_FORWARDED_HOST:	fee.sis.pasteur.fr:81
+paste.recursive.include:	<paste.recursive.Includer from />
+SCRIPT_NAME:	
+REQUEST_METHOD:	GET
+PATH_INFO:	/api/histories/b472e2eb553fa0d1
+SERVER_PROTOCOL:	HTTP/1.1
+QUERY_STRING:	
+paste.throw_errors:	True
+CONTENT_LENGTH:	0
+weberror.evalexception:	<weberror.evalexception.middleware.EvalException object at 0x8b33ed0>
+HTTP_USER_AGENT:	Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:28.0) Gecko/20100101 Firefox/28.0
+HTTP_CONNECTION:	close
+HTTP_REFERER:	http://fee.sis.pasteur.fr:81/history
+SERVER_NAME:	127.0.0.1
+REMOTE_ADDR:	157.99.60.206
+ORGINAL_REMOTE_ADDR:	127.0.0.1
+wsgi.url_scheme:	http
+SERVER_PORT:	8082
+paste.recursive.forward:	<paste.recursive.Forwarder from />
+HTTP_REMOTE_USER:	(null)
+HTTP_X_REQUESTED_WITH:	XMLHttpRequest
+paste.recursive.script_name:	
+paste.evalexception:	<weberror.evalexception.middleware.EvalException object at 0x8b33ed0>
+wsgi.input:	<socket._fileobject object at 0x7fba9c32c050 length=0>
+HTTP_HOST:	fee.sis.pasteur.fr:81
+paste.recursive.include_app_iter:	<paste.recursive.IncluderAppIter from />
+wsgi.multithread:	True
+HTTP_ACCEPT:	application/json, text/javascript, */*; q=0.01
+wsgi.version:	(1, 0)
+wsgi.run_once:	False
+wsgi.errors:	<open file '<stderr>', mode 'w' at 0x7fbade17c1e0>
+wsgi.multiprocess:	False
+HTTP_ACCEPT_LANGUAGE:	en-US,en;q=0.5
+ORGINAL_HTTP_HOST:	localhost:8082
+HTTP_X_FORWARDED_FOR:	157.99.60.206
+CONTENT_TYPE:	
+request_id:	1cc5ff72c71811e3bb2490b11c7455d7
+paste.httpserver.thread_pool:	<paste.httpserver.ThreadPool object at 0x9937910>
+HTTP_ACCEPT_ENCODING:	gzip, deflate
+galaxy.web.framework WARNING 2014-04-18 18:40:12,729 User logged in as '(null)' externally, but has a cookie as 'fmareuil@pasteur.fr' invalidating session

@@ -1,0 +1,210 @@
+<tool id="GetDifferentialExpression" name="get differential expression">
+	<description>Get the differential expression between 2 conditions using Fisher's exact test, on regions defined by a third file.</description>
+	<command interpreter="python">
+		../Java/Python/GetDifferentialExpression.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+			
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+			-g gtf
+		#end if
+			
+		-k $formatTypeRef.inputFileNameRef
+		#if $formatTypeRef.FormatInputFileNameRef == 'bed':
+			-l bed
+		#elif $formatTypeRef.FormatInputFileNameRef == 'gff':
+			-l gff	
+		#elif $formatTypeRef.FormatInputFileNameRef == 'gff2':
+			-l gff2
+		#elif $formatTypeRef.FormatInputFileNameRef == 'gff3':
+			-l gff3
+		#elif $formatTypeRef.FormatInputFileNameRef == 'sam':
+			-l sam
+		#elif $formatTypeRef.FormatInputFileNameRef == 'gtf':
+			-l gtf
+		#end if
+		
+		-o $outputFileGff 
+		
+		$simple
+		$adjusted
+
+
+		#if $optionSimplePara.simplePara == 'Yes':
+			-S $optionSimplePara.paraValue
+		#end if		
+		
+		#if $optionFixedSizeFactor.FSF == 'Yes':
+			-x $optionFixedSizeFactor.FSFValue
+		#end if
+		
+		#if $optionFDR.FDR == 'Yes':
+			-d $optionFDR.FDRValue
+		#end if
+		$plot $outputFilePNG
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File Format 1">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File 1"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File 1"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File 1"/>
+			</when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input File Format 2">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="Input File 2"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="Input File 2"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="Input File 2"/>
+			</when>
+		</conditional>
+
+		<conditional name="formatTypeRef">
+			<param name="FormatInputFileNameRef" type="select" label="Input Ref File Format ">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileNameRef" format="bed" type="data" label="Input Ref File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileNameRef" format="gff" type="data" label="Input Ref File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileNameRef" format="gff2" type="data" label="Input Ref File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileNameRef" format="gff3" type="data" label="Input Ref File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileNameRef" format="sam" type="data" label="Input Ref File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileNameRef" format="gtf" type="data" label="Input Ref File"/>
+			</when>
+		</conditional>
+
+		<param name="simple" type="boolean" truevalue="-s" falsevalue="" checked="false" label="normalize using the number of reads in each condition"/>
+		<param name="adjusted" type="boolean" truevalue="-a" falsevalue="" checked="false" label="normalize using the number of reads of 'mean' regions"/>
+		
+		<conditional name="optionSimplePara">
+			<param name="simplePara" type="select" label="provide the number of reads" >
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="paraValue" type="text" value="None" label="provide the number of reads" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionFixedSizeFactor">
+			<param name="FSF" type="select" label="give the magnification factor for the normalization using fixed size sliding windows in reference regions (leave empty for no such normalization)">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="FSFValue" type="integer" value="0" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionFDR">
+			<param name="FDR" type="select" label="use FDR">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="FDRValue" type="float" value="0.0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<param name="plot" type="boolean" truevalue="-p" falsevalue="" checked="false" label="plot option" help="plot cloud plot"/>
+
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3" label="[GetDifferentialExpression]out file"/>
+		<data name="outputFilePNG" format="PNG" label="[GetDifferentialExpression]PNG file">
+			<filter>plot</filter>
+		</data>
+	</outputs> 
+	
+	<help>
+		example: python GetDifferentialExpression.py -i input1 -f gff3 -j input2 -g gff3 -k ref -l gff3 -o output.gff3
+	</help>
+</tool>

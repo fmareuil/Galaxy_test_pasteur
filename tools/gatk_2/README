@@ -1,0 +1,12 @@
+The gatk2_sorted_picard_index.loc and gatk2_annotations.txt files must be
+copied into the tool-data directory.  The file tool_data_table_conf.xml must
+be edited to include references to these two new files.  
+
+Additionally, copies of or links to the GenomeAnalysisTK.jar and key file
+must be made within the directory tool-data/shared/jars/gatk2.
+
+  cd ${GALAXY_DATA_INDEX_DIR}/shared/jars
+  mkdir gatk2
+  cd gatk2
+  ln -s /path/to/wherever/GenomeAnalysisTK.jar .
+  ln -s /path/to/wherever/key.file gatk2_key_file

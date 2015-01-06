@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/scientific
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/scientific/__init__.py
+END
+FortranFormat.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/scientific/FortranFormat.py
+END
+TextFile.py
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/scientific/TextFile.py
+END
+PDB.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/scientific/PDB.py
+END

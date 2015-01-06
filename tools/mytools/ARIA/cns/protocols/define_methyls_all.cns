@@ -1,0 +1,35 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: define_methyls_all.cns,v $
+
+! define_methyls_all.cns
+! script to define methyle and other equivalent groups
+! called by calib.inp, merge.inp, refine.inp
+! by default, all methyle groups and all aromatics are 
+!   defined
+! methyl.tbl is written by define_methyls_ini.cns
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+! first, define methyl groups into store1
+@@RUN:begin/methyls.tbl
+
+aria
+   analyse_restraints
+      equivalent
+         initialize
+         for $loopid in id (store1) loop meth
+            select (bondedt(id $loopid) and name h*)
+         end loop meth
+         for $loopid in id ((resn phe or resn tyr) and name cd1) loop arom
+            select (byres(id $loopid) and (name hd#))
+            select (byres(id $loopid) and (name he#))
+         end loop arom
+      end
+   end
+end
+

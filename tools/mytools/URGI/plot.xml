@@ -1,0 +1,71 @@
+<tool id="plot" name="Plot">
+	<description>Plot some information from a list of transcripts.</description>
+	<command interpreter="python">
+		../Java/Python/plot.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#end if
+		
+		-x $xLabel
+		
+                -y $yLabel
+
+	        -X $XVal
+                -Y $YVal
+
+	        #if $optionLog.log == 'Yes' :
+		    -l $optionLog.logOnAxisLabel
+                #end if
+                
+                -s $shape
+		-o $outputFile
+
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+			</param>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+		</conditional>
+		
+		<param name="xLabel" type="text" value="value1" label="x label option" help="Choose one of the tags of 9th column in GFF file to be plotted as X-axis. Warning: You can only choose the tag value is digital."/>
+                <param name="yLabel" type="text" value="value2" label="y label option" help="Choose one of the tags of 9th column in GFF file to be plotted as Y-axis. You can only choose the tag value is digital."/>
+                <param name="XVal" type="float" value="0.0" label="value for x when tag is not present "/>
+		
+		<param name="YVal" type="float" value="0.0" label="value for y when tag is not present"/>
+
+
+                <conditional name="optionLog">
+			<param name="log" type="select" label="calculate log option" help="use log on x- or y-axis (write 'x', 'y' or 'xy')">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="logOnAxisLabel" type="text" value="y" label="use log on x- or y-axis (write 'x', 'y' or 'xy')"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+                <param name="shape" type="text" value="barplot" label="shape of the plot [format: choice (barplot, line, points, heatPoints)]"/>
+	</inputs>
+	
+	<outputs>
+		<data name="outputFile" format="png" label="[plot] Output file"/>
+	</outputs>
+</tool>

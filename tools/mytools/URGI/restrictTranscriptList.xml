@@ -1,0 +1,108 @@
+<tool id="restrictTranscriptList" name="restrict transcript list">
+  <description>Keep the coordinates which are located in a given position.</description>
+  <command interpreter="python"> ../Java/Python/restrictTranscriptList.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if
+		
+  		#if $OptionChrom.Chrom == "Yes":
+			-c $OptionChrom.ChromName
+  		#end if
+  				
+  		#if $OptionStart.start == "Yes":
+			-s $OptionStart.startValue
+  		#end if
+  	
+  		#if $OptionEnd.end == "Yes":
+			-e $OptionEnd.endValue
+  		#end if
+  		
+  	-o $outputFile  
+  
+  </command>
+  
+  
+  <inputs>
+    <conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input File"/>
+			</when>
+	</conditional>
+	
+	<conditional name="OptionChrom">
+			<param name="Chrom" type="select" label="chromosome name">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="ChromName" type="text" value="None"/>
+			</when>
+			<when value="No">
+			</when>
+	</conditional>	
+  
+	<conditional name="OptionStart">
+			<param name="start" type="select" label="restrict to the start of the transcript">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="startValue" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+	</conditional>
+		
+	<conditional name="OptionEnd">
+			<param name="end" type="select" label="restrict to the end of the transcript">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="endValue" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+	</conditional>    
+  </inputs>
+
+  <outputs>
+    <data format="gff3" name="outputFile" label="[restrictTranscriptList] Output File"/>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

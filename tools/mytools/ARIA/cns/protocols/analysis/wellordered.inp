@@ -1,0 +1,381 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: wellordered.inp,v $
+
+remarks  wellordered.inp
+remarks  ARIA
+remarks  Michael Nilges,  EMBL, FEB-1994 - Jul-1995
+remarks  Michael Nilges and Jens Linge, EMBL, MAR-1999 CNS version
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+evaluate ($iteration = $Data.iteration)
+
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+{
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+}
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+
+
+{* set some options for the identification of well-ordered region(s) *}
+!evaluate ($target_mean = 15.0)   {* target rmsd from average *}
+!evaluate ($total_segments = 1)   {* number of ordered segments to search for *}
+evaluate ($qwritepdb = TRUE)      {* TRUE if ensemble should be fitted and written out *}
+evaluate ($resave = FALSE)        {* average rmsd over each residue *}
+evaluate ($scale = -1)            {* scale rmsd to be scale/max(b)*b *}
+iden (store6) (all)               {* output selection *}
+iden (store8) (name ca or name c or name n or name p or name c1')
+
+{* filenames *}
+evaluate ($protocol  = "wellordered.inp")
+evaluate ($citation1 = "Nilges, M., Gronenborn, A.M., Clore, G.M.")
+evaluate ($citation2 = "FEBS lett. 219, 17-21.")
+evaluate ($outroot  = "ANALYSIS:" + $Filenames.fileroot)
+evaluate ($trajfile=$outroot+".crd")
+evaluate ($dispfile=$outroot+".prt")
+
+{* ==================================== *}
+{* part 1: generate a pseudo trajectory *}
+{* ==================================== *}
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 0)
+evaluate ($TotalNstruct = 0)
+while ($count lt $Iterations.Structures) loop main
+   evaluate ($count=$count+1) 
+   evaluate ($file = $filenames.bestfile_$count)
+   if ($file ne "") then 
+      evaluate ($TotalNstruct = $TotalNstruct + 1) 
+   end if
+   display $file
+end loop main
+
+
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+while ($count lt $TotalNstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   display $file
+   coor init end
+   if ($file ne "") then 
+      coor @@$file
+      evaluate ($nstruc = $nstruc + 1)
+      if ($nstruc = 1) then coor copy end end if
+      coor sele= (store8) fit end
+      @RUN:protocols/analysis/rotares.cns
+
+      if ($nstruc eq 1) then
+         write trajectory
+            ascii true
+            output= $trajfile
+         end
+      else
+         write traj next end
+      end if
+   end if
+end loop main
+
+close $trajfile end
+if ($Iterations.Assignstruct < $TotalNstruct) then
+  evaluate ($FittedStructures = $Iterations.Assignstruct)
+else
+  evaluate ($FittedStructures = $TotalNstruct)
+end if
+
+{* ======================================== *}
+{* part 2: search for a well defined region *}
+{* ======================================== *}
+
+{* the folowing values need not be changed, usually *}
+
+evaluate ($nsigma = 2)         {* starting cutoff level *}
+evaluate ($mean_toler = 0.5)   {* convergence criterion *}
+evaluate ($stdev_toler = 0.05) {* convergence criterion *}
+evaluate ($sigma_factor = 1.1) {* reduce limit each iteration by *}
+
+set display $dispfile end
+display ! all atoms with Rms > RmsLimit are excluded
+display ! RmsLimit = MeanRms + SigmaLimit*Stdev
+display ! Iteration SigmaLimit RmsLimit MeanRms Stdev nFittedAtoms
+
+do (store1 = 0) (all)
+do (store2 = 0) (all)
+do (store3 = 0) (all)
+evaluate ($nstruc = 0)
+
+!read trajectory:
+while ($nstruc lt $FittedStructures) loop fitt 
+   evaluate ($nstruc = $nstruc + 1)
+   if ($nstruc eq 1) then
+      read trajectory
+         ascii true
+         input= $trajfile
+         begin 1 skip 1 stop $FittedStructures
+      end
+   else
+      read traj next end
+   end if
+   coor sele= (store8) fit end
+   do (store1 = store1 + x) (all)
+   do (store2 = store2 + y) (all)
+   do (store3 = store3 + z) (all)
+end loop fitt
+
+
+do (xcomp = store1/$nstruc) (all)
+do (ycomp = store2/$nstruc) (all)
+do (zcomp = store3/$nstruc) (all)
+
+iden (store7) (not all)
+evaluate ($count = 1)
+iden (store9) (store8 and not store7)
+
+evaluate ($rms_iter = 0)
+evaluate ($limit = 0)
+
+
+evaluate ($converged = 0)
+evaluate ($old_mean = 0)
+evaluate ($old_stdev = 0)
+
+iden (store9) (store8)
+
+while ($converged = 0) loop rms
+   evaluate ($rms_iter = $rms_iter + 1)
+
+! generate an average structure in the MAIN coor set,
+! using atoms selected in store9 as reference
+! calculate rms fluctuations in B array
+
+   do (store1 = 0) (all)
+   do (store2 = 0) (all)
+   do (store3 = 0) (all)
+   do (store4 = 0) (all)
+   evaluate ($nstruc = 0)
+   while ($nstruc < $FittedStructures) loop fitt 
+      evaluate ($nstruc = $nstruc + 1)
+      if ($nstruc eq 1) then
+         read trajectory
+            ascii true
+            input= $trajfile
+            begin 1 skip 1 stop $FittedStructures
+         end
+      else
+         read traj next end
+      end if
+      coor sele= (store9) fit end
+      do (store1 = store1 + x) (all)
+      do (store2 = store2 + y) (all)
+      do (store3 = store3 + z) (all)
+      do (store4 = store4 + x^2 + y^2 + z^2) (all)
+   end loop fitt
+   do (xcomp = store1/$nstruc) (all)
+   do (ycomp = store2/$nstruc) (all)
+   do (zcomp = store3/$nstruc) (all)
+   do (b = sqrt(store4/$nstruc - (xcomp^2 + ycomp^2 + zcomp^2))) (all)
+
+! calcuate mean rms fluctuation and sigma
+   show ave (b) (store9)
+   evaluate ($mean_u = $result)
+   evaluate ($diff_mean = abs($old_mean - $mean_u))
+   show rms (b) (store9)
+   evaluate ($stdev_u = $result)
+   evaluate ($diff_stdev = abs($old_stdev - $stdev_u)/$stdev_u)
+
+   if ($diff_mean < $mean_toler) then
+      if ($diff_stdev < $stdev_toler) then
+         evaluate ($converged = 1)
+      else
+         evaluate ($old_stdev = $stdev_u)
+      end if
+   else
+      evaluate ($old_mean = $mean_u)
+      evaluate ($old_stdev = $stdev_u)
+   end if
+
+   evaluate ($fitatoms = $select)
+   display $rms_iter $nsigma $limit $mean_u $stdev_u $fitatoms
+
+   evaluate ($limit = $mean_u + $nsigma * $stdev_u)
+
+! exclude all residues that have rmsd beyond limit
+   iden (store9) (attribute b < $limit and store8 and not store7)
+
+end loop rms
+
+display
+
+do (q = 0) (all)
+do (q = $count) (store9)
+
+{* write out average coordinates  *}
+
+evaluate ($filename = $outroot + "_ave.pdb")
+remark average structure
+remark generated by $protocol
+remark $citation1
+remark $citation2
+remark fitted to segment number $count
+remark average rms difference of well defined region $mean_u
+
+
+do (bcomp = b) (all)
+do (qcomp = q) (all)
+
+write coor from=comp sele= (all) output= $filename end
+
+{* ============================================= *}
+{* part 3: sequence dependend rms difference     *}
+{* ============================================= *}
+
+evaluate ($filename = $outroot + "_ave.pdb")
+coor @@$filename
+
+set display ANALYSIS:rmsdseq.disp end 
+display # sequential rms differences
+display resid	rmsback3	rmsback5	rmsside	rmsall
+for $id in id (tag) loop rmss
+    show element (resid) (id $id)
+    evaluate ($resid = $result)
+    show norm (b) 
+      (byres(id $id) and (name c or name ca or name cb or name n or name o))
+    evaluate ($rmsback5 = $result)
+    show norm (b) 
+      (byres(id $id) and (name c or name ca or name n))
+    evaluate ($rmsback3 = $result)
+    show norm (b) 
+      (byres(id $id) and not hydro and not 
+      (name c or name ca or name cb or name n or name o))
+    evaluate ($rmsside = $result)
+    show norm (b) 
+      (byres(id $id) and not hydro)
+    evaluate ($rmsall = $result)
+
+    display $resid	$rmsback3	$rmsback5	$rmsside	$rmsall
+end loop rmss
+
+
+{* ============================================= *}
+{* part 4: fit the ensemble to the first segment *}
+{* ============================================= *}
+
+
+
+ident (store1) (attribute q > 0)
+do (q=1) (all)
+
+if ($resave eq TRUE) then
+   for $id in id (tag) loop bfac
+      show norm (b)
+         (byres(id $id)
+          and not (name h* or name ca or name o or name n or name c))
+      do (b=$result)
+         (byres(id $id)
+          and not (name h* or name ca or name o or name n or name c))
+      show norm (b)
+         (byres(id $id) and (name ca or name o or name n or name c))
+      do (b=$result)
+         (byres(id $id) and (name ca or name o or name n or name c))
+   end loop bfac
+end if
+
+if ($scale > 0) then
+   show max (b) (not hydro)
+   do (b = min($scale,$scale/$result*b)) (all)
+end if
+
+coor sele= (store1) fit end
+coor copy end
+do (bcomp=b) (all)
+
+if ($qwritepdb eq TRUE) then
+evaluate ($nstruc = 0)
+
+
+!fit structures to average structure and write pdb files:
+while ($nstruc < $FittedStructures) loop fitt 
+   evaluate ($nstruc = $nstruc + 1)
+
+   if ($nstruc eq 1) then
+      read trajectory
+         ascii true
+         input= $trajfile
+         begin 1 skip 1 stop $FittedStructures
+      end
+   else
+      read traj next end
+   end if
+
+   coor sele= (store1) fit end
+   do (b=bcomp) (all)
+   evaluate ($filename =  $outroot + "fit" + "_" + encode($nstruc) + ".pdb" )
+
+   remark best fit to average with $protocol
+   remark $citation1
+   remark $citation2
+   remark fitted to segment number $count
+   remark average rms difference of well defined region $mean_u
+   remark well defined region contains $fitatoms backbone atoms
+   write coor output= $filename sele= (all) end
+
+end loop fitt
+end if
+
+stop

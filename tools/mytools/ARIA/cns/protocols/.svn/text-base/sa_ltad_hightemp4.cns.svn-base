@@ -1,0 +1,141 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_ltad_hightemp4.cns,v $
+
+! module sa_ltad_hightemp.cns
+! torsion dynamics high temperature phase
+
+module(nstep;SaProtocol;Data;Toppar)
+
+evaluate ($ncycle=1)
+evaluate ($calcsteps=int(&nstep / &SaProtocol.tadfactor)+1 ) 
+evaluate ($cyclesteps = int(&nstep / $ncycle / &SaProtocol.tadfactor)+1 )
+
+noe 
+    rswitch ambi &Data.Rswi_hot 
+    rswitch dist &Data.Rswi_hot
+    rswitch hbon &Data.Rswi_hot
+
+    mrswitch ambi &Data.mRswi_hot 
+    mrswitch dist &Data.mRswi_hot
+    mrswitch hbon &Data.mRswi_hot
+
+    asym ambi &Data.asy_hot 
+    asym dist &Data.asy_hot
+    asym hbon &Data.asy_hot
+
+    masym ambi &Data.masy_hot 
+    masym dist &Data.masy_hot
+    masym hbon &Data.masy_hot
+end
+
+evaluate ($k_vdw = 0.005)
+evaluate ($bath = &SaPRotocol.tadinit_t)
+evaluate ($timestep = &SaProtocol.timestep*&SaProtocol.tadfactor)
+
+do (vx = maxwell(10)) (all)
+do (vy = maxwell(10)) (all)
+do (vz = maxwell(10)) (all)
+
+parameter nbonds 
+   atom cutnb 12 tolerance 4 repel=1.25 wmin 0.5
+   rexp=4 irexp=1 rcon=1. nbxmod 4 ctonnb 0.9 ctofnb 1.0
+end end
+
+
+!for the vean statement:
+evaluate( $k_cen_1 = &data.ini_cen_hot_1)
+evaluate( $cen_fac_1 = ( &data.fin_cen_hot_1 / &data.ini_cen_hot_1)^( 1 / $ncycle))
+evaluate( $k_bor_1 = &data.ini_bor_hot_1)
+evaluate( $bor_fac_1 = ( &data.fin_bor_hot_1 / &data.ini_bor_hot_1)^( 1 / $ncycle))
+
+evaluate( $k_cen_2 = &data.ini_cen_hot_2)
+evaluate( $cen_fac_2 = ( &data.fin_cen_hot_2 / &data.ini_cen_hot_2)^( 1 / $ncycle))
+evaluate( $k_bor_2 = &data.ini_bor_hot_2)
+evaluate( $bor_fac_2 = ( &data.fin_bor_hot_2 / &data.ini_bor_hot_2)^( 1 / $ncycle))
+
+evaluate( $k_cen_3 = &data.ini_cen_hot_3)
+evaluate( $cen_fac_3 = ( &data.fin_cen_hot_3 / &data.ini_cen_hot_3)^( 1 / $ncycle))
+evaluate( $k_bor_3 = &data.ini_bor_hot_3)
+evaluate( $bor_fac_3 = ( &data.fin_bor_hot_3 / &data.ini_bor_hot_3)^( 1 / $ncycle))
+
+evaluate( $k_cen_4 = &data.ini_cen_hot_4)
+evaluate( $cen_fac_4 = ( &data.fin_cen_hot_4 / &data.ini_cen_hot_4)^( 1 / $ncycle))
+evaluate( $k_bor_4 = &data.ini_bor_hot_4)
+evaluate( $bor_fac_4 = ( &data.fin_bor_hot_4 / &data.ini_bor_hot_4)^( 1 / $ncycle))
+
+evaluate( $k_cen_5 = &data.ini_cen_hot_5)
+evaluate( $cen_fac_5 = ( &data.fin_cen_hot_5 / &data.ini_cen_hot_5)^( 1 / $ncycle))
+evaluate( $k_bor_5 = &data.ini_bor_hot_5)
+evaluate( $bor_fac_5 = ( &data.fin_bor_hot_5 / &data.ini_bor_hot_5)^( 1 / $ncycle))
+
+igroup
+   inter (all) (not store1) weights * 1 angl 1.0 impr 1.0 vdw 0.0 elec 0 end
+   inter (store1) (store1)  weights * 1 angl 1.0 impr 1.0 vdw $k_vdw elec 0 end
+end
+   
+restraints dihedral scale &Data.dihedrals_hot end 
+noe scale dist 0 scale ambi 0 scale hbon 0 end
+minimize powell nstep=200 drop=10.  nprint=25 end
+
+noe 
+   scale dist  &Data.unamb_hot 
+   scale ambi  &Data.amb_hot
+   scale hbon  &Data.hbond_hot
+end
+
+couplings class c1 force $Data.c1_hot end
+couplings class c2 force $Data.c2_hot end
+couplings class c3 force $Data.c3_hot end
+couplings class c4 force $Data.c4_hot end
+couplings class c5 force $Data.c5_hot end
+sani class rdc1 force $Data.rdc1_hot end
+sani class rdc2 force $Data.rdc2_hot end
+sani class rdc3 force $Data.rdc3_hot end
+sani class rdc4 force $Data.rdc4_hot end
+sani class rdc5 force $Data.rdc5_hot end
+
+evaluate ($reassign = TRUE)
+evaluate ($countcycle = 1)
+while ($countcycle le $ncycle) loop high
+
+!     flags exclude improper angle bond end
+
+      ! BARDIAUX 13/07/05
+      if (&Toppar.symmetry ne "1") then
+	flags include ncs end
+      end if
+
+
+     !for the vean statement:
+
+     evaluate ($k_bor_1 = $k_bor_1 * $bor_fac_1)
+     evaluate ($k_bor_2 = $k_bor_2 * $bor_fac_2)
+     evaluate ($k_bor_3 = $k_bor_3 * $bor_fac_3)
+     evaluate ($k_bor_4 = $k_bor_4 * $bor_fac_4)
+     evaluate ($k_bor_5 = $k_bor_5 * $bor_fac_5)
+
+     evaluate ($k_cen_1 = $k_cen_1 * $cen_fac_1)
+     evaluate ($k_cen_2 = $k_cen_2 * $cen_fac_2)
+     evaluate ($k_cen_3 = $k_cen_3 * $cen_fac_3)
+     evaluate ($k_cen_4 = $k_cen_4 * $cen_fac_4)
+     evaluate ($k_cen_5 = $k_cen_5 * $cen_fac_5)
+
+     vean class vea1 force $k_bor_1 $k_cen_1 end
+     vean class vea2 force $k_bor_2 $k_cen_2 end
+     vean class vea3 force $k_bor_3 $k_cen_3 end
+     vean class vea4 force $k_bor_4 $k_cen_4 end
+     vean class vea5 force $k_bor_5 $k_cen_5 end
+
+     dyna tors
+         reassign $reassign
+         timestep=$timestep
+         nstep=$cyclesteps
+         nprint=$cyclesteps
+         ntrfrq=0
+         tcoupling = true  tbath = $bath
+     end
+     evaluate ($reassign = FALSE)
+     evaluate ($countcycle=$countcycle+1)
+end loop high
+

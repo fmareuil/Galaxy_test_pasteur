@@ -1,0 +1,7 @@
+REMARK FILENAME="tensor.pdb"
+REMARK CNS VERSION:0.5
+ATOM      1  X   ANI   999       3.000   0.000   0.000  1.00  0.00          
+ATOM      2  Y   ANI   999       0.000   3.000   0.000  1.00  0.00          
+ATOM      3  Z   ANI   999       0.000   0.000   3.000  1.00  0.00          
+ATOM      4  OO  ANI   999       0.000   0.000   0.000  1.00  0.00          
+END

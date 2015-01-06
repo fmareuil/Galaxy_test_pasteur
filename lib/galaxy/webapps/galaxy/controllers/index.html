@@ -1,0 +1,632 @@
+<!DOCTYPE HTML>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+    <!--base_panels.mako-->
+    
+
+    <script type="text/javascript">
+        if ( window != top ) {
+            top.location.href = location.href;
+        }
+    </script>
+    
+    <head>
+            <title>Galaxy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name = "viewport" content = "maximum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        
+    
+    <link href="/static/style/base.css?v=1413465874" media="screen" rel="stylesheet" type="text/css" />
+<link href="/static/style/jquery.rating.css?v=1413465874" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    #center {
+    }
+    </style>
+
+    <link href="/static/style/tool_menu.css?v=1413465874" media="screen" rel="stylesheet" type="text/css" />
+    <style>
+        #right .unified-panel-body {
+            background: none repeat scroll 0 0 #DFE5F9;
+            overflow: auto;
+            padding: 0;
+        }
+    </style>
+
+        
+    
+
+
+
+    <script src="/static/scripts/libs/jquery/jquery.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/jquery/jquery.migrate.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/jquery/select2.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/bootstrap.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/underscore.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/backbone/backbone.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/handlebars.runtime.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/galaxy.base.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/require.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/mvc/ui.js?v=1413465874" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        var galaxy_config =
+        {
+            root: '/'
+        };
+
+        //## load additional style sheet
+        //if (window != window.top)
+        //    $('<link href="' + galaxy_config.root + 'static/style/galaxy.frame.masthead.css" rel="stylesheet">').appendTo('head');
+
+        // console protection
+        window.console = window.console || {
+            log     : function(){},
+            debug   : function(){},
+            info    : function(){},
+            warn    : function(){},
+            error   : function(){},
+            assert  : function(){}
+        };
+
+        require.config({
+            baseUrl: "/static/scripts",
+            shim: {
+                "libs/underscore": { exports: "_" },
+                "libs/backbone/backbone": { exports: "Backbone" }
+            }
+        });
+    </script>
+
+
+
+    
+    <script src="/static/scripts/templates/compiled/tool_link.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/templates/compiled/panel_section.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/templates/compiled/tool_search.js?v=1413465874" type="text/javascript"></script>
+    <script src="/static/scripts/libs/require.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/galaxy.autocom_tagging.js?v=1413465874" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+
+        require.config({ 
+                baseUrl: "/static/scripts",
+                shim: {
+                    "libs/underscore": { exports: "_" }
+                }
+        });
+
+        require(["mvc/tools"], function(tools_mod) {
+
+            // Init. on document load.
+            $(function() {
+            });
+
+        });
+    </script>
+
+
+        
+    
+    
+    
+    
+    
+    <script type="text/javascript">
+        //TODO: global...
+            ( window.bootstrapped = window.bootstrapped || {} )[ 'config' ] = (
+                {
+  "wiki_url": "http://wiki.galaxyproject.org/", 
+  "ftp_upload_site": null, 
+  "support_url": "https://wiki.galaxyproject.org/Support", 
+  "allow_user_dataset_purge": true, 
+  "use_remote_user": false, 
+  "terms_url": null, 
+  "ftp_upload_dir": null, 
+  "logo_url": null, 
+  "enable_unique_workflow_defaults": false
+} );
+            ( window.bootstrapped = window.bootstrapped || {} )[ 'user' ] = (
+                {
+  "quota_percent": null, 
+  "nice_total_disk_usage": "0 bytes", 
+  "total_disk_usage": 0
+} );
+        define( 'bootstrapped-data', function(){
+            return window.bootstrapped;
+        });
+    </script>
+
+    <script type="text/javascript">
+        require([ 'require', 'galaxy-app-base' ], function( require, galaxy ){
+            //TODO: global...
+            window.Galaxy = new galaxy.GalaxyApp({
+                root            : '/',
+                //TODO: get these options from the server
+                loggerOptions   : {}
+            });
+
+        });
+    </script>
+
+
+    </head>
+    
+    
+
+    <body scroll="no" class="full-content ">
+            <noscript>
+                <div class="overlay overlay-background">
+                    <div class="modal dialog-box" border="0">
+                        <div class="modal-header"><h3 class="title">Javascript Required</h3></div>
+                        <div class="modal-body">The Galaxy analysis interface requires a browser with Javascript enabled. <br> Please enable Javascript and refresh this page</div>
+                    </div>
+                </div>
+            </noscript>
+        <div id="everything" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            <div id="background"></div>
+            <div id="masthead" class="navbar navbar-fixed-top navbar-inverse">
+                
+    
+    
+
+
+    <script type="text/javascript">
+        if( !window.Galaxy ){
+            Galaxy = {};
+        }
+
+        if (window != window.top){
+            $('<link href="' + galaxy_config.root + 'static/style/galaxy.frame.masthead.css" rel="stylesheet">')
+                .appendTo('head');
+        }
+
+        require([
+            'galaxy.masthead', 'galaxy.menu', 'mvc/ui/ui-modal', 'galaxy.frame', 'mvc/upload/upload-view',
+            'mvc/user/user-model',
+            'mvc/user/user-quotameter'
+        ], function( mod_masthead, mod_menu, mod_modal, mod_frame, GalaxyUpload, user, quotameter ){
+            if( !Galaxy.currUser ){
+                // this doesn't need to wait for the page being readied
+                Galaxy.currUser = new user.User(
+{
+  "quota_percent": null, 
+  "nice_total_disk_usage": "0 bytes", 
+  "total_disk_usage": 0
+});
+            }
+
+            $(function() {
+                // check if masthead is available
+                if (Galaxy.masthead){
+                    return;
+                }
+
+                // get configuration
+                var masthead_config = {"ftp_upload_site": null, "mailing_lists": "http://wiki.galaxyproject.org/MailingLists", "nginx_upload_path": "/api/tools", "terms_url": "", "wiki_url": "http://galaxyproject.org/", "support_url": "http://wiki.galaxyproject.org/Support", "remote_user_logout_href": "www.pasteur.fr", "biostar_url_redirect": "http://127.0.0.1:8082/biostar/biostar_redirect", "ftp_upload_dir": null, "logo_url": "/", "search_url": "http://galaxyproject.org/search/usegalaxy/", "screencasts_url": "http://vimeo.com/galaxyproject", "brand": "", "lims_doc_url": "http://main.g2.bx.psu.edu/u/rkchak/p/sts", "active_view": "analysis", "citation_url": "http://wiki.galaxyproject.org/CitingGalaxy", "allow_user_creation": false, "is_admin_user": null, "biostar_url": null, "datatypes_disable_auto": false, "use_remote_user": false, "enable_cloud_launch": false, "user": {"requests": false, "valid": false, "email": "", "json": {"quota_percent": null, "nice_total_disk_usage": "0 bytes", "total_disk_usage": 0}}};
+
+                // load global galaxy objects
+                Galaxy.masthead = new mod_masthead.GalaxyMasthead(masthead_config);
+                Galaxy.modal = new mod_modal.View();
+                Galaxy.frame = new mod_frame.GalaxyFrame();
+
+                // construct default menu options
+                Galaxy.menu = new mod_menu.GalaxyMenu({
+                    masthead: Galaxy.masthead,
+                    config: masthead_config
+                });
+                
+                // add upload plugin
+                Galaxy.upload = new GalaxyUpload(masthead_config);
+
+                // set up the quota meter (And fetch the current user data from trans)
+                // add quota meter to masthead
+                Galaxy.quotaMeter = new quotameter.UserQuotaMeter({
+                    model   : Galaxy.currUser,
+                    el      : Galaxy.masthead.$('.quota-meter-container')
+                }).render();
+            });
+        });
+    </script>
+
+
+            </div>
+            <div id="messagebox" class="panel-info-message">
+                None
+            </div>
+            
+    
+    
+
+    
+
+    <div id="top-modal" class="modal fade " style='display: none;'>
+        <div id="top-modal-backdrop" class="modal-backdrop fade " style="z-index: -1"></div>
+        <div id="top-modal-dialog" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type='button' class='close' style="display: none;">&times;</button>
+                    <h4 class='title'></h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <div class="buttons" style="float: right;"></div>
+                    <div class="extra_buttons" style=""></div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                <div id="left">
+                    
+    <div class="unified-panel-header" unselectable="on">
+        <div class='unified-panel-header-inner'>
+            Tools
+        </div>
+    </div>
+    <div class="unified-panel-body" style="overflow: auto">
+        
+    <div class="toolMenuContainer">
+        
+        <div class="toolMenu" style="display: none">
+            <div id="search-no-results" style="display: none; padding-top: 5px">
+                <em><strong>Search did not match any tools.</strong></em>
+            </div>
+            
+            
+            
+        </div>
+    </div>
+
+    </div>
+
+                    <div class="unified-panel-footer">
+                        <div class="panel-collapse"></div>
+                        <div class="drag"></div>
+                    </div>
+                </div><!--end left-->
+            <div id="center" class="inbound">
+                
+
+    
+    
+    <div style="position: absolute; width: 100%; height: 100%">
+        <iframe name="galaxy_main" id="galaxy_main" frameborder="0"
+                style="position: absolute; width: 100%; height: 100%;" src="/user/login"></iframe>
+    </div>
+
+
+            </div><!--end center-->
+                <div id="right">
+                    
+    <!-- current history panel -->
+    <div class="unified-panel-header" unselectable="on">
+        <div class="unified-panel-header-inner">
+            <div style="float: right">
+                <a id="history-refresh-button" class='panel-header-button' href="javascript:void(0)"
+                   title="Refresh history">
+                    <span class="fa fa-refresh"></span>
+                </a>
+                <a id="history-options-button" class='panel-header-button'
+                   href="/root/history_options" target="galaxy_main"
+                   title="History options">
+                    <span class="fa fa-cog"></span>
+                </a>
+            </div>
+            <div class="panel-header-text">History</div>
+        </div>
+    </div>
+    <div class="unified-panel-body">
+        <div id="current-history-panel" class="history-panel"></div>
+        <script type="text/javascript">
+        require([ "mvc/history/history-panel-edit-current" ], function( historyPanel ){
+            $(function(){
+                var currPanel = new historyPanel.CurrentHistoryPanel({
+                    el              : $( "#current-history-panel" ),
+                    purgeAllowed    : Galaxy.config.allow_user_dataset_purge,
+                    linkTarget      : 'galaxy_main',
+                    $scrollContainer: function(){ return this.$el.parent(); }
+                });
+                currPanel
+                    .connectToQuotaMeter( Galaxy.quotaMeter )
+                    .connectToOptionsMenu( Galaxy.historyOptionsMenu );
+                currPanel.loadCurrentHistory();
+                Galaxy.currHistoryPanel = currPanel;
+            });
+        });
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $( '#history-refresh-button' )
+                    .on( 'click', function(){
+                        if( top.Galaxy && top.Galaxy.currHistoryPanel ){
+                            top.Galaxy.currHistoryPanel.loadCurrentHistory();
+                            inside_galaxy_frameset = true;
+                        }
+                    });
+            });
+        </script>
+    </div>
+
+                    <div class="unified-panel-footer">
+                        <div class="panel-collapse right"></div>
+                        <div class="drag"></div>
+                    </div>
+                </div><!--end right-->
+        </div><!--end everything-->
+    </body>
+    
+    
+
+    <script src="/static/scripts/libs/jquery/jquery.event.hover.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/jquery/jquery.form.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/libs/jquery/jquery.rating.js?v=1413465874" type="text/javascript"></script>
+<script src="/static/scripts/galaxy.panels.js?v=1413465874" type="text/javascript"></script>
+    <script type="text/javascript">
+        
+    ensure_dd_helper();
+        
+            var lp = new Panel( { panel: $("#left"), center: $("#center"), drag: $("#left > .unified-panel-footer > .drag" ), toggle: $("#left > .unified-panel-footer > .panel-collapse" ) } );
+            force_left_panel = function( x ) { lp.force_panel( x ) };
+        
+            var rp = new Panel( { panel: $("#right"), center: $("#center"), drag: $("#right > .unified-panel-footer > .drag" ), toggle: $("#right > .unified-panel-footer > .panel-collapse" ), right: true } );
+            window.handle_minwidth_hint = function( x ) { rp.handle_minwidth_hint( x ) };
+            force_right_panel = function( x ) { rp.force_panel( x ) };
+    
+    </script>
+    <script type="text/javascript">
+        var upload_form_error = function( msg ) {
+            var $galaxy_mainBody = $("iframe#galaxy_main").contents().find("body"),
+                $errMsg = $galaxy_mainBody.find( 'div.errormessage' );
+            if ( !$errMsg.size() ){
+                $errMsg = $( '<div/>' ).addClass( 'errormessage' ).prependTo( $galaxy_mainBody );
+            }
+            $errMsg.text( msg );
+        }
+
+        var uploads_in_progress = 0;
+        function decrementUploadsInProgress(){
+            uploads_in_progress -= 1;
+            if( uploads_in_progress === 0 ){
+                window.onbeforeunload = null;
+            }
+        }
+        jQuery( function() {
+            $("iframe#galaxy_main").load( function() {
+                $(this).contents().find("form").each( function() {
+                    if ( $(this).find("input[galaxy-ajax-upload]").length > 0 ){
+                        var $form = $( this );
+
+                        $(this).submit( function( event ) {
+                            // Only bother using a hidden iframe if there's a file (e.g. big data) upload
+                            var file_upload = false;
+                            $(this).find("input[galaxy-ajax-upload]").each( function() {
+                                if ( $(this).val() != '' ) {
+                                    file_upload = true;
+                                }
+                            });
+                            if ( ! file_upload ) {
+                                return true;
+                            }
+                            // Make a synchronous request to create the datasets first
+                            var async_datasets;
+                            var upload_error = false;
+
+                            //NOTE: in order for upload.py to match the datasets created below, we'll move the js File
+                            //  object's name into the file_data field (not in the form only for what we send to
+                            //  upload_async_create)
+                            var formData = $( this ).serializeArray();
+                            var name = function(){
+                                var $fileInput = $form.find( 'input[name="files_0|file_data"]' );
+                                if( /msie/.test( navigator.userAgent.toLowerCase() ) ){
+                                    return $fileInput.val().replace( 'C:\\fakepath\\', '' );
+                                } else {
+                                    return $fileInput.get( 0 ).files[0].name;
+                                }
+                            }
+                            formData.push({ name: "files_0|file_data", value: name });
+
+                            $.ajax( {
+                                async:      false,
+                                type:       "POST",
+                                url:        "/tool_runner/upload_async_create",
+                                data:       formData,
+                                dataType:   "json",
+                                success:    function(array_obj, status) {
+                                                if (array_obj.length > 0) {
+                                                    if (array_obj[0] == 'error') {
+                                                        upload_error = true;
+                                                        upload_form_error(array_obj[1]);
+                                                    } else {
+                                                        async_datasets = array_obj.join();
+                                                    }
+                                                } else {
+                                                    // ( gvk 1/22/10 ) FIXME: this block is never entered, so there may be a bug somewhere
+                                                    // I've done some debugging like checking to see if array_obj is undefined, but have not
+                                                    // tracked down the behavior that will result in this block being entered.  I believe the
+                                                    // intent was to have this block entered if the upload button is clicked on the upload
+                                                    // form but no file was selected.
+                                                    upload_error = true;
+                                                    upload_form_error( 'No data was entered in the upload form.  You may choose to upload a file, paste some data directly in the data box, or enter URL(s) to fetch data.' );
+                                                }
+                                            }
+                            } );
+
+                            // show the dataset we created above in the history panel
+                            Galaxy && Galaxy.currHistoryPanel && Galaxy.currHistoryPanel.refreshContents();
+
+                            if (upload_error == true) {
+                                return false;
+                            } else {
+                                $(this).find("input[name=async_datasets]").val( async_datasets );
+                                $(this).append("<input type='hidden' name='ajax_upload' value='true'>");
+                            }
+                            // iframe submit is required for nginx (otherwise the encoding is wrong)
+                            $(this).ajaxSubmit({
+                                //iframe: true,
+                                error: function( xhr, msg, status ){
+                                    decrementUploadsInProgress();
+                                },
+                                success: function ( response, x, y, z ) {
+                                    decrementUploadsInProgress();
+                                }
+                            });
+                            uploads_in_progress++;
+                            window.onbeforeunload = function() {
+                                return "Navigating away from the Galaxy analysis interface will interrupt the "
+                                        + "file upload(s) currently in progress.  Do you really want to do this?";
+                            }
+                            if ( $(this).find("input[name='folder_id']").val() != undefined ) {
+                                var library_id = $(this).find("input[name='library_id']").val();
+                                var show_deleted = $(this).find("input[name='show_deleted']").val();
+                                if ( location.pathname.indexOf( 'admin' ) != -1 ) {
+                                    $("iframe#galaxy_main").attr("src","/library_common/browse_library?cntrller=library_admin&id=" + library_id + "&created_ldda_ids=" + async_datasets + "&show_deleted=" + show_deleted);
+                                } else {
+                                    $("iframe#galaxy_main").attr("src","/library_common/browse_library?cntrller=library&id=" + library_id + "&created_ldda_ids=" + async_datasets + "&show_deleted=" + show_deleted);
+                                }
+                            } else {
+                                $("iframe#galaxy_main").attr("src","/tool_runner/upload_async_message");
+                            }
+                            event.preventDefault();
+                            return false;
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <script type="text/javascript">
+    // Set up GalaxyAsync object.
+    var galaxy_async = new GalaxyAsync();
+    galaxy_async.set_func_url( galaxy_async.set_user_pref,
+        "/user/set_user_pref_async");
+    
+    // set up history options menu
+    $(function(){
+        // Init history options.
+        //$("#history-options-button").css( "position", "relative" );
+        var popupmenu = PopupMenu.make_popupmenu( $("#history-options-button"), {
+            "History Lists": null,
+            "Saved Histories": function() {
+                galaxy_main.location = "/history/list";
+            },
+            "Histories Shared with Me": function() {
+                galaxy_main.location = "/history/list_shared";
+            },
+            "Current History": null,
+            "Create New": function() {
+                if( Galaxy && Galaxy.currHistoryPanel ){
+                    Galaxy.currHistoryPanel.createNewHistory();
+                }
+            },
+            "Copy History": function() {
+                galaxy_main.location = "/history/copy";
+            },
+            "Copy Datasets": function() {
+                galaxy_main.location = "/dataset/copy_datasets";
+            },
+            "Share or Publish": function() {
+                galaxy_main.location = "/history/sharing";
+            },
+            "Extract Workflow": function() {
+                galaxy_main.location = "/workflow/build_from_current_history";
+            },
+            "Dataset Security": function() {
+                galaxy_main.location = "/root/history_set_default_permissions";
+            },
+            "Resume Paused Jobs": function() {
+                galaxy_main.location = "/history/resume_paused_jobs?current=True";
+            },
+            "Collapse Expanded Datasets": function() {
+                if( Galaxy && Galaxy.currHistoryPanel ){
+                    Galaxy.currHistoryPanel.collapseAll();
+                }
+            },
+            "Include Deleted Datasets": function( clickEvent, thisMenuOption ) {
+                if( Galaxy && Galaxy.currHistoryPanel ){
+                    thisMenuOption.checked = Galaxy.currHistoryPanel.toggleShowDeleted();
+                }
+            },
+            "Include Hidden Datasets": function( clickEvent, thisMenuOption ) {
+                if( Galaxy && Galaxy.currHistoryPanel ){
+                    thisMenuOption.checked = Galaxy.currHistoryPanel.toggleShowHidden();
+                }
+            },
+            "Unhide Hidden Datasets": function() {
+                if ( confirm( "Really unhide all hidden datasets?" ) ) {
+                    galaxy_main.location = "/history/unhide_datasets?current=True";
+                }
+            },
+            "Delete Hidden Datasets": function() {
+                if ( confirm( "Really delete all hidden datasets?" ) ) {
+                    galaxy_main.location = "/history/delete_hidden_datasets";
+                }
+            },
+            "Purge Deleted Datasets": function() {
+                if ( confirm( "Really delete all deleted datasets permanently? This cannot be undone." ) ) {
+                    galaxy_main.location = "/history/purge_deleted_datasets";
+                    // update the user disk size when the purge page loads
+                    $( '#galaxy_main' ).load( function(){
+                        Galaxy.user.fetch();
+                    })
+                }
+            },
+            "Show Structure": function() {
+                galaxy_main.location = "/history/display_structured";
+            },            
+            "Export Citations": function() {
+                galaxy_main.location = "/history/citations";
+            },
+            "Export to File": function() {
+                galaxy_main.location = "/history/export_archive?preview=True";
+            },
+            "Delete": function() {
+                if ( confirm( "Really delete the current history?" ) ) {
+                    galaxy_main.location = "/history/delete_current";
+                }
+            },
+            "Delete Permanently": function() {
+                if ( confirm( "Really delete the current history permanently? This cannot be undone." ) ) {
+                    galaxy_main.location = "/history/delete_current?purge=True";
+                }
+            },
+            "Other Actions": null,
+            "Import from File": function() {
+                galaxy_main.location = "/history/import_archive";
+            }
+        });
+        Galaxy.historyOptionsMenu = popupmenu;
+
+        // Fix iFrame scrolling on iOS
+        if( navigator.userAgent.match( /(iPhone|iPod|iPad)/i ) ) {
+            $("iframe").parent().css( {
+                "overflow": "scroll",
+                "-webkit-overflow-scrolling": "touch"
+            })
+        }
+
+    });
+    </script>
+
+</html>

@@ -1,0 +1,255 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: minimize.inp,v $
+
+remarks Author: MN, IP, Aug-2001; based on generate_template.inp
+remarks Energy minimization of average structure
+
+
+!set abort off end
+set abort normal end
+
+!@RUN:protocols/initialize.cns(
+!spectrum=$spectrum;
+!iteration=$iteration;)
+
+!@NEWIT:iteration.cns(
+!iteration=$iteration;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+Data      =$Data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;)
+
+evaluate ($iteration = $Data.iteration)
+
+!not used in minimize.inp:
+evalute ($Data.flags.cdih = false)
+evalute ($Data.flags.noe = false)
+evalute ($Data.flags.sani = false)
+evalute ($Data.flags.vean = false)
+evalute ($Data.flags.coup = false)
+
+
+if ($Data.rdc1_firstIt > $iteration) then
+  evaluate ($Data.rdc1_hot = 0.0)
+  evaluate ($Data.rdc1_cool1 = 0.0)
+  evaluate ($Data.rdc1_cool2 = 0.0)
+end if
+if ($Data.rdc2_firstIt > $iteration) then
+  evaluate ($Data.rdc2_hot = 0.0)
+  evaluate ($Data.rdc2_cool1 = 0.0)
+  evaluate ($Data.rdc2_cool2 = 0.0)
+end if
+if ($Data.rdc3_firstIt > $iteration) then
+  evaluate ($Data.rdc3_hot = 0.0)
+  evaluate ($Data.rdc3_cool1 = 0.0)
+  evaluate ($Data.rdc3_cool2 = 0.0)
+end if
+if ($Data.rdc4_firstIt > $iteration) then
+  evaluate ($Data.rdc4_hot = 0.0)
+  evaluate ($Data.rdc4_cool1 = 0.0)
+  evaluate ($Data.rdc4_cool2 = 0.0)
+end if
+if ($Data.rdc5_firstIt > $iteration) then
+  evaluate ($Data.rdc5_hot = 0.0)
+  evaluate ($Data.rdc5_cool1 = 0.0)
+  evaluate ($Data.rdc5_cool2 = 0.0)
+end if
+
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+!read the .psf files:
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+
+!read all the experimental Data:
+@@RUN:protocols/read_data.cns(Iteration=$Iteration; Data=$Data; Toppar=$Toppar)
+
+evaluate ($k_unamb= $Data.unamb_cool2)
+evaluate ($k_amb= $Data.amb_cool2)
+evaluate ($k_hbond= $Data.hbond_cool2)
+
+noe 
+    rswitch ambi $Data.Rswi_cool2 
+    rswitch dist $Data.Rswi_cool2
+    rswitch hbon $Data.Rswi_cool2
+
+    mrswitch ambi $Data.mRswi_cool2 
+    mrswitch dist $Data.mRswi_cool2
+    mrswitch hbon $Data.mRswi_cool2
+
+    asym ambi $Data.asy_cool2
+    asym dist $Data.asy_cool2
+    asym hbon $Data.asy_cool2
+
+    masym ambi $Data.masy_cool2 
+    masym dist $Data.masy_cool2
+    masym hbon $Data.masy_cool2
+
+    scale ambi $k_unamb 
+    scale dist $k_amb
+    scale hbon $k_hbond
+end
+
+restraints dihedral 
+    scale=200                      
+end 
+
+couplings class c1 force $data.c1_cool2 end
+couplings class c2 force $data.c2_cool2 end
+couplings class c3 force $data.c3_cool2 end
+couplings class c4 force $data.c4_cool2 end
+couplings class c5 force $data.c5_cool2 end
+sani class rdc1 force $data.rdc1_cool2 end
+sani class rdc2 force $data.rdc2_cool2 end
+sani class rdc3 force $data.rdc3_cool2 end
+sani class rdc4 force $data.rdc4_cool2 end
+sani class rdc5 force $data.rdc5_cool2 end
+vean class vea1 force $Data.fin_bor_cool2_1 $Data.fin_cen_cool2_1 end
+vean class vea2 force $Data.fin_bor_cool2_2 $Data.fin_cen_cool2_2 end
+vean class vea3 force $Data.fin_bor_cool2_3 $Data.fin_cen_cool2_3 end
+vean class vea4 force $Data.fin_bor_cool2_4 $Data.fin_cen_cool2_4 end
+vean class vea5 force $Data.fin_bor_cool2_5 $Data.fin_cen_cool2_5 end
+
+!set the rdc coefficients:
+!syntax: sani coeff <0.0> <magnitude> <rhombicity> end
+if ($Data.rdc1_choice eq "SANI") then
+  sani class rdc1 coeff 0.0 $Data.rdc1_d $Data.rdc1_r end
+end if
+if ($Data.rdc2_choice eq "SANI") then
+  sani class rdc2 coeff 0.0 $Data.rdc2_d $Data.rdc2_r end
+end if
+if ($Data.rdc3_choice eq "SANI") then
+  sani class rdc3 coeff 0.0 $Data.rdc3_d $Data.rdc3_r end
+end if
+if ($Data.rdc4_choice eq "SANI") then
+  sani class rdc4 coeff 0.0 $Data.rdc4_d $Data.rdc4_r end
+end if
+if ($Data.rdc5_choice eq "SANI") then
+  sani class rdc5 coeff 0.0 $Data.rdc5_d $Data.rdc5_r end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+if ($Data.flags.sani = true) then
+  parameter @@RUN:toppar/par_axis.pro end
+end if
+
+! define methyl groups and swapped protons
+@RUN:protocols/define_methyls_all.cns
+@RUN:begin/setup_swap_list.tbl
+
+!read .pdb file (average structure from wellordered.inp):
+evaluate ($filename = "ANALYSIS:" + $Filenames.fileroot + "_ave.pdb")
+coor @@$filename
+
+{=========================== minimization *}
+
+igroup 
+        interaction  (all) (all) weights * 1 vdw 1.0 elec 0 end 
+end
+
+do (refx = x) (all)
+do (refy = y) (all)
+do (refz = z) (all)
+do (harm = 1.0) (not name h*)
+do (mass = 100.0) (all)
+do (fbeta = 50.0) (all)
+
+parameter 
+   nbonds
+      cutnb=6.5 rcon=50. nbxmod=-2 repel=1.2  wmin=0.1 tolerance=1.
+      rexp=4 irexp=1 inhibit=0.0
+   end       
+
+   !set all force constants uniform to make dynamics more stable:
+   bonds    (all) (all) 1000.0 token
+   angles   (all) (all) (all) 500.0 token
+   improper (all) (all) (all) (all) 500.0 token token 
+
+end 
+
+flags exclude * include bond angle vdw harm end
+
+minimize powell nstep=500  nprint=10 end
+
+
+flags include impr end
+
+minimize powell nstep=500 nprint=10 end
+
+do (vx=maxwell(1000)) (all)
+do (vy=maxwell(1000)) (all)
+do (vz=maxwell(1000)) (all)
+
+dynamics  cartesian
+   nstep=1500  timestep=0.001   
+   tcoupling = true  temperature = 1000.   nprint=50  
+   cmremove=true cmperiodic=0 
+end
+
+parameter 
+   nbonds
+      rcon=25. nbxmod=5 repel=1.0
+   end
+end
+
+minimize powell nstep=300 nprint=10 end 
+
+if ($Data.flags.dihed = true) then 
+   flags incl dihed end
+end if
+
+dynamics  cartesian
+   nstep=2000  timestep=0.005   
+   tcoupling = true  temperature = 200.   nprint=100 
+   cmremove=true cmperiodic=0  
+end
+
+minimize powell nstep=500 nprint=50 end
+
+{=========================== write out the final structure *}
+
+evaluate ($filename = "ANALYSIS:" + $Filenames.fileroot + "_ave_em.pdb")
+@RUN:protocols/print_coorheader.cns
+write coordinates sele= (all) output =$filename end
+
+stop
+

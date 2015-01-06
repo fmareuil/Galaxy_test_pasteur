@@ -1,0 +1,15 @@
+<tool id="prepareAnnotation" name="prepare annotation file">
+  <description>Prepares Annotation file -> clusterizes, filters exon and sorts annotations.</description>
+  <command interpreter="sh"> ../bacteriaRegulatoryRegion_Detection/prepareAnnot.sh $inputFile $outputFile $__root_dir__</command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="gff"/>
+  </inputs>
+
+  <outputs>
+    <data format="gff3" name="outputFile" label="[prepareAnnotation] Output File"/>
+  </outputs>
+
+  <help>
+	command example: sh prepareAnnot.sh NC_011744r_annot_tmp1.gff NC_011744r_annot_pre1.gff
+  </help>
+</tool>

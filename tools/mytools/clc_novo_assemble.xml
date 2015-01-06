@@ -1,0 +1,142 @@
+<tool id="clc_novo_assemble" name="clc_novo_assemble" version="3.22.55705">
+  <description> The de novo assembly algorithm of CLC Genomics Workbench, CLC Genomics Server, and CLC Assembly Cell offers comprehensive support for a variety of data formats, including both short and long reads, and mixing of paired reads (both insert size and orientation).</description>
+  <command> 
+    stderr_wrapper.sh 
+    clc_novo_assemble -o $output -v -m $minContigsLen 
+    
+    #if $read_type.read_type_selector == "paired_end":
+      -p fb $read_type.distMode $read_type.minDist $read_type.maxDist -q -i $read_type.read1 $read_type.read2  
+
+      #for $joc in $read_type.reads_pe:
+        -p no -q $joc.read_pe
+      #end for
+
+ 
+    #else:
+    
+      #for $ioc in $read_type.reads_sr:
+        -q $ioc.read_sr 
+      #end for
+    
+    #end if
+    
+  </command>
+  
+  <inputs>
+    
+    <conditional name="read_type">
+      <param name="read_type_selector" type="select" label="Type of input data">
+	<option value="single" selected="True">Single Read</option>
+	<option value="paired_end">Paired End</option>
+      </param>
+      
+      <when value="paired_end">
+	<param name="read1" type="data" format="fasta,fastq" label="Read 1 fastq dataset from your history"/>
+	<param name="read2" type="data" format="fasta,fastq" label="Read 2 fastq dataset from your history"/>
+        <param name="distMode" type="select" display="radio" label="select your distance mode">
+	  <option value="ss">start and start mode</option>
+	  <option value="se">start and end mode</option>
+	  <option value="es">end and start mode</option>
+	  <option value="ee">end and end mode</option>
+	</param>
+	<param name="minDist" type="integer" size="4" value="400" min="100" label="minimal nucleotides quantity between each pair" />
+        <param name="maxDist" type="integer" size="4" value="1500" min="100" label="maximal nucleotides quantity between each pair" />
+	
+	<repeat name="reads_pe" title="Pair-End Reads" min="0">
+	  <param name="read_pe" type="data" format="fasta,fastq" label="Other sequences to assemble"/>
+	</repeat>
+      </when>      
+      
+      <when value="single">
+      	<repeat name="reads_sr" title="Single Reads" min="1">
+	  <param name="read_sr" type="data" format="fasta,fastq" label="read to assemble"/>
+	</repeat>
+      </when>
+
+    </conditional>
+    <param name="minContigsLen" type="integer" size="4" value="500"  min="100" label="Contigs minimal size" />
+  </inputs>
+  <outputs>
+    <data name="output" type="data" format="fasta" label="Fasta file containing result contigs" />
+    
+  </outputs>
+  
+  <tests>
+    
+
+  </tests>
+
+  
+  <help>
+    
+**usage:** 
+
+clc_novo_assemble [options]
+
+
+**What it does:**
+
+De novo assemble some reads and output contig sequences in fasta format.
+
+----
+
+**Options:**
+
+
+-h: Display this message
+
+-q: The files following this option are read files. (may be used several times)
+
+-i (file1) (file2) : Interleave the sequences in two files, alternating between the files when 
+reading the sequences. Only valid for read files. (may be used several times)
+
+-o (file) : Give the output fasta file (required)
+
+-m (n): Set the minimum contig length to output (default = 200)
+
+-w (n) : Set the word size for the de Bruijn graph (default is automatic based on input data size)
+
+-v: Output various information while running.
+
+-p (par) : Set the paired read mode for the read files following this option (may be used several 
+times) par consists of four strings::
+
+  (mode) (dist_mode) (min_dist) (max_dist)
+
+    *mode* is ff, fb, bf, bb and sets the relative orientation of read one and two in a pair 
+    (f = forward, b = backward)
+
+    *dist_mode* is ss, se, es, ee and sets the place on read one and two to measure the distance 
+    (s = start, e = end)
+
+    A typical use would be "-p fb ss 180 250" which means that the reads are inverted and pointing 
+    towards each other. The distance includes both the reads and the sequence between them. The 
+    distance may be between 180 and 250, both included.
+
+    It is also allowed to insert a "d" before the mode. This indicates that the reads in the 
+    following file(s) should only be used for their paired end information and not to build 
+    initial contigs. E.g. "-p d fb ss 180 250".
+
+    To explicitly say that the following reads are not paired, use "no" for par, i.e. "-p no".
+    
+    For paired end reads split in two files, use the -i option.
+
+--cpus (n>): Set the number of cpus to use.
+
+--no-progress: Disable progress bar.
+
+----
+
+**Examples:**
+
+De novo assembly of a single file with reads:
+
+  # clc_novo_assemble -o contigs.fasta -q reads.fasta
+
+De novo assembly of two interleaved files with paired end reads:
+
+  # clc_novo_assemble -o contigs.fasta -p fb ss 180 250 -q -i reads1.fq reads2.fq
+
+
+  </help>
+</tool>

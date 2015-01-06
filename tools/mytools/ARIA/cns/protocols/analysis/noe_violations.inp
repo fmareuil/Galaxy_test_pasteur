@@ -1,0 +1,88 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: noe_violations.inp,v $
+
+!     ************************************
+!     * Authors and copyright:           *
+!     * Jens Linge, EMBL                 *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+!read the .psf files:
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+set  echo off message off end
+
+noe
+        reset
+        nrestraints=  100000
+        class DIST @@NEWIT:unambig.tbl
+	class ambi @@NEWIT:ambig.tbl
+        class hbon @@RUN:data/hbonds/hbonds.tbl
+        ceiling 1000
+        averaging  DIST sum
+        potential  DIST soft
+        scale      DIST 1.0
+        sqconstant DIST 1.0
+        sqexponent DIST 2
+        soexponent DIST 1
+        rswitch    DIST 1.0
+        sqoffset   DIST 0.0
+        asymptote  DIST 2.0
+        avexpo hbond 20
+end
+
+set echo on message on end
+
+flags exclude * include noe end
+
+{* Print all noe violations larger than zero *}
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 1)
+evaluate ($nstruc1 = 0)
+while ($count le $Iterations.Assignstruct) loop main
+   evaluate ($file = $filenames.bestfile_$count)
+   display $file
+   coor init end
+!   if ($file ne "") then
+      coor @@$file
+      evaluate ($nstruc1 = $nstruc1 + 1)
+!   end if
+!XXX   evaluate ($file = $file - "PREVIT:")
+!XXX   evaluate ($file = "NEWIT:" + $file)
+   evaluate ($file = $file - "NEWIT:")
+   evaluate ($violfile="ANALYSIS:" + $file-".pdb"+".viol")
+   set print-file $violfile end
+   print threshold=0 noe
+   evaluate ($count = $count + 1)
+end loop main
+
+stop

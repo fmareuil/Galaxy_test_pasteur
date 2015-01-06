@@ -1,0 +1,15 @@
+<tool id="listAnnotation" name="list annotation">
+  <description>Shows the information of Annotation file -> Number of genes, rRNA, tRNA.</description>
+  <command interpreter="sh"> ../bacteriaRegulatoryRegion_Detection/listGff.sh $inputFile > $outputFile  </command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="gff"/>
+  </inputs>
+
+  <outputs>
+    <data format="txt" name="outputFile" label="[listAnnotation] Output File"/>
+  </outputs>
+
+  <help>
+	command example: sh listGff.sh NC_011744r_annot.gff 
+  </help>
+</tool>

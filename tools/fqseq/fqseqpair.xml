@@ -1,0 +1,25 @@
+<tool id="fqseqpair" name="fqseqpair" version="1.0">
+   <description>"List names of sequence pairs from two FASTQ formatted files"</description>
+   <stdio>
+        <exit_code range="0" level="warning" description="Information message" />
+        <exit_code range="1:" level="fatal" />
+    </stdio>   
+   <command>fqseqpair -o $output $input1 $input2
+   </command>
+   <inputs>
+       <param name="input1" type="data" format="fastqsolexa,fastqillumina,fastq" label="First FASTQ formatted sequence file"/>
+       <param name="input2" type="data" format="fastqsolexa,fastqillumina,fastq" label="Second FASTQ formatted sequence file"/>
+    </inputs>
+    <outputs>
+        <data name="output" format="lst"/>
+    </outputs>
+    <help>
+**Description:**
+
+fqseqpair is a small tool designed to list name from sequence pairs, given two FASTQ formatted sequence files.
+
+**Contact:**
+
+*Nicolas Joly (njoly@pasteur.fr), Institut Pasteur.*
+    </help>
+</tool>

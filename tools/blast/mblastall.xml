@@ -1,0 +1,390 @@
+<tool id="mblastall" name="Pasteur blastall for NGS data" version="2.2.26">
+    <description>Search nucleotide database with nucleotide query sequence(s)</description>
+    <command interpreter="python">
+## The command is a Cheetah template which allows some Python based syntax.
+## Lines starting hash hash are comments. Galaxy will turn newlines into spaces
+
+blast_wrapper.py --progName
+  mblastall --thread \$GALAXY_SLOTS
+--query $query
+#if $db_opts.db_opts_selector == "available_db":
+  --blast_type $db_opts.type_blast.blast
+  --db $db_opts.type_blast.database
+#else:
+  --blast_type $db_opts.blast
+  --db $db_opts.private_database
+#end if
+--evalue $evalue
+--out_format $out_format
+--output $output
+--filter_query $filter_query
+--max_hits $max_hits
+--word_size $word_size
+--best_hits $max_hits
+    </command>
+    <inputs>
+      <param name="query" type="data" format="fasta" label="Nucleotide or proteique query sequence(s)"/>
+      <param name="max_hits" type="integer" value="10" label="Maximum number of hits to show regarless of the hit species">
+	<validator type="in_range" min="0" />
+      </param> 
+      <param name="word_size" type="integer" value="0" label="Word size for wordfinder algorithm. Default if 0, meaning: 11 for blastn, 3 for all other type of blast.">
+        <validator type="in_range" min="0" />
+      </param>
+      <param name="filter_query" type="boolean" label="Filter out low complexity regions (with DUST)" truevalue="T" falsevalue="F" checked="True" />
+      <param name="evalue" type="float" size="15" value="0.001" label="Set expectation value cutoff" />
+      <param name="out_format" type="select" label="Output format">
+        <option value="8" selected="True">Tabular</option>
+        <option value="0">Pairwise text</option>
+        <option value="7">BLAST XML</option>
+      </param>
+      <conditional name="db_opts">
+	  <param name="db_opts_selector" type="select" label="Subject database/sequences">
+	    <option value="available_db" selected="True">BLAST Database</option>
+            <option value="own_db">Your own database made with Formadb</option>
+          </param>
+        <when value="own_db">
+	  <param name="blast" type="select" label="select blastn, blastp...">
+            <option value="blastn" selected="True">blastn</option>
+	    <option value="blastp">blastp</option>
+	    <option value="blastx">blastx</option>
+	    <option value="tblastn">tblastn</option>
+	    <option value="tblastx">tblastx</option>	
+          </param>
+          <param name="private_database" type="data" format="formatdb" label="Home made Blast database from the history" /> 
+        </when>
+          <when value="available_db">
+	    <conditional name="type_blast">
+	      <param name="blast" type="select" label="select blastn, blastp...">
+	        <option value="blastn" selected="True">blastn</option>
+	        <option value="blastp">blastp</option>
+	        <option value="blastx">blastx</option>
+	        <option value="tblastn">tblastn</option>
+	        <option value="tblastx">tblastx</option>	
+              </param>
+	      <when value="blastn">
+	        <param name="database" type="select" label="Nucleotide BLAST database" help="For more informations about banks or genomes see https://biomaj.it.pasteur.fr/BmajWatcher/">
+		  <option value="alunuc">alunuc: alu nucleic database</option>
+                  <option value="embl">embl: Embl last release + updates</option>
+		  <option value="embl_release">embl_release: Embl release</option>
+                  <option value="embl_update">embl_update: Embl updates</option>
+                  <option value="genbank">genbank: Genbank last release + updates</option>
+		  <option value="genbank_release">genbank_release: Genbank release</option>
+                  <option value="genbank_update">genbank_update: Genbank updates</option>
+                  <option value="gbbct">gbbct: genbank bacteria</option>
+		  <option value="gbcon">gbcon: Constructed Sequences</option>
+		  <option value="gbenv">gbenv: Environmental sampling</option>
+                  <option value="gbpri">gbpri: primates</option>
+                  <option value="gbmam">gbmam: other mammals</option>
+                  <option value="gbrod">gbrod: rodents</option>
+                  <option value="gbvrt">gbvrt: other vertebrates</option>
+                  <option value="gbinv">gbinv: invertebrates</option>
+                  <option value="gbpln">gbpln: plants (including yeast)</option>
+                  <option value="gbvrl">gbvrl: virus</option>
+                  <option value="gbphg">gbphg: phages</option>
+                  <option value="gbest">gbest: EST (Expressed Sequence Tags)</option>
+                  <option value="gbsts">gbsts: STS (Sequence Tagged sites)</option>
+                  <option value="gbsyn">gbsyn: synthetic</option>
+                  <option value="gbpat">gbpat: patented</option>
+                  <option value="gbuna">gbuna: unannotated</option>
+                  <option value="gbgss">gbgss: Genome Survey Sequences</option>
+		  <option value="gbhtc">gbhtc: HTC (high throughput cDNA sequencing)</option>
+                  <option value="gbhtg">gbhtg: HTG (high throughput Genomic Sequencing)</option>
+		  <option value="gbtsa">gbtsa: Transcriptome shotgun assembly</option>
+		  <option value="wgsnuc">wgsnuc: Whole Genome Shotgun</option>
+		  <option value="vector">vector: Vector subset of GenBank(R), NCBI</option>
+		  <option value="greengenes">greengenes: 16S rRNA gene database</option>
+		  <option value="imgt">imgt: IMGT/LIGM-DB, ImMunoGeneTics sequence database</option>
+		  <option value="nt">nt: non redundant nucleotide sequence database </option>
+		  <option value="pdb">pdb: Protein Data Bank: Fasta section, fasta and blast2 are available</option>
+		  <option value="refseqn_release">refseqn_release: RefSeq Nucleic release</option>
+		  <option value="refseqn_update">refseqn_update: RefSeq Nucleic updates</option>
+                  <option value="rdpii">rdpii: Ribosomal Database Project</option>
+		  <option value="rdpii_cultured">rdpii_cultured: RPDII without uncultured bacteria</option>
+		  <option value="silva">silva: SILVA rRNA database project</option>
+		  <option value="vipr_nt">vipr_nt: Virus Pathogen Resource (Nucleic)</option>
+                  <option value="borrelia">borrelia: Borrelia burgdorferi complete genome</option>
+		  <option value="bsubtilis">bsubtilis: Bacillus Subtilis complete genome</option>
+		  <option value="btaurus">btaurus: Bos taurus genome (Bovine) complete genome</option>
+		  <option value="calbicans5314">calbicans5314: Candida albicans strain 5314 complete genome</option>
+		  <option value="calbicansWO1">calbicansWO1: Candida albicans strain WO1 complete genome</option>
+		  <option value="cfamiliaris">cfamiliaris: Canis familiaris dog complete genome</option>
+		  <option value="chiroptera">chiroptera: Bat complete genome</option>
+		  <option value="cpneumoniae">cpneumoniae: Chlamydophila pneumoniae CWL029 complete genome</option>
+		  <option value="csabaeus">csabaeus: Chlorocebus sabaeus green monkey complete genome</option>
+		  <option value="dmelanogaster">dmelanogaster: Drosophila melanogaster fly complete genome</option>
+		  <option value="ecaballus">ecaballus: Equus caballus horse complete genome</option>
+		  <option value="ecoli">ecoli: Escherichia Coli complete genome</option>
+		  <option value="epo">epo: European Patent Office complete genome</option>
+		  <option value="fcactus">fcatus: Felis catus cat complete genome</option>
+                  <option value="genitalium">genitalium: Mycoplasma Genitalium complete genome</option>
+		  <option value="hg19">hg19: Homo sapiens Human v19 complete genome</option>
+		  <option value="hpylori">hpylori: Helicobacter Pylori complete genome</option>
+		  <option value="mlucifugus">mlucifugus: Myotis lucifugus Little brown bat complete genome</option>
+		  <option value="mm9">mm9: Mus musculus Mouse v9 complete genome</option>
+		  <option value="mm10">mm10: Mus musculus Mouse v10 complete genome</option>
+		  <option value="mtuberculosis">mtuberculosis: Mycobacterium tuberculosis complete genome</option>
+		  <option value="pfalciparum">pfalciparum: Plasmodium falciparum 3D7</option>
+		  <option value="pneumoniae">pneumoniae: Mycoplasma Pneumoniae complete genome</option>
+                  <option value="pvampyrus">pvampyrus: teropus vampyrus Large flying fox (bat) complete genome</option>
+		  <option value="pvivax">pvivax: Plasmodium vivax strin Sal-I complete genome</option>
+                  <option value="scerevisiae">scerevisiae: Saccharomyces cerevisiae S288C complete genome</option>
+		  <option value="spombe">spombe: Schizosaccharomyces pombe complete genome</option>
+		  <option value="sscrofa">sscrofa: Sus scrofa pig complete genome</option>
+                  <option value="ypestis">ypestis: Yersinia pestis unfinished genome</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mdm_ref">mdm: Monodelphis domestica complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/hs_ncbi37">hs_ncbi37: Human complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mm_ref_ncbi37">mm_ncbi37: Mus Musculus complete genome for findpromoter project</option>
+		</param>
+	      </when>
+	      <when value="tblastn">
+	        <param name="database" type="select" label="Nucleotide BLAST database" help="For more informations about banks or genomes see https://biomaj.it.pasteur.fr/BmajWatcher/">
+		  <option value="alunuc">alunuc: alu nucleic database</option>
+                  <option value="embl">embl: Embl last release + updates</option>
+		  <option value="embl_release">embl_release: Embl release</option>
+                  <option value="embl_update">embl_update: Embl updates</option>
+                  <option value="genbank">genbank: Genbank last release + updates</option>
+		  <option value="genbank_release">genbank_release: Genbank release</option>
+                  <option value="genbank_update">genbank_update: Genbank updates</option>
+                  <option value="gbbct">gbbct: genbank bacteria</option>
+		  <option value="gbcon">gbcon: Constructed Sequences</option>
+		  <option value="gbenv">gbenv: Environmental sampling</option>
+                  <option value="gbpri">gbpri: primates</option>
+                  <option value="gbmam">gbmam: other mammals</option>
+                  <option value="gbrod">gbrod: rodents</option>
+                  <option value="gbvrt">gbvrt: other vertebrates</option>
+                  <option value="gbinv">gbinv: invertebrates</option>
+                  <option value="gbpln">gbpln: plants (including yeast)</option>
+                  <option value="gbvrl">gbvrl: virus</option>
+                  <option value="gbphg">gbphg: phages</option>
+                  <option value="gbest">gbest: EST (Expressed Sequence Tags)</option>
+                  <option value="gbsts">gbsts: STS (Sequence Tagged sites)</option>
+                  <option value="gbsyn">gbsyn: synthetic</option>
+                  <option value="gbpat">gbpat: patented</option>
+                  <option value="gbuna">gbuna: unannotated</option>
+                  <option value="gbgss">gbgss: Genome Survey Sequences</option>
+		  <option value="gbhtc">gbhtc: HTC (high throughput cDNA sequencing)</option>
+                  <option value="gbhtg">gbhtg: HTG (high throughput Genomic Sequencing)</option>
+		  <option value="gbtsa">gbtsa: Transcriptome shotgun assembly</option>
+		  <option value="wgsnuc">wgsnuc: Whole Genome Shotgun</option>
+		  <option value="vector">vector: Vector subset of GenBank(R), NCBI</option>
+		  <option value="greengenes">greengenes: 16S rRNA gene database</option>
+		  <option value="imgt">imgt: IMGT/LIGM-DB, ImMunoGeneTics sequence database</option>
+		  <option value="nt">nt: non redundant nucleotide sequence database </option>
+		  <option value="pdb">pdb: Protein Data Bank: Fasta section, fasta and blast2 are available</option>
+		  <option value="refseqn_release">refseqn_release: RefSeq Nucleic release</option>
+		  <option value="refseqn_update">refseqn_update: RefSeq Nucleic updates</option>
+                  <option value="rdpii">rdpii: Ribosomal Database Project</option>
+		  <option value="rdpii_cultured">rdpii_cultured: RPDII without uncultured bacteria</option>
+		  <option value="silva">silva: SILVA rRNA database project</option>
+		  <option value="vipr_nt">vipr_nt: Virus Pathogen Resource (Nucleic)</option>
+                  <option value="borrelia">borrelia: Borrelia burgdorferi complete genome</option>
+		  <option value="bsubtilis">bsubtilis: Bacillus Subtilis complete genome</option>
+		  <option value="btaurus">btaurus: Bos taurus genome (Bovine) complete genome</option>
+		  <option value="calbicans5314">calbicans5314: Candida albicans strain 5314 complete genome</option>
+		  <option value="calbicansWO1">calbicansWO1: Candida albicans strain WO1 complete genome</option>
+		  <option value="cfamiliaris">cfamiliaris: Canis familiaris dog complete genome</option>
+		  <option value="chiroptera">chiroptera: Bat complete genome</option>
+		  <option value="cpneumoniae">cpneumoniae: Chlamydophila pneumoniae CWL029 complete genome</option>
+		  <option value="csabaeus">csabaeus: Chlorocebus sabaeus green monkey complete genome</option>
+		  <option value="dmelanogaster">dmelanogaster: Drosophila melanogaster fly complete genome</option>
+		  <option value="ecaballus">ecaballus: Equus caballus horse complete genome</option>
+		  <option value="ecoli">ecoli: Escherichia Coli complete genome</option>
+		  <option value="epo">epo: European Patent Office complete genome</option>
+		  <option value="fcactus">fcatus: Felis catus cat complete genome</option>
+                  <option value="genitalium">genitalium: Mycoplasma Genitalium complete genome</option>
+		  <option value="hg19">hg19: Homo sapiens Human v19 complete genome</option>
+		  <option value="hpylori">hpylori: Helicobacter Pylori complete genome</option>
+		  <option value="mlucifugus">mlucifugus: Myotis lucifugus Little brown bat complete genome</option>
+		  <option value="mm9">mm9: Mus musculus Mouse v9 complete genome</option>
+		  <option value="mm10">mm10: Mus musculus Mouse v10 complete genome</option>
+		  <option value="mtuberculosis">mtuberculosis: Mycobacterium tuberculosis complete genome</option>
+		  <option value="pfalciparum">pfalciparum: Plasmodium falciparum 3D7</option>
+		  <option value="pneumoniae">pneumoniae: Mycoplasma Pneumoniae complete genome</option>
+                  <option value="pvampyrus">pvampyrus: teropus vampyrus Large flying fox (bat) complete genome</option>
+		  <option value="pvivax">pvivax: Plasmodium vivax strin Sal-I complete genome</option>
+                  <option value="scerevisiae">scerevisiae: Saccharomyces cerevisiae S288C complete genome</option>
+		  <option value="spombe">spombe: Schizosaccharomyces pombe complete genome</option>
+		  <option value="sscrofa">sscrofa: Sus scrofa pig complete genome</option>
+                  <option value="ypestis">ypestis: Yersinia pestis unfinished genome</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mdm_ref">mdm: Monodelphis domestica complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/hs_ncbi37">hs_ncbi37: Human complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mm_ref_ncbi37">mm_ncbi37: Mus Musculus complete genome for findpromoter project</option>
+		</param>
+	      </when>
+	      <when value="tblastx">
+	        <param name="database" type="select" label="Nucleotide BLAST database" help="For more informations about banks or genomes see https://biomaj.it.pasteur.fr/BmajWatcher/">
+		  <option value="alunuc">alunuc: alu nucleic database</option>
+                  <option value="embl">embl: Embl last release + updates</option>
+		  <option value="embl_release">embl_release: Embl release</option>
+                  <option value="embl_update">embl_update: Embl updates</option>
+                  <option value="genbank">genbank: Genbank last release + updates</option>
+		  <option value="genbank_release">genbank_release: Genbank release</option>
+                  <option value="genbank_update">genbank_update: Genbank updates</option>
+                  <option value="gbbct">gbbct: genbank bacteria</option>
+		  <option value="gbcon">gbcon: Constructed Sequences</option>
+		  <option value="gbenv">gbenv: Environmental sampling</option>
+                  <option value="gbpri">gbpri: primates</option>
+                  <option value="gbmam">gbmam: other mammals</option>
+                  <option value="gbrod">gbrod: rodents</option>
+                  <option value="gbvrt">gbvrt: other vertebrates</option>
+                  <option value="gbinv">gbinv: invertebrates</option>
+                  <option value="gbpln">gbpln: plants (including yeast)</option>
+                  <option value="gbvrl">gbvrl: virus</option>
+                  <option value="gbphg">gbphg: phages</option>
+                  <option value="gbest">gbest: EST (Expressed Sequence Tags)</option>
+                  <option value="gbsts">gbsts: STS (Sequence Tagged sites)</option>
+                  <option value="gbsyn">gbsyn: synthetic</option>
+                  <option value="gbpat">gbpat: patented</option>
+                  <option value="gbuna">gbuna: unannotated</option>
+                  <option value="gbgss">gbgss: Genome Survey Sequences</option>
+		  <option value="gbhtc">gbhtc: HTC (high throughput cDNA sequencing)</option>
+                  <option value="gbhtg">gbhtg: HTG (high throughput Genomic Sequencing)</option>
+		  <option value="gbtsa">gbtsa: Transcriptome shotgun assembly</option>
+		  <option value="wgsnuc">wgsnuc: Whole Genome Shotgun</option>
+		  <option value="vector">vector: Vector subset of GenBank(R), NCBI</option>
+		  <option value="greengenes">greengenes: 16S rRNA gene database</option>
+		  <option value="imgt">imgt: IMGT/LIGM-DB, ImMunoGeneTics sequence database</option>
+		  <option value="nt">nt: non redundant nucleotide sequence database </option>
+		  <option value="pdb">pdb: Protein Data Bank: Fasta section, fasta and blast2 are available</option>
+		  <option value="refseqn_release">refseqn_release: RefSeq Nucleic release</option>
+		  <option value="refseqn_update">refseqn_update: RefSeq Nucleic updates</option>
+                  <option value="rdpii">rdpii: Ribosomal Database Project</option>
+		  <option value="rdpii_cultured">rdpii_cultured: RPDII without uncultured bacteria</option>
+		  <option value="silva">silva: SILVA rRNA database project</option>
+		  <option value="vipr_nt">vipr_nt: Virus Pathogen Resource (Nucleic)</option>
+                  <option value="borrelia">borrelia: Borrelia burgdorferi complete genome</option>
+		  <option value="bsubtilis">bsubtilis: Bacillus Subtilis complete genome</option>
+		  <option value="btaurus">btaurus: Bos taurus genome (Bovine) complete genome</option>
+		  <option value="calbicans5314">calbicans5314: Candida albicans strain 5314 complete genome</option>
+		  <option value="calbicansWO1">calbicansWO1: Candida albicans strain WO1 complete genome</option>
+		  <option value="cfamiliaris">cfamiliaris: Canis familiaris dog complete genome</option>
+		  <option value="chiroptera">chiroptera: Bat complete genome</option>
+		  <option value="cpneumoniae">cpneumoniae: Chlamydophila pneumoniae CWL029 complete genome</option>
+		  <option value="csabaeus">csabaeus: Chlorocebus sabaeus green monkey complete genome</option>
+		  <option value="dmelanogaster">dmelanogaster: Drosophila melanogaster fly complete genome</option>
+		  <option value="ecaballus">ecaballus: Equus caballus horse complete genome</option>
+		  <option value="ecoli">ecoli: Escherichia Coli complete genome</option>
+		  <option value="epo">epo: European Patent Office complete genome</option>
+		  <option value="fcactus">fcatus: Felis catus cat complete genome</option>
+                  <option value="genitalium">genitalium: Mycoplasma Genitalium complete genome</option>
+		  <option value="hg19">hg19: Homo sapiens Human v19 complete genome</option>
+		  <option value="hpylori">hpylori: Helicobacter Pylori complete genome</option>
+		  <option value="mlucifugus">mlucifugus: Myotis lucifugus Little brown bat complete genome</option>
+		  <option value="mm9">mm9: Mus musculus Mouse v9 complete genome</option>
+		  <option value="mm10">mm10: Mus musculus Mouse v10 complete genome</option>
+		  <option value="mtuberculosis">mtuberculosis: Mycobacterium tuberculosis complete genome</option>
+		  <option value="pfalciparum">pfalciparum: Plasmodium falciparum 3D7</option>
+		  <option value="pneumoniae">pneumoniae: Mycoplasma Pneumoniae complete genome</option>
+                  <option value="pvampyrus">pvampyrus: teropus vampyrus Large flying fox (bat) complete genome</option>
+		  <option value="pvivax">pvivax: Plasmodium vivax strin Sal-I complete genome</option>
+                  <option value="scerevisiae">scerevisiae: Saccharomyces cerevisiae S288C complete genome</option>
+		  <option value="spombe">spombe: Schizosaccharomyces pombe complete genome</option>
+		  <option value="sscrofa">sscrofa: Sus scrofa pig complete genome</option>
+                  <option value="ypestis">ypestis: Yersinia pestis unfinished genome</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mdm_ref">mdm: Monodelphis domestica complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/hs_ncbi37">hs_ncbi37: Human complete genome for findpromoter project</option>
+                  <option value="/pasteur/projets/common/galaxy/projets/genomes/promoteur_ljm/mm_ref_ncbi37">mm_ncbi37: Mus Musculus complete genome for findpromoter project</option>
+		</param>
+	      </when>
+	      <when value="blastp">
+	        <param name="database" type="select" label="Protein BLAST database" help="For more informations about banks or genomes see https://biomaj.it.pasteur.fr/BmajWatcher/">
+		  <option value="alupro">alupro: alu protein database</option>
+		  <option value="nrprot">nrprot: NCBI non-redundant Genbank CDS translations+PDB+Swissprot+PIR</option>
+		  <option value="refseqp_release">refseqn_release: RefSeq Protein release</option>
+		  <option value="refseqp_update">refseqn_update: RefSeq Protein updates</option>
+                  <option value="sbase">sbase: annotated domains sequences</option>
+                  <option value="uniprot">uniprot: Universal Protein Resource = SwissProt + TrEMBL + PIR </option>
+                  <option value="uniprot_sprot">uniprot_sprot: Universal Protein Resource (SwissProt part)</option>
+                  <option value="uniprot_trembl">uniprot_trembl: Universal Protein Resource (TrEmbl part)</option>
+		  <option value="uniref90">uniref90: Clustered sets of sequences from UniProt Knowledgebase</option>
+		  <option value="vipr_aa">vipr_aa: Virus Pathogen Resource (Protein)</option>
+		  <option value="wgspro">wgspro: Whole Genome Shotgun</option>
+   		</param>
+	      </when>
+	      <when value="blastx">
+	        <param name="database" type="select" label="Protein BLAST database" help="For more informations about banks or genomes see https://biomaj.it.pasteur.fr/BmajWatcher/">
+		  <option value="alupro">alupro: alu protein database</option>
+		  <option value="nrprot">nrprot: NCBI non-redundant Genbank CDS translations+PDB+Swissprot+PIR</option>
+		  <option value="refseqp_release">refseqn_release: RefSeq Protein release</option>
+		  <option value="refseqp_update">refseqn_update: RefSeq Protein updates</option>
+                  <option value="sbase">sbase: annotated domains sequences</option>
+                  <option value="uniprot">uniprot: Universal Protein Resource = SwissProt + TrEMBL + PIR </option>
+                  <option value="uniprot_sprot">uniprot_sprot: Universal Protein Resource (SwissProt part)</option>
+                  <option value="uniprot_trembl">uniprot_trembl: Universal Protein Resource (TrEmbl part)</option>
+		  <option value="uniref90">uniref90: Clustered sets of sequences from UniProt Knowledgebase</option>
+		  <option value="vipr_aa">vipr_aa: Virus Pathogen Resource (Protein)</option>
+		  <option value="wgspro">wgspro: Whole Genome Shotgun</option>
+   		</param>
+	      </when>  
+	  </conditional>
+        </when>
+      </conditional>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular">
+            <change_format>
+                <when input="out_format" value="0" format="txt"/>
+                <when input="out_format" value="8" format="tabular"/>
+                <when input="out_format" value="7" format="blastxml"/>
+            </change_format>
+        </data>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+    
+.. class:: warningmark
+
+**Note**. Database searches may take substantial amount of time.
+For large input datasets it is advisable to allow overnight processing.  
+
+-----
+
+**What it does**
+
+Search a *nucleotide database* :
+* already available
+* created with formatdb in Galaxy 
+using a *nucleotide query*,
+using a parallel version of blastall command line tool.
+
+-----
+
+**Output format**
+
+Because Galaxy focuses on processing tabular data, the default output of this tool is tabular. This contains 12 columns:
+
+1. Id of your sequence 
+2. GI of the database hit 
+3. % identity
+4. Alignment length
+5. # mismatches
+6. # gaps
+7. Start position in your sequence
+8. End position in your sequence
+9. Start position in database hit
+10. End position in database hit
+11. E-value
+12. Bit score
+
+The second option is BLAST XML output, which is designed to be parsed by another program, and is understood by other Galaxy tools.
+
+You can also choose several plain text or HTML output formats which are designed to be read by a person (not by another program).
+The HTML versions use basic webpage formatting and can include links to the hits on the NCBI website.
+The pairwise output (the default on the NCBI BLAST website) shows each match as a pairwise alignment with the query.
+The two query anchored outputs show a multiple sequence alignment between the query and all the matches,
+and differ in how insertions are shown (marked as insertions or with gap characters added to the other sequences).
+
+-------
+
+**References**
+
+The Basic Local Alignment Search Tool (BLAST) finds regions of local similarity between sequences.
+Altschul, Stephen F., Thomas L. Madden, Alejandro A. Schaeffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), Gapped BLAST and PSI-BLAST: a new generation of protein database search programs, Nucleic Acids Res. 25:3389-3402.
+
+Altschul, Madden, Schaeffer, Zhang, Miller, Lipman
+
+http://www.ncbi.nlm.nih.gov/books/bv.fcgi?rid=handbook.chapter.ch16
+http://www.ncbi.nlm.nih.gov/Education/BLASTinfo/tut1.html
+    </help>
+</tool>

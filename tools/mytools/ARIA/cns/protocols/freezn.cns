@@ -1,0 +1,26 @@
+! BARDIAUX Benjamin 02/12/2009
+! find SG atoms that are not always
+! bound to ZN in SSSS,SSSE and SSSD
+! patches
+
+set echo off message off end
+
+ident (store8) (name SG)
+
+evaluate($ssss_counter=1)
+while ($ssss_counter le $Toppar.ssss_patches) loop freess
+   ident (store8) (store8 and (not resid $Toppar.ssss_1_resid_$ssss_counter))
+   evaluate($ssss_counter=$ssss_counter + 1)
+end loop freess
+
+evaluate($ssse_counter=1)
+while ($ssse_counter le $Toppar.ssse_patches) loop freess
+   ident (store8) (store8 and (not resid $Toppar.ssse_1_resid_$ssse_counter))
+   evaluate($ssse_counter=$ssse_counter + 1)
+end loop freess
+
+evaluate($sssd_counter=1)
+while ($sssd_counter le $Toppar.sssd_patches) loop freess
+   ident (store8) (store8 and (not resid $Toppar.sssd_1_resid_$sssd_counter))
+   evaluate($sssd_counter=$sssd_counter + 1)
+end loop freess

@@ -1,0 +1,15 @@
+<tool id="qualToFastq" name="qual -> Fastq">
+  <description>Convert a file in FASTA/Qual format to FastQ format.</description>
+  <command interpreter="python"> ../Java/Python/qualToFastq.py -f $inputFastaFile -q $inputQualFile -o $outputFile </command>
+  <inputs>
+    <param name="inputFastaFile" type="data" label="Input fasta File" format="fasta"/>
+    <param name="inputQualFile" type="data" label="Input qual File" format="txt"/>
+  </inputs>
+
+  <outputs>
+    <data format="fastq" name="outputFile" label="[qual -> Fastq] Output File"/>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

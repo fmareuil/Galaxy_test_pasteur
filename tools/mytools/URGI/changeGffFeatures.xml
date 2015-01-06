@@ -1,0 +1,16 @@
+<tool id="changeGffFeatures" name="change gff Features">
+	<description>Changes one feature name by an other name (the feature name can be found on the 3rd column).</description>
+		<command interpreter="bash">
+			../Java/Python/changeGffFeatures.sh $inputFile $inputFeature $outputFeature >$outputFile
+		</command>
+      <inputs>
+	      <param name="inputFile" type="data" label="Input File" format="gff3"/>	
+	      <param name="inputFeature" type="text" value="exon" label="A given feature, you must choose a feature name(on the 3rd column)."/>
+	      <param name="outputFeature" type="text" value="exon" label="You must choose an other feature name(on the 3rd column)."/>
+      </inputs>
+
+      <outputs>
+             <data name="outputFile" format="gff3" label="[changeGffFeatures] Output File"/>
+      </outputs> 
+</tool>
+

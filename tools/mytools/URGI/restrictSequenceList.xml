@@ -1,0 +1,16 @@
+<tool id="restrictSequenceList" name="restrict sequence list">
+  <description>Keep the elements of a list of sequences whose name is mentionned in a given file.</description>
+  <command interpreter="python"> ../Java/Python/restrictSequenceList.py -i $inputFile -f fasta -n $name -o $outputFile </command>
+  
+  <inputs>
+	<param name="inputFile" type="data" label="Input fasta File" format="fasta"/>
+	<param name="name" type="data" label="The txt file contains the names of the transcripts." format="txt"/> 
+  </inputs>
+
+  <outputs>
+    <data format="fasta" name="outputFile" label="[restrictSequenceList] Output File"/>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

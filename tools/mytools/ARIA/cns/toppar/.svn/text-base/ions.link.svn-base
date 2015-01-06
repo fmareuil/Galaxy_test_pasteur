@@ -1,0 +1,14 @@
+REMARKS  TOPH19.pep -MACRO for protein sequence
+SET ECHO=FALSE END
+
+! this is an empty link file to include single molecules
+
+
+link  DUMM head - ZN tail + ZN end
+
+first DUMM           tail + ZN end
+
+last  DUMM head - ZN           end
+
+
+SET ECHO=TRUE END

@@ -1,0 +1,21 @@
+<tool id="ReadFastaFile" name="Read Fasta File" version="0.38">
+    <description>This tool is the fastest and most efficient fasta-formatted sequence file (alphanumerical) sorting tool I have up front</description>
+    <stdio>
+        <exit_code range="0" level="warning" description="Description message" />
+	<exit_code range="1:" level="fatal" />
+    </stdio>
+    <command> ReadFastaFile $inputfasta $outputfasta</command> 
+    <inputs>
+        <param name="inputfasta" type="data" label="Input fasta file " format="fasta"/>
+    </inputs>
+    <outputs>
+        <data name="outputfasta" format="fasta" label="ReadFastaFile on $inputfasta.name"/>
+    </outputs>
+    <help>
+    </help>
+   <!-- <tests>
+        <test>
+	    <param name="input" value="1.fasta" ftype="fasta"/>
+	</test>
+    </tests> -->
+</tool>

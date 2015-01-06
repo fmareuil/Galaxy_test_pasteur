@@ -1,0 +1,67 @@
+<tool id="getReadDistribution" name="get read distribution">
+	<description>Get Read Distribution v1.0.1: Plot the number of identical reads and give the most represented.</description>
+	<command interpreter="python">
+		../Java/Python/WrappGetReadDistribution.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'fasta':
+			-f fasta
+		#elif $formatType.FormatInputFileName == 'fastq':
+			-f fastq	
+		#end if
+			
+		#if $optionnumber.number == 'Yes':
+			-n $optionnumber.bestNumber
+		#end if
+		#if $optionpercent.percent == 'Yes':
+			-p $optionpercent.percentage
+		#end if
+		-o $outputFile
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Sequence input File Format ">
+				<option value="fasta">fasta</option>
+				<option value="fastq">fastq</option>
+			</param>
+			<when value="fasta">
+				<param name="inputFileName" format="fasta" type="data" label="Sequence input File"/>
+			</when>
+			<when value="fastq">
+				<param name="inputFileName" format="fastq" type="data" label="Sequence input File"/>
+			</when>
+		</conditional>
+		
+		<conditional name="optionnumber">
+			<param name="number" type="select" label="keep the best n">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="bestNumber" type="integer" value="0"  />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionpercent">
+			<param name="percent" type="select" label="keep the best n percentage">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="percentage" type="integer" value="0" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+	</inputs>
+
+	<outputs>
+		<data name="outputFile" format="tar" label="[getReadDistribution] tar out file" help="You can not see the results directly from galaxy, but you can download this tar output file."/>
+	</outputs> 
+
+    <help>
+        This script gives a .tar out file, if you want to take look at the results, you have to download it.
+    </help>	
+</tool>

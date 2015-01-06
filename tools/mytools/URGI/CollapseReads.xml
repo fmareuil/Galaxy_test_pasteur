@@ -1,0 +1,59 @@
+<tool id="collapseReads" name="collapse reads">
+	<description>Merges two reads if they have exactly the same genomic coordinates.</description>
+	<command interpreter="python">
+		../Java/Python/CollapseReads.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if
+		-$strand
+		-o $outputFileGff 
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input File"/>
+			</when>
+		</conditional>
+
+		<param name="strand" type="boolean" truevalue="-s" falsevalue="" checked="false" label="Strand option merges 2 different strands[default:False]."/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3"/>
+	</outputs> 
+	
+</tool>

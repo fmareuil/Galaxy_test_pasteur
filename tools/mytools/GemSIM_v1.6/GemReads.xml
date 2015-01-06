@@ -1,0 +1,127 @@
+<tool id="GemReads" name="GemReads" version="0.1 beta">
+
+	<description>simulate Illumina and 454 reads</description>
+	<command interpreter="python"> GemSIM_wrapper.py -n $nReads -m $error_modelgzip -l $length -q $quality -o output
+	        #if $haplo.flag == "yes":
+	            #if $haplo.tar_log.flag == "yes":
+		        -G $haplo.tar_log.tar_haplo_in
+		        -a $haplo.tar_log.abun_in
+		    #else:
+		        -g $haplo.tar_log.haplo_in
+		    #end if
+		#else:
+		    #if $haplo.tar_log.flag == "yes":
+		        -R  $haplo.tar_log.tar_fasta_in
+		        -a $haplo.tar_log.abun_in
+		    #else:
+		        -r $haplo.tar_log.fasta_in
+		    #end if
+		#end if
+		#if $circular == "Yes":
+		    -c 
+		#end if
+		#if $paired_end == "Yes":
+		    -p
+		#end if
+	</command>
+	<inputs>
+	        <conditional name="haplo">
+		    <param name="flag" type="select" label="It's an haplotype projects?" >
+		            <option value="yes"> yes </option>
+		            <option value="no" selected="True" > no </option>
+                    </param>
+		    <when value="yes">
+	                <conditional name="tar_log">
+		            <param name="flag" type="select" label="It's a metagenome projects?" >
+		                    <option value="yes" selected="True" > yes </option>
+		                    <option value="no" > no </option>
+                           </param>
+                           <when value="yes">
+			           <param name="tar_haplo_in" type="data" format="tar" label="Archive tar of haplotype files, specifying location and frequency of snps."/>
+			           <param name="abun_in" type="data" format="txt" label="Species-abundance file."/>
+	                   </when>
+                           <when value="no">
+			           <param name="haplo_in" type="data" format="fasta" label="haplotype file, specifying location and frequency of snps."/>   
+	                   </when>  
+                        </conditional>
+		     </when> 
+		     <when value="no">
+	                <conditional name="tar_log">
+		            <param name="flag" type="select" label="It's a metagenome projects?" >
+		                    <option value="yes" selected="True" > yes </option>
+		                    <option value="no" > no </option>
+                           </param>
+                           <when value="yes">
+		                   <param name="tar_fasta_in" type="data" format="tar" label="Archive tar containing references genome, in fasta format."/>
+			           <param name="abun_in" type="data" format="txt" label="Species-abundance file."/>
+	                   </when>
+                           <when value="no">
+		                   <param name="fasta_in" type="data" format="fasta" label="reference genome, in fasta format."/> 
+	                   </when>  
+                        </conditional>		      
+		     </when>
+		 </conditional>	 
+		<param name="nReads" size="5" type="integer" value="1000" label="Number  of  reads  (or  pairs  of  reads)  to  simulate" />
+		<param name="length" size="5" type="text" value="100" label="Simulated  read  length" help="specify  'd' to  use  an  empirical  read  length  distribution " />
+		<param name="circular" type="select" label="Calculate error models based on circular genomes"> 
+			<option value="No">No</option>
+       		<option value="Yes">Yes</option>
+      	</param>
+	<param name="error_modelgzip" type="data" format="gzip" label="error model file *_single.gzip or *_paired.gzip."/>
+      	<param name="paired_end" type="select" label="Paired end data"> 
+      		<option value="No">No</option>
+       		<option value="Yes">Yes</option>
+      	</param>
+		<param name="quality" type="select" label="Quality  score  offset" help="33  for  Sanger  format,  64  for 
+Solexa/Illumina  1.3+."> 
+			<option value="33">33</option>
+			<option value="64">64</option>
+		</param>
+	</inputs>
+
+	<outputs>
+            <data format="fastq" name="output1" label="${tool.name} on ${on_string}: output first" from_work_dir="output_paired.fastq">
+	        <filter>paired_end == "Yes"</filter>
+	    </data>
+	    <data format="fastq" name="output2" label="${tool.name} on ${on_string}: output first" from_work_dir="output_single.fastq">
+	        <filter>paired_end == "No"</filter>
+	    </data>
+	</outputs>
+
+	<tests>
+ 	</tests>
+
+ 	<help>
+GemSIM - Generic Error Model based SIMulator of N.G. sequencing data
+
+http://gemsim.sourceforge.net/
+
+**GemReads.py**:
+
+Takes a reference genome, an empirical error model, and a haplotype file
+listing SNP locations and frequencies, and creates a simulated data set
+of random reads, as would be produced by a next-gen sequencing run.
+Output is in fastq format, suitable for input into popular alignment
+software.
+
+**Options**::
+
+ -h prints these instructions.
+ -r reference genome, in fasta format.
+ -R Only for metagenome projects. Directory containing references.
+ -a Only for metagenome projects. Species-abundance file.
+ -n number of reads to produce. For paired end reads, number of pairs.
+ -g haplotype file, specifying location and frequency of snps.
+ -G directory of haplotype files (metagenomics mode only).
+ -l length of reads. Integer value, or -l d for empirical distribution.
+ -m error model file *_single.gzip or *_paired.gzip.
+ -c use this flag if you wish to draw reads from a circular genome.
+ -q quality score offset. Usually 33 or 64 (see manual).
+ -o output file name prefix.
+ -u Mean fragment length for paired end reads. -u d for empirical.
+ -s standard deviation for fragment length. Use only with -u and -p.
+ -p use only to create paired end reads.
+
+ 	</help>
+
+ </tool>

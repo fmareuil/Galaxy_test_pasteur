@@ -1,0 +1,54 @@
+<tool id="DESEQ" name="DESEQ for differential expression analysis">
+  <description>Differential expression analysis for reads count data</description>
+  <requirements>
+    <requirement type="package">R</requirement>
+    <requirement type="package">Biobase</requirement>
+    <requirement type="package">DESeq</requirement>
+  </requirements>
+  
+  <command interpreter="bash"> deseq.sh -i $inputFile -h $header -m $method -o $outPDF -p $projectName -a $analysisVersion 
+      -r $riboNames
+
+    #if $geneFileOption.geneLengthFile == 'Yes':
+      -l $geneFileOption.geneFile
+    #end if
+
+    2> $log
+  </command>
+
+  <inputs>
+      <param name="inputFile" type="data" label="Input File list" format="txt"/>
+      <param name="header" type="boolean" truevalue="1" falsevalue="0" checked="false" label="If there is a header for your count files, please choose this case."/>
+      <param name="method" type="text" value="pooled" label="With replicates (pooled method by default), without replicates, please tape blind in the case."/>
+      <param name="projectName" type="text" value="SLX080" label="Please tape your project name" >
+          <validator type="regex" message="Use only alphanumeric characters or tidashret and only one dot">[A-Za-z0-9\-.]+$</validator>
+      </param>
+      <param name="analysisVersion" type="text" value="V1" label="Please tape the Version of your analyse" />
+
+      <param name="riboNames" type="text" value="EXAMPLE" label="Please tape the ribosomic sequence names, seperate names by ',' ." />
+
+      <conditional name="geneFileOption">
+      <param name="geneLengthFile" type="select" label="normalization of gene length" >
+          <option value="Yes">Yes</option>
+          <option value="No" selected="true">No</option>
+      </param>
+      <when value="Yes">
+        <param name="geneFile" type="data" label="gene length File" />
+      </when>
+      <when value="No">
+      </when>
+    </conditional>
+
+
+  </inputs>
+
+  <outputs>
+      <data format="PDF" name="outPDF" label="[DESEQ] Output PDF File" help="This output file shows all results by DESeq analysis"/> 
+      <data format="txt" name="log" label="[DESEQ] Output log File"/> 
+  </outputs>
+
+  <help>
+  </help>
+  <test>
+  </test>
+</tool>

@@ -1,0 +1,45 @@
+--- pgcleanup.pyold	2013-10-31 11:05:16.054789255 +0100
++++ pgcleanup.py	2013-10-31 11:07:28.754792988 +0100
+@@ -71,6 +71,7 @@
+         parser.add_option('-o', '--older-than', type='int', dest='days', help='Only perform action(s) on objects that have not been updated since the specified number of days', default=14)
+         parser.add_option('-U', '--no-update-time', action='store_false', dest='update_time', help="Don't set update_time on updated objects", default=True)
+         parser.add_option('-s', '--sequence', dest='sequence', help='Comma-separated sequence of actions, chosen from: %s' % self.action_names, default='')
++        parser.add_option('-u', '--user', dest='user', help='user for reset user', action='store')
+         parser.add_option('-w', '--work-mem', dest='work_mem', help='Set PostgreSQL work_mem for this connection', default=None)
+         ( self.options, self.args ) = parser.parse_args()
+ 
+@@ -107,6 +108,10 @@
+         log.info('Connecting to database with URL: %s' % url)
+         args = url.translate_connect_args()
+         args.update(url.query)
++##MAREUIL
++        args['user'] = args['username']
++        del(args['username'])
++##MAREUIL
+ 
+         assert url.get_dialect().name == 'postgresql', 'This script can only be used with PostgreSQL.'
+ 
+@@ -767,6 +772,23 @@
+                         self._log('Removal of %s failed with error: %s' % (extra_files_dir, e))
+ 
+         self._close_logfile()
++##MAREUIL
++    def reset_user(self): 
++        log.info('Reset user.')
++        sql = """update galaxy_user set purged='f', deleted='f' where id in (select id from galaxy_user where email='%s');"""
++        user=self.options.user
++        if user is None:
++             log.error('user is required')
++             sys.exit('user is required')
++        else:
++            sql = sql % user
++            cur = self._update(sql, None)
++            self._flush()
++            self._open_logfile()
++            self._log('User reset: %s' % user)
++            self._close_logfile()
++##MAREUIL
++
+ 
+ if __name__ == '__main__':
+     cleanup = Cleanup()

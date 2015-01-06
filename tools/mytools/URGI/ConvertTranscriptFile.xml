@@ -1,0 +1,109 @@
+<tool id="ConvertTranscriptFile" name="Convert transcript file">
+  <description>Convert a file from a format to another.</description>
+  <command interpreter="python">../Java/Python/convertTranscriptFile.py -i $inputFormatType.inputFileName 
+	  #if $inputFormatType.FormatInputFileName == 'gff3':
+	  	-f gff3
+	  #elif $inputFormatType.FormatInputFileName == 'bed': 
+	 	-f bed 
+	  #elif $inputFormatType.FormatInputFileName == 'gff2': 
+	 	-f gff2
+	  #elif $inputFormatType.FormatInputFileName == 'bam': 
+	 	-f blast
+	  #elif $inputFormatType.FormatInputFileName == 'sam': 
+	 	-f sam
+          #end if
+	  
+	 -g $outputFormatType.outFormat
+  	  #if $optionSequence.choose == 'Yes':
+	  	-s $optionSequence.value
+		#end if 
+	
+	  
+	  -n $name
+	  $strand
+	  -o $outputFile
+	 
+  </command>
+  <inputs>
+	  <conditional name="inputFormatType">
+		  <param name="FormatInputFileName"  type="select" label="Input File Format">
+			  <option value="gff3">GFF3</option> 
+			  <option value="bed">BED</option> 
+			  <option value="gff2">GFF2</option> 
+			  <option value="bam">BAM</option> 
+			  <option value="sam">SAM</option> 
+		  </param>
+		  <when value="gff3">  
+			  <param name="inputFileName" format="gff3" type="data" label="Input File"/>
+		  </when>
+		  <when value="bed">  
+			  <param name="inputFileName" format="bed" type="data" label="Input File"/>
+		  </when>
+		  <when value="gff2">  
+			  <param name="inputFileName" format="gff2" type="data" label="Input File"/>
+		  </when>
+		  <when value="bam">  
+			  <param name="inputFileName" format="bam" type="data" label="Input File"/>
+		  </when>
+		  <when value="sam">  
+			  <param name="inputFileName" format="sam" type="data" label="Input File"/>
+		  </when>
+		</conditional>    
+  
+  
+ 	  <conditional name="outputFormatType">
+		  <param name="outFormat"  type="select" label="Please choose the format that you want to convert to (corresponding to your input file format).">
+			  <option value="gff3">GFF3</option> 
+			  <option value="bed">BED</option> 
+			  <option value="gff2">GFF2</option> 
+			  <option value="wig">WIG</option> 
+			  <option value="sam">SAM</option> 
+			  <option value="csv">CSV</option> 
+		  </param> 
+  		  <when value="gff3">  
+		  </when>
+		  <when value="bed">  
+		  </when>
+  		  <when value="gff2">  
+		  </when>
+		  <when value="wig">  
+		  </when>
+  		  <when value="sam">  
+		  </when>
+		  <when value="csv">  
+		  </when>
+ 		</conditional>  
+ 		
+ 		<param name="name" type="text" value="SMART" label="name for the transcripts"/>
+ 		
+ 		<conditional name="optionSequence">
+ 		<param name="choose" type="select" label="give the corresponding Multi-Fasta file (useful for EMBL format)">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			 <param name="value" type="data" format="mfa" />
+		</when>
+		<when value="No">
+		</when>
+		</conditional>
+ 		 
+ 		<param name="strand" type="boolean" truevalue="-t" falsevalue="" checked="false" label="consider the 2 strands as different (only useful for writing WIG files)"/>
+ 		 
+  </inputs>
+
+  <outputs>
+  		<data name="outputFile" format="gff3" label="$inputFormatType.FormatInputFileName to $outputFormatType.outFormat">
+			<change_format>
+			<when input="outputFormatType.outFormat" value="bed" format="bed" />
+			<when input="outputFormatType.outFormat" value="gff2" format="gff2" />
+			<when input="outputFormatType.outFormat" value="wig" format="wig" />
+			<when input="outputFormatType.outFormat" value="sam" format="sam" />
+			<when input="outputFormatType.outFormat" value="csv" format="csv" />
+			</change_format> 
+		</data>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

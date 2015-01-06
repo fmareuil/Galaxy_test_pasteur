@@ -1,0 +1,201 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: ensemble_rmsd.inp,v $
+
+remarks  ensemble_rmsd.inp
+remarks  ARIA
+remarks  Alexandre Bonvin, Utrecht University, Feb-2001
+remarks  some modifications MN, IP, Aug-2001
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+ident (store8) (not all) 
+ident (store1) (not all)
+
+!if secondary structure defined use it otherwise use the
+!the result of wellordered.inp
+
+!read .pdb file (average structure from wellordered.inp):
+evaluate ($filename = "ANALYSIS:" + $Filenames.fileroot + "_ave.pdb")
+coor @@$filename
+coor copy end
+
+@@RUN:data/sequence/secondarystructure.cns
+show sum (store1) (all)
+
+if ($result < 3) then
+
+
+   coor select (store8) end
+   if ($select eq 0) then
+      for $id in id (tag) loop order
+         show sum (q) (byresid (id $id))
+         do (q=$result) (byresid(id $id))
+      end loop order
+      identity (store8) (attribute q > 1)
+   end if
+  
+else
+
+  ident (store8) (name CA and (attr store1 > 0))
+  
+end if
+
+{* filenames *}
+evaluate ($outroot  = "ANALYSIS:" + $Filenames.fileroot)
+evaluate ($trajfile=$outroot+".crd")
+evaluate ($dispfile=$outroot+"_enerms.disp")
+
+set display $dispfile end
+display # Ensemble RMSD as a function of the number of structures
+display # sorted in increasing (total or restraint) energies
+display # 
+display # Nstruc MaxRms RMS AveRms Stdev 
+
+evaluate ($count = 0)
+evaluate ($status = READ)
+while ($status eq READ) loop traj
+   evaluate ($count = $count + 1)
+   if ($count eq 1) then
+      read trajectory
+         ascii true
+         input= $trajfile
+         begin 1 skip 1 stop 100
+      end
+   else
+      read trajectory 
+         next
+      end
+   end if
+end loop traj
+close $trajfile end
+! we need to substract one since status is only modified on EOF
+evaluate ($TotalNstruct = $count-1)
+
+evaluate ($FittedStructures = 1)
+while ($FittedStructures < $TotalNstruct) loop sofit
+
+   evaluate ($FittedStructures = $FittedStructures + 1)
+
+   do (store1 = 0) (all)
+   do (store2 = 0) (all)
+   do (store3 = 0) (all)
+   do (store4 = 0) (all)
+   evaluate ($nstruc = 0)
+
+!read trajectory:
+   while ($nstruc < $FittedStructures) loop fitt
+      evaluate ($nstruc = $nstruc + 1)
+      if ($nstruc eq 1) then
+         read trajectory
+            ascii true
+            input= $trajfile
+            begin 1 skip 1 stop $FittedStructures
+         end
+         coor copy end 
+      else
+         read traj next end
+      end if
+      coor sele= (store8) fit end
+      do (store1 = store1 + x) (all)
+      do (store2 = store2 + y) (all)
+      do (store3 = store3 + z) (all)
+   end loop fitt
+   close $trajfile end
+
+   do (xcomp = store1/$nstruc) (all)
+   do (ycomp = store2/$nstruc) (all)
+   do (zcomp = store3/$nstruc) (all)
+
+   evaluate ($nstruc = 0)
+   do (store4 = 0) (all)
+   evaluate ($maxrms = 0)
+   while ($nstruc < $FittedStructures) loop fitt
+      evaluate ($nstruc = $nstruc + 1)
+      if ($nstruc eq 1) then
+         read trajectory
+            ascii true
+            input= $trajfile
+            begin 1 skip 1 stop $FittedStructures
+         end
+      else
+         read traj next end
+      end if
+      coor sele= (store8) fit end
+      coor sele= (store8) rms end
+      evaluate ($maxrms = max($result,$maxrms))
+      do (store4 = store4 + x^2 + y^2 + z^2) (store8)
+   end loop fitt
+   close $trajfile end
+   do (b = sqrt(store4/$nstruc - (xcomp^2 + ycomp^2 + zcomp^2))) (store8)
+
+! calcuate mean rms fluctuation and sigma
+   show ave (b) (store8)
+   evaluate ($mean_u = $result)
+   show rms (b) (store8)
+   evaluate ($stdev_u = $result)
+   show norm (b) (store8)
+   evaluate ($norm_u = $result)
+
+   set echo on end
+   display $FittedStructures $maxrms $norm_u $mean_u $stdev_u
+   set echo off end
+  
+end loop sofit
+
+stop

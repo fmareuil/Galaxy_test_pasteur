@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui
+END
+ccpnGui.py
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/ccpnGui.py
+END
+logo.gif
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/logo.gif
+END
+AriaViewer.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/AriaViewer.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/__init__.py
+END
+shaded_folder.xpm
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/shaded_folder.xpm
+END
+warning.xpm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/warning.xpm
+END
+panels.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/panels.py
+END
+gui.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/gui.py
+END
+decorators.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/decorators.py
+END
+widgets.py
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/sandbox/!svn/ver/34/fmareuil/Stratuslab_aria2.3/src/py/aria/gui/widgets.py
+END

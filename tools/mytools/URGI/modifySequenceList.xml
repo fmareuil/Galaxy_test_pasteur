@@ -1,0 +1,46 @@
+<tool id="modifySequenceList" name="modify sequence list">
+  <description>Extend or shring a list of sequences. </description>
+  <command interpreter="python"> ../Java/Python/modifySequenceList.py -i $inputFile -f fasta
+	#if $OptionStart.Start == "Yes":
+		-s $OptionStart.StartVal
+	#end if		
+	#if $OptionEnd.End == "Yes":
+		-e $OptionEnd.EndVal
+	#end if	
+  	-o $outputFile  
+  </command>
+  
+  
+  <inputs>
+	<param name="inputFile" type="data" format="fasta" label="input file"/>
+
+	<conditional name="OptionStart">
+		<param name="Start" type="select" label="keep first nucleotides">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="StartVal" type="integer" value="0" />
+		</when>
+		<when value="No">
+		</when>
+	</conditional>
+		
+	<conditional name="OptionEnd">
+		<param name="End" type="select" label="keep last nucleotides">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="EndVal" type="integer" value="0"/>
+		</when>
+		<when value="No">
+		</when>
+	</conditional>	
+  </inputs>
+
+  <outputs>
+    	<data format="fasta" name="outputFile" label="[modifySequenceList] Output File"/>
+  </outputs>
+
+</tool>

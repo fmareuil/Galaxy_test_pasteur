@@ -1,0 +1,56 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: swap.cns,v $
+
+
+REMARK protocols/swap.cns
+REMARK swaps systematically randomly selected methylene protons
+REMARK   accepts the conformation with lower noe energy
+REMARK   can be used in conjunction with floating assignment
+REMARK uses the ARIA FLIP command
+
+!     **********************************************
+!     * Author and copyright: Michael Nilges, EMBL *
+!     * No warranty implied or expressed           *
+!     * All rights reserved                        *
+!     **********************************************
+
+
+set echo off message off end
+
+! reduce q randomly
+
+if ($swap > 0) then
+   do (q = q * ran()) (attr q > -0.5)
+end if
+
+! swap any atoms that have a q value smaller than specified value
+
+for $id in id ((attr store9=1) and name h*2 and attr q < $swap and attr q > -0.5) loop meth
+  aria 
+   flip 
+  (bondedto(bondedto(id $id)) and name h*) 
+ end
+end loop meth
+
+
+for $id in id ((attr store9 eq 2) 
+ and ((resn val and name cg1) or (resn leu and name cd1) )
+ and attr q < $swap and attr q > -0.5) loop meth
+
+  show element (resid) (id $id)
+  eval ($resid = $result)
+  show element (name) (id $id)
+  eval ($name1 = $result)
+  eval ($name2 = $name1 - "1" + "2")
+  aria flip (bondedto (resid $resid and (name $name1 or name $name2)) and name h*) end
+
+end loop meth
+
+! set q of the swapped atoms to 1.0
+
+do (q=1) (attr q < $swap and attr q > -0.5)
+
+set echo off message off end
+
+

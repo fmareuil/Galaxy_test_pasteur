@@ -1,0 +1,40 @@
+cns_refine {<cns-statement>} stop
+
+<cns-statement> :==
+
+  aria <aria-statement> end --{ARIA NOE assignment}
+  connectivity <connectivity-statement> end --{Analyse atomic connectivity}
+  coordinate <coordinate-statement> end --{Read and manipulate coordinates}
+  delete <delete-statement> end --{Delete atoms}
+  distance <distance-statement> end --{Analyse nonbonded distances}
+  do <do-statement> --{Manipulate atom objects}
+  duplicate <duplicate-statement> end --{Duplicate atoms}
+  dynamics <dynamics-statement> end --{Molecular dynamics}
+  energy <energy-statement> end --{Calculate current energy}
+  fastnb <fastnb-statement> end --{Fast nonbonded interaction setup}
+  fix <fix-statement> end --{Fix atomic positions}
+  flags <flags-statement> end --{Flag energy terms}
+  identity <identity-statement> --{Store atom selections}
+  igroup <igroup-statement> end --{Setup interacting sets of atoms}
+  minimize <minimize-statement> end --{Energy minimization}
+  mmdg <mmdg-statement> end --{Distance geometry calculation}
+  modes <modes-statement> end --{Quasi-normal mode analysis.}
+  ncs <ncs-statement> end --{Non-crystallographic symmetry}
+  noe <noe-statement> end --{NMR distance restraints}
+  parameter <parameter-statement> end --{Read atomic parameters}
+  patch <patch-statement> end --{Patch molecular topology database}
+  pick <pick-statement> --{Analyse geometric properties}
+  print <print-statement> --{Print molecular properties}
+  read <read-statement> end --{Read information from file}
+  restraints <restraints-statement> end --{Additional atomic restraints}
+  rotman <rotman-statement> end --{Compare matrices}
+  segment <segment-statement> end --{Define molecular topology}
+  show <show-statement> --{Show atomic objects}
+  structure <structure-statement> end --{Read molecular topology}
+  surface <surface-statement> end --{Surface area calculation}
+  test <test-statement> end --{Test first derivative and memory}
+  topology <topology-statement> end --{Residue and patch topology database}
+  write <write-statement> end --{Write information}
+  xray <xray-statement> end --{Xray restraint and manipulation}
+  ? --{Print information about current status}
+  <global-statement> --{Global commands - See help-global}

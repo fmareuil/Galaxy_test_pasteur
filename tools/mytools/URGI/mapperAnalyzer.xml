@@ -1,0 +1,186 @@
+<tool id="mapperAnalyzer" name="mapper analyzer">
+	<description>Read the output of an aligner, print statistics and possibly translate into BED or GBrowse formats. </description>
+	<command interpreter="python">
+		../Java/Python/mapperAnalyzer.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3	
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'bam':
+			-f bam
+		#elif $formatType.FormatInputFileName1 == 'seqmap':
+			-f seqmap
+		#end if
+			
+		-q $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'fasta':
+			-k fasta
+		#elif $formatType2.FormatInputFileName2 == 'fastq':
+			-k fastq	
+		#end if
+		
+
+		#if $optionnumber.number == 'Yes':
+			-n $optionnumber.numberVal
+		#end if
+		#if $optionsize.size == 'Yes':
+			-s $optionsize.sizeVal
+		#end if
+		#if $optionidentity.identity == 'Yes':
+			-d $optionidentity.identityVal
+		#end if
+		#if $optionmismatch.mismatch == 'Yes':
+			-m $optionmismatch.mismatchVal
+		#end if
+		#if $optiongap.gap == 'Yes':
+			-p $optiongap.gapVal
+		#end if		
+		#if $optiontitle.title == 'Yes':
+			-t $optiontitle.titleVal
+		#end if	
+		#if $optionappend.append == 'Yes':
+			-a $optionappend.appendfile
+		#end if	
+			
+		$merge
+		$remove
+		$remain
+		-o $outputFileGFF
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File mapping Format">
+				<option value="bed">bed</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="bam">bam</option>
+				<option value="seqmap" selected="true">seqmap</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="bam">
+				<param name="inputFileName1" format="bam" type="data" label="Input File"/>
+			</when>
+			<when value="seqmap">
+				<param name="inputFileName1" format="seqmap" type="data" label="Input File"/>
+			</when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Reference sequence File Format">
+				<option value="fasta" selected="true">fasta</option>
+				<option value="fastq">fastq</option>
+			</param>
+			<when value="fasta">
+				<param name="inputFileName2" format="fasta" type="data" label="Reference sequence File Format"/>
+			</when>
+			<when value="fastq">
+				<param name="inputFileName2" format="fastq" type="data" label="Reference sequence File Format"/>
+			</when>
+		</conditional>
+
+
+		<conditional name="optionnumber">
+			<param name="number" type="select" label="max. number of occurrences of a sequence">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="numberVal" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionsize">
+			<param name="size" type="select" label="minimum pourcentage of size ">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="sizeVal" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionidentity">
+			<param name="identity" type="select" label="minimum pourcentage of identity ">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="identityVal" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionmismatch">
+			<param name="mismatch" type="select" label="maximum number of mismatches">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="mismatchVal" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optiongap">
+			<param name="gap" type="select" label="maximum number of gaps">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="gapVal" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optiontitle">
+			<param name="title" type="select" label="title of the plots ">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="titleVal" type="text" value="title of the UCSC track" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionappend">
+			<param name="append" type="select" label="append to GFF3 file">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="appendfile" type="data" format="gff3" label="append a file"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<param name="merge" type="boolean" truevalue="-e" falsevalue="" checked="false" label="merge exons when introns are short "/>
+		<param name="remove" type="boolean" truevalue="-x" falsevalue="" checked="false" label="remove transcripts when exons are short"/>
+		<param name="remain" type="boolean" truevalue="-r" falsevalue="" checked="false" label="print the unmatched sequences "/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGFF" format="gff3" label="[mapperAnalyzer] out file"/>
+	</outputs> 
+	
+</tool>

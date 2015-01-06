@@ -1,0 +1,82 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: print_coorheader.cns,v $
+
+! print_coorheader.cns
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+
+
+if ($Data.flags.dihed eq FALSE) then evaluate ($dihe = 0) end if
+if ($Data.flags.sani  eq FALSE) then evaluate ($sani = 0) end if
+if ($Data.flags.coup  eq FALSE) then evaluate ($coup = 0) end if
+if ($Data.flags.vean  eq FALSE) then evaluate ($vean = 0) end if
+if ($Data.flags.cdih  eq FALSE) then evaluate ($cdih = 0) end if
+if ($Data.flags.elec  eq FALSE) then evaluate ($elec = 0) end if
+if ($Data.flags.noe   eq FALSE) then evaluate ($noe  = 0) end if
+
+energy end
+set echo off message off end
+
+
+print threshold=0.5 noe 
+
+! if you want to be more stringent, please use:
+!print threshold=0.3 noe
+
+evaluate ($rms_noe=$result)
+evaluate ($violations_noe=$violations)
+print threshold=5. cdih
+evaluate ($rms_cdih=$result)
+evaluate ($violations_cdih=$violations)
+print thres=0.05 bonds          
+evaluate ($rms_bonds=$result)
+print thres=5. angles
+evaluate ($rms_angles=$result)
+print thres=5. impropers
+evaluate ($rms_impropers=$result)
+print thres=30. dihedrals 
+evaluate ($rms_dihedrals=$result)
+coupl print thres=1.0 class c1 end
+evaluate ($rms_coup = $result)
+evaluate ($violations_coup = $violations)
+coupl print thres=1.0 class c2 end
+coupl print thres=1.0 class c3 end
+coupl print thres=1.0 class c4 end
+coupl print thres=1.0 class c5 end
+sani print threshold=0.0 class rdc1 end
+evaluate ($rms_sani=$result)
+evaluate ($violations_sani=$violations)
+sani print threshold=0.0 class rdc2 end
+sani print threshold=0.0 class rdc3 end
+sani print threshold=0.0 class rdc4 end
+sani print threshold=0.0 class rdc5 end
+
+vean print threshold = 5.00 class vea1 end
+evaluate( $rms_vean = $result)
+evaluate( $violations_vean = $violations)
+vean print threshold = 5.00 class vea2 end
+vean print threshold = 5.00 class vea3 end
+vean print threshold = 5.00 class vea4 end
+vean print threshold = 5.00 class vea5 end
+
+!   remarks initial random number seed: $seed
+remarks =============================================================== 
+remarks            overall,bonds,angles,improper,dihe,vdw,elec,noe,cdih,coup,sani,vean
+remarks energies: $ener, $bond, $angl, $impr, $dihe, $vdw, $elec, $noe, $cdih, $coup, $sani, $vean
+remarks =============================================================== 
+remarks            bonds,angles,impropers,dihe,noe,cdih,coup,sani,vean
+remarks rms-dev.: $rms_bonds,$rms_angles,$rms_impropers,$rms_dihedrals,$rms_noe,$rms_cdih,$rms_coup, $rms_sani, $rms_vean
+remarks =============================================================== 
+remarks               noe,cdih,coup,sani,vean
+remarks               >0.5,>5,>1,>0,>5
+!remarks               >0.3,>5,>1,>0,>5
+remarks violations.: $violations_noe, $violations_cdih, $violations_coup, $violations_sani, $violations_vean
+remarks =============================================================== 
+
+

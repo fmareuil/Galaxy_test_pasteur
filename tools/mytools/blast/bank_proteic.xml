@@ -1,0 +1,13 @@
+	        <param name="database" type="select" label="Protein BLAST database">
+		  <option value="alupro">alupro: alu protein database</option>
+		  <option value="nrprot">nrprot: NCBI non-redundant Genbank CDS translations+PDB+Swissprot+PIR</option>
+		  <option value="refseqp_release">refseqn_release: RefSeq Protein release</option>
+		  <option value="refseqp_update">refseqn_update: RefSeq Protein updates</option>
+                  <option value="sbase">sbase: annotated domains sequences</option>
+                  <option value="uniprot">uniprot: Universal Protein Resource = SwissProt + TrEMBL + PIR </option>
+                  <option value="uniprot_sprot">uniprot_sprot: Universal Protein Resource (SwissProt part)</option>
+                  <option value="uniprot_trembl">uniprot_trembl: Universal Protein Resource (TrEmbl part)</option>
+		  <option value="uniref90">uniref90: Clustered sets of sequences from UniProt Knowledgebase</option>
+		  <option value="vipr_aa">vipr_aa: Virus Pathogen Resource (Protein)</option>
+		  <option value="wgspro">wgspro: Whole Genome Shotgun</option>
+   		</param>

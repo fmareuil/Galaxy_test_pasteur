@@ -1,0 +1,107 @@
+
+set echo off message off end
+
+if ( $Data.logharmonic.auto_weight eq TRUE ) then
+  ! we use auto_weight with distribution over two classes (ambi and dist)
+
+  evaluate ($kboltz300 = $kboltz * 300)
+
+  if ( $logn_fin eq TRUE ) then
+    ! final weight values
+	
+    ! auto weight
+    noe distr dist ambi 100 end
+    noe rms dist end
+    evaluate ($2sigma = 2*$result)
+    noe distr dist ambi $2sigma  end
+
+    noe rms dist end
+    if ($result gt 0.0) then
+      evaluate ($sqdist = $kboltz300 / (2 * $result**2))
+    end if
+    noe sqconst dist $sqdist end
+
+    noe rms ambi end
+    if ($result gt 0) then
+      evaluate ($sqambi = $kboltz300 / (2 * $result**2))
+    end if
+    noe sqconst ambi $sqambi end
+
+    noe rms hbon end
+    if ($result gt 0.0) then
+      evaluate ($sqhbond = $kboltz300 / (2 * $result**2))
+    end if
+    noe sqconst hbon $sqhbond end
+    
+  else
+    ! auto weight
+    noe distr dist ambi 100 end
+    noe rms dist end
+    evaluate ($2sigma = 2*$result)
+    noe distr dist ambi $2sigma  end
+
+    ! unambig
+    noe rms dist end
+    if ($result gt 0.0) then
+      evaluate ($sqdist = min(25, max($sqdist/1.25, $kboltz300 / (2 * $result**2))))
+    else
+      evaluate ($sqdist =     $sqdist/1.25 )
+    end if
+    noe sqconst dist $sqdist end
+    
+    ! ambig
+    noe rms ambi end
+    if ($result gt 0) then
+      evaluate ($sqambi = min(25, max($sqambi/1.25, $kboltz300 / (2 * $result**2))))
+    else
+      evaluate ($sqambi =     $sqambi/1.25 )
+    end if
+    noe sqconst ambi $sqambi end
+    
+    ! hbond
+    noe rms hbon end
+    if ($result gt 0.0) then
+      evaluate ($sqhbond = min(25, max($sqhbond/1.25, $kboltz300 / (2 * $result**2))))
+    else
+      evaluate ($sqhbond =     $sqhbond/1.25 )
+    end if
+    noe sqconst hbon $sqhbond end
+  end if
+
+else
+  ! auto weight
+  noe distr dist ambi 100 end
+  noe rms dist end
+  evaluate ($2sigma = 2*$result)
+  noe distr dist ambi $2sigma  end
+
+  ! unambig
+  noe rms dist end
+  if ($result gt 0.0) then
+    evaluate ($sqdist = max($sqdist/1.25, $Data.logharmonic.weight_unambig))
+  else
+    evaluate ($sqdist =     $sqdist/1.25 )
+  end if
+  noe sqconst dist $sqdist end
+
+  ! ambig
+  noe rms ambi end
+  if ($result gt 0) then
+    evaluate ($sqambi = max($sqambi/1.25, $Data.logharmonic.weight_ambig))
+  else
+    evaluate ($sqambi =     $sqambi/1.25 )
+  end if
+  noe sqconst ambi $sqambi end
+
+  ! hbond
+  noe rms hbon end
+  if ($result gt 0.0) then
+    evaluate ($sqhbond = max($sqhbond/1.25, $Data.logharmonic.weight_hbond))
+  else
+    evaluate ($sqhbond =     $sqhbond/1.25 )
+  end if
+  noe sqconst hbon $sqhbond end
+
+end if
+
+set echo off message off end

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT chemical_shift_list (shift_assignment+)>
+
+  <!ELEMENT shift_assignment (spin_system+)>
+  <!ATTLIST shift_assignment method (STEREO_SPECIFIC|EQUIVALENT|FLOATING) #REQUIRED>  
+    <!ELEMENT spin_system (atom+,
+                           chemical_shift+)>
+    <!ATTLIST spin_system averaging_method (FAST|SLOW|NONE) "NONE">
+      <!ELEMENT atom EMPTY>
+      <!ATTLIST atom name CDATA #REQUIRED>
+      <!ATTLIST atom residue CDATA #REQUIRED>
+      <!ATTLIST atom segid CDATA #REQUIRED>
+                                      
+      <!ELEMENT chemical_shift EMPTY>
+      <!ATTLIST chemical_shift value CDATA #REQUIRED>
+      <!ATTLIST chemical_shift error CDATA #REQUIRED>
+

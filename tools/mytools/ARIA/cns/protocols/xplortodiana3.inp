@@ -1,0 +1,132 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: xplortodiana3.inp,v $
+
+REMARK X-PLOR script to convert X-PLOR methylene hydrogen names to the
+REMARK the naming convention adopted by DIANA
+REMARK Author: Michael Nilges, EMBL
+
+{****
+methylene:
+a: gly
+b: ser cys asn gln glu asp tyr phe trp his arg lys pro met leu 
+g: gln glu arg lys pro met 
+g1: ile
+d: pro lys arg
+e: lys
+****}
+
+
+{* alpha *}  
+ident (store1) (resn gly and name ha%)
+do (name =  AAA) (store1 and name ha1)
+do (name =  HA1) (store1 and name ha2)
+do (name =  HA2) (store1 and name AAA)
+  
+{* beta *}  
+ident (store1) 
+((resn ser or resn cys or resn asn or resn gln or resn glu or resn asp 
+   or resn tyr or resn phe or resn trp or resn his or resn arg or resn lys 
+   or resn pro or resn met or resn leu)
+and name hb%)
+do (name =  HB3) (store1 and name hb1)
+  
+{* gamma *}
+ident (store1) 
+((resn gln or resn glu or resn arg or resn lys or resn pro or resn met)
+and name hg%)
+do (name =  HG3) (store1 and name hg1)
+
+{* gamma1 *}
+ident (store1) (resn ile and name hg1%)
+do (name = HG13) (store1 and name hg11)
+
+{* delta *}
+ident (store1) ((resn arg or resn pro or resn lys or resn asn) and name hd%)
+do (name =  HD3) (store1 and name hd1)
+
+{* epsilon *}
+ident (store1) (resn lys and name he%)
+do (name =  HE3) (store1 and name he1)
+
+
+{****
+methyl:
+b: ala
+g1: val
+g2: val ile
+d1: leu ile
+d2: leu
+e: met
+z: lys
+****}
+
+{* beta *}
+ident (store1) (resn ala and name hb%)
+do (name =  BBB) (store1 and name hb2)
+do (name =  HB2) (store1 and name hb1)
+do (name =  HB1) (store1 and name BBB)
+
+{* gamma1 *}
+ident (store1) (resn val and name hg1%)
+do (name = GGGG) (store1 and name hg11)
+do (name = HG11) (store1 and name hg12)
+do (name = HG12) (store1 and name GGGG)
+  
+{* gamma2 *}
+ident (store1) ((resn ile or resn val) and name hg2%)
+do (name = GGGG) (store1 and name hg21)
+do (name = HG21) (store1 and name hg22)
+do (name = HG22) (store1 and name GGGG)
+
+{* delta1 *}
+ident (store1) ((resn ile or resn leu) and name hd1%)
+do (name = DDDD) (store1 and name hd11)
+do (name = HD11) (store1 and name hd12)
+do (name = HD12) (store1 and name DDDD)
+
+{* delta2 *}
+ident (store1) ((resn leu) and name hd2%)
+do (name = DDDD) (store1 and name hd21)
+do (name = HD21) (store1 and name hd22)
+do (name = HD22) (store1 and name DDDD)
+
+{* epsilon *}
+ident (store1) ((resn met) and name he%)
+do (name =  EEE) (store1 and name he1)
+do (name =  HE1) (store1 and name he2)
+do (name =  HE2) (store1 and name EEE)
+
+{* zeta *}
+ident (store1) ((resn zeta) and name hz%)
+do (name =  ZZZ) (store1 and name hz1)
+do (name =  HZ1) (store1 and name hz2)
+do (name =  HZ2) (store1 and name ZZZ)
+
+
+{****
+arg nh2's
+****}
+
+ident (store1) ((resn arg) and name hh1%)
+do (name = HHHH) (store1 and name hh11)
+do (name = HH11) (store1 and name hh12)
+do (name = HH12) (store1 and name HHHH)
+
+ident (store1) ((resn arg) and name hh2%)
+do (name = HHHH) (store1 and name hh21)
+do (name = HH21) (store1 and name hh22)
+do (name = HH22) (store1 and name HHHH)
+
+
+
+{*** for the C- and N-terminus ***}
+ident (store1) (name ht%)
+do (name = H1) (store1 and name ht1)
+do (name = H2) (store1 and name ht2)
+do (name = H3) (store1 and name ht3)
+
+ident (store1) (name ot%)
+do (name = O) (store1 and name ot1)
+do (name = OXT) (store1 and name ot2)
+

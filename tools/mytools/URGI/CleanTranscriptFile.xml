@@ -1,0 +1,53 @@
+<tool id="CleanTranscriptFile" name="Clean Transcript File">
+	<description> Clean a transcript file so that it is useable for S-MART.</description>
+	<command interpreter="python"> ../Java/Python/CleanTranscriptFile.py -i $formatType.inputFileName 
+		#if $formatType.FormatInputFileName == 'gff':
+		 	-f gff
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if	
+		#if $optionType.type == 'Yes':
+			-t $optionType.value
+		#end if 
+		-o $outputFile 
+	</command> 
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName"  type="select" label="Input File Format">
+				<option value="gff">gff</option>
+				<option value="gtf">gtf</option>
+			 </param>
+			 <when value="gff">
+				 <param name="inputFileName" format="gff" type="data" label="Input File"/>	 
+			</when>
+			<when value="gtf"> 
+			         <param name="inputFileName" format="gtf" type="data" label="Input File"/> 
+			 </when>
+		 </conditional>
+ 
+		 <conditional name="optionType">
+
+		<param name="type" type="select" label="You can choose the tag that you are interested in, like tRNA,rRNA,ncRNA,CDS,exon, etc." help="Name of the types you want to keep in GFF/GTF (list separated by commas)">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			 <param name="value" type="text" value="tRNA,rRNA,ncRNA,CDS,exon"/>
+		</when>
+		<when value="No">
+		</when>
+	</conditional>
+
+	</inputs>
+
+
+	<outputs>
+		<data name="outputFile" format="gtf">
+			<change_format>
+			<when input="formatType.FormatInputFileName" value="gff" format="gff" />
+		</change_format> 
+		</data>
+
+	</outputs>
+</tool>

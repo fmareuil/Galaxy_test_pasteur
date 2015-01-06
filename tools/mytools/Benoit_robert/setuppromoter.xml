@@ -1,0 +1,31 @@
+<tool id="setuppromoter" name="setuppromoter" version="1.0">
+  <description>builds a fasta file of sequences from a reference genome using promoter region coordinates.</description>
+  <command interpreter="/local/gensoft/adm/bin/perl">setuppromoter.pl -s $species -P $name_project $coordinate
+  </command>
+  
+  <inputs>
+      <param name="species" label="source species" type="select" display="radio" help="species from which the promoters/adapter seq originate.">
+        <option value="Hs" selected="True">Homo sapiens</option>
+        <option value="Mm">Mus musculus</option>
+        <option value="Md">Monodelphis domestica</option>
+      </param>
+      <param format="csv" name="coordinate" label="Promoter region coordinates for the source species." type="data" help="2 formats possible: chr:start-end or id chr start end strand rest"/>
+  </inputs>
+  <outputs>
+      <data format="fasta" name="name_project" label="setuppromoter on ${coordinate.name}"/>
+  </outputs>
+  <help>
+setuppromoter.pl builds a fasta file of sequences from a reference genome using promoter region coordinates.
+
+The coordinate file can be in two formats::
+
+- chr:start-end
+
+or
+
+- rank    chr    start    end   strand   rest   (tab separated columns)
+
+  </help>
+
+</tool>
+

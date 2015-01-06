@@ -1,0 +1,17 @@
+<tool id="getWigData" name="get wig data">
+    <description>Compute the average data for some genomic coordinates using WIG files</description>
+    <command interpreter="python">
+		../Java/Python/getWigData.py -i $inputGff3File -f gff3 -w $inputWigFile -t $tagName -$strand -o $outputFile
+	</command>
+	
+    <inputs>
+    	<param name="inputGff3File" type="data" label="Input Gff3 File (compulsory option)" format="gff3"/>
+   		<param name="inputWigFile" type="data" label="Input Wig File (compulsory option)" format="wig"/>
+		<param name="tagName" type="text" value="None" label="tag option (compulsory option)" help="choose a tag name to write the wig information to output file."/>
+		<param name="strand" type="boolean" truevalue="-s" falsevalue="" checked="false" label="consider both strands separately."/>    
+    </inputs>
+        
+    <outputs>
+        <data format="gff3" name="outputFile" label="[getWigData -> gff3] Output File"/>       
+    </outputs> 
+</tool>

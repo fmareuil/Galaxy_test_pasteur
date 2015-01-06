@@ -1,0 +1,55 @@
+
+
+
+
+lmj@eau:~> findpromoter.pl -h
+Usage: findpromoter.pl [-s Source species] [-t Target species] [-G Promoter
+sequence] [-g # Promoter mismatches] [-M Adpt sequence] [-m # Adpt mismatches] [-d
+max distance Adpt/Promoter] [-x] [-u] [-a] [-e # extra sequence] [-w threshold] [-i
+blast identity] [-l blast length] [-o outfile] [-S suffix] [-D debug level] [-h]
+blast.out ...
+        -s      species from which the promoters/adapter seq originate. Can be (Hs
+(Homo sapiens) | Mm (Mus musculus) | Md (Monodelphis domestica)) [Mm]
+        -t      species in which to search for promoters/adapter seq. Can be (Hs
+(Homo sapiens) | Mm (Mus musculus) | Md (Monodelphis domestica)) [Hs]
+        -G      are the Promoter sequences (separate by '|') or unique sequence with
+mismatches
+[TGGGTGGAT|CGGGTGGCA|CGGGTGGTC|GGGGTGGCA|TGGGTGTTT|TGCGTGGTA|GGGGTGGGA|TGGGTGGGT]
+        -g      number of Promoter mismatches [1]
+        -M      is the Adpt sequence [AATT]
+        -m      number of Adpt mismatches [0]
+        -d      maximum distance between Promoter motif and Adpt motif [100]
+        -x      add Promoter/Adpt location from the mouse
+        -u      use mismatches [Perl RE]
+        -a      list nearest mouse/human/opossum gene (within '-p' threshold) to
+Promoter sequence
+        -e      add [0] bp (maximum 10000) upstream/downstream of mapped hit
+        -w      threshold for nearest gene (in bp) [10000]
+        -i      Blast hit minimum identity (%)[0.9]
+        -l      Blast hit minimum length (bp) [100]
+        -o      report output file
+        -S      seq_suffix sequence file suffix (without '.') [fa]
+        -D      Debug level 1: hsp parse 2:other info 4: chit/chat[0]
+        -h      This help message
+        blast.out ...   output file(s) from Blast of source sequences to target genome
+
+lmj@eau:~> setuppromoter.pl -h
+Usage: setuppromoter.pl [-s Source species] [-P project name] [-h] coordinate.txt
+        -s      species from which the promoters/adapter seq originate. Can be (Hs
+(Homo sapiens) | Mm (Mus musculus) | Md (Monodelphis domestica)) [Mm]
+        -P      Project name. The fasta file will be the project name with '.fa'
+appended. [-h]
+        -h      This useful help message
+        coordinate.txt  Promoter region coordinates for the source species.
+        2 formats possible:
+                chr:start-end
+                id chr start end strand rest
+
+
+Est-ce que c'est claire?
+
+Je te donne les données plus tard (genomes/GFF files)..
+
+Bon courage,
+
+--Louis

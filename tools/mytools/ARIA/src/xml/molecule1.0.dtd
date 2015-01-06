@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT molecule (chain+)>
+<!ATTLIST molecule name CDATA #REQUIRED>
+
+  <!ELEMENT chain (residue+)>
+  <!ATTLIST chain segid CDATA "">
+  <!ATTLIST chain chain_type (PROTEIN|DNA|RNA|NONPOLYMER) #REQUIRED>
+  
+    <!ELEMENT residue (atom+, equivalent_group*)>
+    <!ATTLIST residue number CDATA #REQUIRED>
+    <!ATTLIST residue residue_type CDATA #REQUIRED>
+
+      <!ELEMENT atom EMPTY>
+      <!ATTLIST atom name CDATA #REQUIRED>
+      <!ATTLIST atom atom_type (H|C|N|O|P|S|UNKNOWN) #REQUIRED>
+      <!ATTLIST atom hetero_name CDATA #REQUIRED>
+
+      <!ELEMENT equivalent_group (atom_name+)>
+      <!ATTLIST equivalent_group group_type (METHYL|METHYLENE|ISOPROPYL|AROMATIC|NTERMINUS) #REQUIRED>
+
+        <!ELEMENT atom_name EMPTY>
+        <!ATTLIST atom_name name CDATA #REQUIRED>

@@ -1,0 +1,81 @@
+<tool id="trimSequences" name="trim sequences">
+  <description>Remove the 5' and/or 3' adaptors of a list of reads.</description>
+  <command interpreter="python"> ../Java/Python/trimSequences.py -i $inputFile -f fastq
+  	#if $OptionFPADP.FPADP == "Yes":
+		-5 $OptionFPADP.fivePAdaptor
+	#end if	  
+	 #if $OptionTPADP.TPADP == "Yes":
+		-3 $OptionTPADP.threePAdaptor
+	#end if	
+  	#if $OptionError.Error == "Yes":
+		-e $OptionError.ErrorVal
+	#end if	
+
+	$indels
+  	$noAdaptor5p $noAdaptorFile5p
+  	$noAdaptor3p $noAdaptorFile3p
+  	-o $outputFile  
+  
+  </command>
+  
+  
+  <inputs>
+    <param name="inputFile" type="data" label="Input fastq File" format="fastq"/>
+	
+	<conditional name="OptionFPADP">
+		<param name="FPADP" type="select" label="5'adaptor">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="fivePAdaptor" type="text" value="None" />
+		</when>
+		<when value="No">
+		</when>
+	</conditional>	
+	
+	<conditional name="OptionTPADP">
+		<param name="TPADP" type="select" label="3'adaptor">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="threePAdaptor" type="text" value="None" />
+		</when>
+		<when value="No">
+		</when>
+	</conditional>
+	
+	<conditional name="OptionError">
+		<param name="Error" type="select" label="number of errors in percent">
+			<option value="Yes">Yes</option>
+			<option value="No" selected="true">No</option>
+		</param>
+		<when value="Yes">
+			<param name="ErrorVal" type="integer" value="0" />
+		</when>
+		<when value="No">
+		</when>
+	</conditional>	
+	
+	<param name="indels" type="boolean" truevalue="-d" falsevalue="" checked="false" label="indels option" help="also accept indels"/>
+	<param name="noAdaptor5p" type="boolean" truevalue="-n" falsevalue="" checked="false" label="noAdaptor 5' option" help="file name where to print sequences with no 5' adaptor "/>
+	<param name="noAdaptor3p" type="boolean" truevalue="-m" falsevalue="" checked="false" label="noAdaptor 3' option" help="file name where to print sequences with no 3' adaptor "/>
+	
+	
+	
+  </inputs>
+
+  <outputs>
+    <data format="fastq" name="outputFile" label="[trimSequences] Output File"/>
+	<data name="noAdaptorFile5p" format="fastq" label="[trimSequences] noAdaptor5p File">
+		<filter>noAdaptor5p</filter>
+	</data>
+	<data name="noAdaptorFile3p" format="fastq" label="[trimSequences] noAdaptor3p File">
+		<filter>noAdaptor3p</filter>
+	</data>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

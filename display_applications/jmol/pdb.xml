@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<display id="jmol_pdb" version="1.0.0" name="display with JMOL ">
+    <link id="Jmol" name="Jmol">
+        <url>${redirect_url}</url>
+        <param type="data" name="pdb_file"/>
+        <param type="template" name="jnlp" url="galaxy_${DATASET_HASH}.jnlp" viewable="True" mimetype="application/x-java-jnlp-file">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;jnlp
+  spec="1.0+"
+  codebase="http://www.example.com/javaws/jmol"
+  href="jmol.jnlp"&gt;
+  &lt;information&gt;
+    &lt;title&gt;Jmol Application&lt;/title&gt;
+    &lt;vendor&gt;Jmol.org&lt;/vendor&gt;
+    &lt;homepage href="http://www.jmol.org"/&gt;
+    &lt;description&gt;3D Molecule Viewer&lt;/description&gt;
+    &lt;description kind="short"&gt;Jmol is a free, open source molecule viewer for students, educators, and researchers in chemistry and biochemistry.&lt;/description&gt;
+    &lt;offline-allowed/&gt;
+    &lt;icon href="http://jmol.sourceforge.net/images/Jmol_smallLogo.jpg"/&gt;
+  &lt;/information&gt;
+  &lt;security&gt;
+    &lt;all-permissions/&gt;
+  &lt;/security&gt;
+  &lt;resources&gt;
+    &lt;j2se version="1.4+"/&gt;
+    &lt;jar href="Jmol.jar"/&gt;
+  &lt;/resources&gt;
+  &lt;application-desc main-class="org.openscience.jmol.app.Jmol"/&gt;
+&lt;/jnlp&gt;
+        </param>
+        <param type="template" name="redirect_url" strip="True" >
+        ${jnlp.url}
+        </param>
+    </link>
+</display>

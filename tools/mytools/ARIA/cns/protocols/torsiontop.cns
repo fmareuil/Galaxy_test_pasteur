@@ -1,0 +1,109 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: torsiontop.cns,v $
+
+dyna tors
+   topology
+      maxj 50
+      kdihmax = 23.
+      maxt 6
+
+      evaluate ($N_atom_id = 0)             
+      evaluate ($atom_id = 0)   
+   
+      for $atom_id in id ( name ca ) loop main
+         if ( $N_atom_id > 0 ) then
+            fix group   
+            (( byresidue ( id $N_atom_id ) and
+                (name C or name O {or name CA} ))
+             or ( byresidue ( id $atom_id ) and
+                (((name N or name HN {or name CA}) {and not resn pro})
+                {or (( name N or name CD or name CA ) and resn pro)})))
+         end if
+         evaluate ($N_atom_id = $atom_id)   
+      end loop main
+      fix group   
+         ( byresidue ( id $atom_id ) 
+            and (name c or name ot1 or name ot2 {or name CA} )) 
+  
+
+      for $atom_id in id 
+     ( name ca and (resn phe or resn trp or resn his or resn asp or resn asn))
+      loop main	  
+         fix group   
+               ( byresidue ( id $atom_id ) 
+                     and ({name CB or} name CG or name %D* or 
+                          name %Z* or name %E* or name %H*  ))
+      end loop main
+      for $atom_id in id 
+        ( name ca and (resn tyr))
+      loop main	  
+         fix group  
+               ( byresidue ( id $atom_id ) 
+                     and ({name CB or} name CG or name %D* or 
+                 name %Z* or name %E* or name OH  )) 
+      end loop main
+      for $atom_id in id 
+        ( name ca and (resn gln or resn glu))
+      loop main	  
+            fix group  
+               ( byresidue ( id $atom_id ) 
+                 and ({name CG or} name %D* or name %E*)) 
+      end loop main
+      for $atom_id in id 
+        ( name ca and (resn arg))
+      loop main	  
+      fix group  
+        ( byresidue ( id $atom_id ) 
+          and ({name CD or} name %E* or name %Z* or name %H*  ))
+      end loop main
+      set message on echo on end
+
+      evaluate($di_counter=1)
+      while ($di_counter le $Toppar.ss_bridge) loop freess
+        free bond (  resid  $Toppar.ss_i_resid_$di_counter and name SG and segid $Toppar.ss_i_segid_$di_counter ) 
+                  (  resid  $Toppar.ss_j_resid_$di_counter and name SG and segid $Toppar.ss_j_segid_$di_counter )
+        evaluate($di_counter=$di_counter + 1)
+      end loop freess
+
+      ! BARDIAUX ZN-SG bonds (except one)
+      evaluate($ssss_counter=1)
+      while ($ssss_counter le $Toppar.ssss_patches) loop freess
+          free bond ( resid $Toppar.ssss_5_resid_$ssss_counter and name ZN and segid $Toppar.ssss_5_segid_$ssss_counter )
+                    ( resid $Toppar.ssss_2_resid_$ssss_counter and name SG and segid $Toppar.ssss_2_segid_$ssss_counter )
+          free bond ( resid $Toppar.ssss_5_resid_$ssss_counter and name ZN and segid $Toppar.ssss_5_segid_$ssss_counter )
+                    ( resid $Toppar.ssss_3_resid_$ssss_counter and name SG and segid $Toppar.ssss_3_segid_$ssss_counter )
+          free bond ( resid $Toppar.ssss_5_resid_$ssss_counter and name ZN and segid $Toppar.ssss_5_segid_$ssss_counter )
+                    ( resid $Toppar.ssss_4_resid_$ssss_counter and name SG and segid $Toppar.ssss_4_segid_$ssss_counter )
+          evaluate($ssss_counter=$ssss_counter + 1)
+      end loop freess      
+
+      evaluate($ssse_counter=1)
+      while ($ssse_counter le $Toppar.ssse_patches) loop freess
+          free bond ( resid $Toppar.ssse_5_resid_$ssse_counter and name ZN and segid $Toppar.ssse_5_segid_$ssse_counter )
+                    ( resid $Toppar.ssse_2_resid_$ssse_counter and name SG and segid $Toppar.ssse_2_segid_$ssse_counter )
+          free bond ( resid $Toppar.ssse_5_resid_$ssse_counter and name ZN and segid $Toppar.ssse_5_segid_$ssse_counter )
+                    ( resid $Toppar.ssse_3_resid_$ssse_counter and name SG and segid $Toppar.ssse_3_segid_$ssse_counter )
+          free bond ( resid $Toppar.ssse_5_resid_$ssse_counter and name ZN and segid $Toppar.ssse_5_segid_$ssse_counter )
+                    ( resid $Toppar.ssse_4_resid_$ssse_counter and name ND1 and segid $Toppar.ssse_4_segid_$ssse_counter )
+          evaluate($ssse_counter=$ssse_counter + 1)
+      end loop freess      
+
+      evaluate($sssd_counter=1)
+      while ($sssd_counter le $Toppar.sssd_patches) loop freess
+          free bond ( resid $Toppar.sssd_5_resid_$sssd_counter and name ZN and segid $Toppar.sssd_5_segid_$sssd_counter )
+                    ( resid $Toppar.sssd_2_resid_$sssd_counter and name SG and segid $Toppar.sssd_2_segid_$sssd_counter )
+          free bond ( resid $Toppar.sssd_5_resid_$sssd_counter and name ZN and segid $Toppar.sssd_5_segid_$sssd_counter )
+                    ( resid $Toppar.sssd_3_resid_$sssd_counter and name SG and segid $Toppar.sssd_3_segid_$sssd_counter )
+          free bond ( resid $Toppar.sssd_5_resid_$sssd_counter and name ZN and segid $Toppar.sssd_5_segid_$sssd_counter )
+                    ( resid $Toppar.sssd_4_resid_$sssd_counter and name NE2 and segid $Toppar.sssd_4_segid_$sssd_counter )
+          evaluate($sssd_counter=$sssd_counter + 1)
+      end loop freess      
+
+
+      fix group ( resn PRO and not (name c or name o) )
+      for $id in id (name C1') loop freeribose
+        free bond (id $id) (byresid (id $id) and name C2')
+      end loop freeribose
+   end
+end

@@ -1,0 +1,36 @@
+HTTP_X_FORWARDED_SERVER:	fee.sis.pasteur.fr
+paste.recursive.forward:	<paste.recursive.Forwarder from />
+paste.recursive.include:	<paste.recursive.Includer from />
+SCRIPT_NAME:	
+REQUEST_METHOD:	GET
+PATH_INFO:	/api/users/
+SERVER_PROTOCOL:	HTTP/1.1
+QUERY_STRING:	key=3074a6c19424c5811884104d5ffa8a27
+paste.throw_errors:	True
+CONTENT_LENGTH:	0
+weberror.evalexception:	<weberror.evalexception.middleware.EvalException object at 0x8b33ed0>
+HTTP_USER_AGENT:	Python-urllib/2.7
+HTTP_CONNECTION:	close
+SERVER_NAME:	127.0.0.1
+REMOTE_ADDR:	157.99.60.206
+ORGINAL_REMOTE_ADDR:	127.0.0.1
+wsgi.url_scheme:	http
+SERVER_PORT:	8082
+HTTP_REMOTE_USER:	(null)
+paste.recursive.script_name:	
+paste.evalexception:	<weberror.evalexception.middleware.EvalException object at 0x8b33ed0>
+wsgi.input:	<socket._fileobject object at 0x7fba7805ee50 length=0>
+HTTP_HOST:	fee.sis.pasteur.fr:81
+paste.recursive.include_app_iter:	<paste.recursive.IncluderAppIter from />
+wsgi.multithread:	True
+wsgi.version:	(1, 0)
+wsgi.run_once:	False
+wsgi.errors:	<open file '<stderr>', mode 'w' at 0x7fbade17c1e0>
+wsgi.multiprocess:	False
+HTTP_X_FORWARDED_HOST:	fee.sis.pasteur.fr:81
+ORGINAL_HTTP_HOST:	localhost:8082
+HTTP_X_FORWARDED_FOR:	157.99.60.206
+CONTENT_TYPE:	
+request_id:	fc630bdac71711e3946390b11c7455d7
+paste.httpserver.thread_pool:	<paste.httpserver.ThreadPool object at 0x9937910>
+HTTP_ACCEPT_ENCODING:	identity

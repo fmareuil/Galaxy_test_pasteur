@@ -1,0 +1,1409 @@
+tool_shed.tool_shed_registry DEBUG 2013-07-16 15:27:28,322 Loading references to tool sheds from tool_sheds_conf.xml
+tool_shed.tool_shed_registry DEBUG 2013-07-16 15:27:28,322 Loaded reference to tool shed: Galaxy main tool shed
+tool_shed.tool_shed_registry DEBUG 2013-07-16 15:27:28,322 Loaded reference to tool shed: Galaxy test tool shed
+galaxy.eggs WARNING 2013-07-16 15:27:28,585 Warning: setuptools (a dependent egg of sqlalchemy-migrate) cannot be fetched
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,653 Loading repository lib/galaxy/model/migrate...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0001_initial_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0001_initial_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0002_metadata_file_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0002_metadata_file_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0003_security_and_libraries.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0003_security_and_libraries.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0004_indexes_and_defaults.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0004_indexes_and_defaults.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0005_cleanup_datasets_fix.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0005_cleanup_datasets_fix.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0006_change_qual_datatype.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0006_change_qual_datatype.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0007_sharing_histories.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0007_sharing_histories.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0008_galaxy_forms.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0008_galaxy_forms.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0009_request_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0009_request_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Loading script lib/galaxy/model/migrate/versions/0010_hda_display_at_authz_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,654 Script lib/galaxy/model/migrate/versions/0010_hda_display_at_authz_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0011_v0010_mysql_index_fix.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0011_v0010_mysql_index_fix.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0012_user_address.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0012_user_address.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0013_change_lib_item_templates_to_forms.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0013_change_lib_item_templates_to_forms.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0014_pages.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0014_pages.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0015_tagging.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0015_tagging.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0016_v0015_mysql_index_fix.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0016_v0015_mysql_index_fix.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0017_library_item_indexes.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0017_library_item_indexes.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0018_ordered_tags_and_page_tags.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0018_ordered_tags_and_page_tags.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0019_request_library_folder.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0019_request_library_folder.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0020_library_upload_job.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Script lib/galaxy/model/migrate/versions/0020_library_upload_job.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,655 Loading script lib/galaxy/model/migrate/versions/0021_user_prefs.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0021_user_prefs.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0022_visualization_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0022_visualization_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0023_page_published_and_deleted_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0023_page_published_and_deleted_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0024_page_slug_unique_constraint.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0024_page_slug_unique_constraint.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0025_user_info.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0025_user_info.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0026_cloud_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0026_cloud_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0027_request_events.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0027_request_events.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0028_external_metadata_file_override.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0028_external_metadata_file_override.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0029_user_actions.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0029_user_actions.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0030_history_slug_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0030_history_slug_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0031_community_and_workflow_tags.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0031_community_and_workflow_tags.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Loading script lib/galaxy/model/migrate/versions/0032_stored_workflow_slug_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,656 Script lib/galaxy/model/migrate/versions/0032_stored_workflow_slug_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0033_published_cols_for_histories_and_workflows.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0033_published_cols_for_histories_and_workflows.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0034_page_user_share_association.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0034_page_user_share_association.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0035_item_annotations_and_workflow_step_tags.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0035_item_annotations_and_workflow_step_tags.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0036_add_deleted_column_to_library_template_assoc_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0036_add_deleted_column_to_library_template_assoc_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0037_samples_library.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0037_samples_library.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0038_add_inheritable_column_to_library_template_assoc_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0038_add_inheritable_column_to_library_template_assoc_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0039_add_synopsis_column_to_library_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0039_add_synopsis_column_to_library_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0040_page_annotations.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0040_page_annotations.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0041_workflow_invocation.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0041_workflow_invocation.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0042_workflow_invocation_fix.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0042_workflow_invocation_fix.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Loading script lib/galaxy/model/migrate/versions/0043_visualization_sharing_tagging_annotating.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,657 Script lib/galaxy/model/migrate/versions/0043_visualization_sharing_tagging_annotating.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0044_add_notify_column_to_request_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0044_add_notify_column_to_request_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0045_request_type_permissions_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0045_request_type_permissions_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0046_post_job_actions.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0046_post_job_actions.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0047_job_table_user_id_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0047_job_table_user_id_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0048_dataset_instance_state_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0048_dataset_instance_state_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0049_api_keys_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0049_api_keys_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0050_drop_cloud_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0050_drop_cloud_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0051_imported_col_for_jobs_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0051_imported_col_for_jobs_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0052_sample_dataset_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Script lib/galaxy/model/migrate/versions/0052_sample_dataset_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,658 Loading script lib/galaxy/model/migrate/versions/0053_item_ratings.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0053_item_ratings.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0054_visualization_dbkey.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0054_visualization_dbkey.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0055_add_pja_assoc_for_jobs.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0055_add_pja_assoc_for_jobs.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0056_workflow_outputs.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0056_workflow_outputs.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0057_request_notify.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0057_request_notify.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0058_history_import_export.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0058_history_import_export.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0059_sample_dataset_file_path.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0059_sample_dataset_file_path.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0060_history_archive_import.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0060_history_archive_import.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0061_tasks.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0061_tasks.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Loading script lib/galaxy/model/migrate/versions/0062_user_openid_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,659 Script lib/galaxy/model/migrate/versions/0062_user_openid_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0063_sequencer_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0063_sequencer_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0064_add_run_and_sample_run_association_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0064_add_run_and_sample_run_association_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0065_add_name_to_form_fields_and_values.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0065_add_name_to_form_fields_and_values.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0066_deferred_job_and_transfer_job_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0066_deferred_job_and_transfer_job_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0067_populate_sequencer_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0067_populate_sequencer_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0068_rename_sequencer_to_external_services.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0068_rename_sequencer_to_external_services.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0069_rename_sequencer_form_type.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0069_rename_sequencer_form_type.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0070_add_info_column_to_deferred_job_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0070_add_info_column_to_deferred_job_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0071_add_history_and_workflow_to_sample.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0071_add_history_and_workflow_to_sample.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0072_add_pid_and_socket_columns_to_transfer_job_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Script lib/galaxy/model/migrate/versions/0072_add_pid_and_socket_columns_to_transfer_job_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,660 Loading script lib/galaxy/model/migrate/versions/0073_add_ldda_to_implicit_conversion_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0073_add_ldda_to_implicit_conversion_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0074_add_purged_column_to_library_dataset_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0074_add_purged_column_to_library_dataset_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0075_add_subindex_column_to_run_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0075_add_subindex_column_to_run_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0076_fix_form_values_data_corruption.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0076_fix_form_values_data_corruption.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0077_create_tool_tag_association_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0077_create_tool_tag_association_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0078_add_columns_for_disk_usage_accounting.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0078_add_columns_for_disk_usage_accounting.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0079_input_library_to_job_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0079_input_library_to_job_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0080_quota_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0080_quota_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0081_add_tool_version_to_hda_ldda.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0081_add_tool_version_to_hda_ldda.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0082_add_tool_shed_repository_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0082_add_tool_shed_repository_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0083_add_prepare_files_to_task.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Script lib/galaxy/model/migrate/versions/0083_add_prepare_files_to_task.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,661 Loading script lib/galaxy/model/migrate/versions/0084_add_ldda_id_to_implicit_conversion_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0084_add_ldda_id_to_implicit_conversion_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0085_add_task_info.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0085_add_task_info.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0086_add_tool_shed_repository_table_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0086_add_tool_shed_repository_table_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0087_tool_id_guid_map_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0087_tool_id_guid_map_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0088_add_installed_changeset_revison_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0088_add_installed_changeset_revison_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0089_add_object_store_id_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0089_add_object_store_id_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0090_add_tool_shed_repository_table_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0090_add_tool_shed_repository_table_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0091_add_tool_version_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0091_add_tool_version_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0092_add_migrate_tools_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0092_add_migrate_tools_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0093_add_job_params_col.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0093_add_job_params_col.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0094_add_job_handler_col.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Script lib/galaxy/model/migrate/versions/0094_add_job_handler_col.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,662 Loading script lib/galaxy/model/migrate/versions/0095_hda_subsets.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0095_hda_subsets.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0096_openid_provider.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0096_openid_provider.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0097_add_ctx_rev_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0097_add_ctx_rev_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0098_genome_index_tool_data_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0098_genome_index_tool_data_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0099_add_tool_dependency_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0099_add_tool_dependency_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0100_alter_tool_dependency_table_version_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0100_alter_tool_dependency_table_version_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0101_drop_installed_changeset_revision_column.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0101_drop_installed_changeset_revision_column.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0102_add_tool_dependency_status_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0102_add_tool_dependency_status_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0103_add_tool_shed_repository_status_columns.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0103_add_tool_shed_repository_status_columns.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0104_update_genome_downloader_job_parameters.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0104_update_genome_downloader_job_parameters.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0105_add_cleanup_event_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Script lib/galaxy/model/migrate/versions/0105_add_cleanup_event_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,663 Loading script lib/galaxy/model/migrate/versions/0106_add_missing_indexes.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0106_add_missing_indexes.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0107_add_exit_code_to_job_and_task.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0107_add_exit_code_to_job_and_task.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0108_add_extended_metadata.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0108_add_extended_metadata.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0109_add_repository_dependency_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0109_add_repository_dependency_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0110_add_dataset_uuid.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0110_add_dataset_uuid.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0111_add_job_destinations.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0111_add_job_destinations.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0112_add_data_manager_history_association_and_data_manager_job_association_tables.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0112_add_data_manager_history_association_and_data_manager_job_association_tables.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0113_update_migrate_tools_table.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0113_update_migrate_tools_table.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0114_update_migrate_tools_table_again.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0114_update_migrate_tools_table_again.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Loading script lib/galaxy/model/migrate/versions/0115_longer_user_password_field.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,664 Script lib/galaxy/model/migrate/versions/0115_longer_user_password_field.py loaded successfully
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,664 Repository lib/galaxy/model/migrate loaded successfully
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,664 Config: OrderedDict([('db_settings', OrderedDict([('__name__', 'db_settings'), ('repository_id', 'Galaxy'), ('version_table', 'migrate_version'), ('required_dbs', '[]')]))])
+galaxy.model.migrate.check DEBUG 2013-07-16 15:27:28,667 pysqlite>=2 egg successfully loaded for sqlite dialect
+galaxy.model.migrate.check INFO 2013-07-16 15:27:28,703 At database version 115
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,713 Loading repository lib/tool_shed/galaxy_install/migrate...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0001_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0001_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0002_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0002_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0003_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0003_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0004_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0004_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0005_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0005_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0006_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0006_tools.py loaded successfully
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Loading script lib/tool_shed/galaxy_install/migrate/versions/0007_tools.py...
+migrate.versioning.script.base DEBUG 2013-07-16 15:27:28,713 Script lib/tool_shed/galaxy_install/migrate/versions/0007_tools.py loaded successfully
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,714 Repository lib/tool_shed/galaxy_install/migrate loaded successfully
+migrate.versioning.repository DEBUG 2013-07-16 15:27:28,714 Config: OrderedDict([('db_settings', OrderedDict([('__name__', 'db_settings'), ('repository_id', 'GalaxyTools'), ('version_table', 'migrate_tools'), ('required_dbs', '[]')]))])
+tool_shed.galaxy_install.migrate.check DEBUG 2013-07-16 15:27:28,716 pysqlite>=2 egg successfully loaded for sqlite dialect
+tool_shed.galaxy_install.migrate.check INFO 2013-07-16 15:27:28,730 At migrate_tools version 7
+galaxy.model.mapping DEBUG 2013-07-16 15:27:28,733 pysqlite>=2 egg successfully loaded for sqlite dialect
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,747 Loading datatypes from /home/fmareuil/Travail/Galaxy/galaxy-dist/database/tmp/tmpaUF47Z
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,748 Loaded sniffer for datatype 'galaxy.datatypes.blast:BlastXml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,752 Loading datatypes from datatypes_conf.xml
+galaxy.datatypes.registry WARNING 2013-07-16 15:27:28,752 Overriding conflicting datatype with extension 'data', using datatype from datatypes_conf.xml.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.tabular:Vcf'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.binary:TwoBit'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.binary:Bam'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.binary:Sff'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.xml:Phyloxml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.xml:GenericXml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,756 Loaded sniffer for datatype 'galaxy.datatypes.sequence:Maf'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.sequence:Lav'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.sequence:csFasta'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.qualityscore:QualityScoreSOLiD'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.qualityscore:QualityScore454'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.sequence:Fasta'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.sequence:Fastq'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Wiggle'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.images:Html'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.images:Pdf'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.sequence:Axt'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Bed'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:CustomTrack'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Gtf'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Gff'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Gff3'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.tabular:Pileup'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.interval:Interval'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,757 Loaded sniffer for datatype 'galaxy.datatypes.tabular:Sam'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.data:Newick'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.data:Nexus'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Jpg'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Png'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Tiff'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Bmp'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Gif'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Im'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Pcd'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Pcx'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Ppm'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Psd'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Xbm'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Rgb'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Pbm'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Pgm'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Xpm'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Eps'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:28,758 Loaded sniffer for datatype 'galaxy.datatypes.images:Rast'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,766 Loaded tool data table 'all_fasta'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,766 Loaded tool data table 'bfast_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'blastdb'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'blastdb_p'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'bowtie2_indexes'
+galaxy.tools.data WARNING 2013-07-16 15:27:28,767 Cannot find index file 'tool-data/bwa_index.loc' for tool data table 'bwa_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'bwa_indexes'
+galaxy.tools.data WARNING 2013-07-16 15:27:28,767 Cannot find index file 'tool-data/bwa_index_color.loc' for tool data table 'bwa_indexes_color'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'bwa_indexes_color'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'indexed_maf_files'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'ngs_sim_fasta'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'perm_base_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,767 Loaded tool data table 'perm_color_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'sam_fa_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'picard_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'gatk_picard_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'gatk_annotations'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'srma_indexes'
+galaxy.tools.data WARNING 2013-07-16 15:27:28,768 Cannot find index file 'tool-data/bowtie_indices.loc' for tool data table 'tophat_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'tophat_indexes'
+galaxy.tools.data WARNING 2013-07-16 15:27:28,768 Cannot find index file 'tool-data/bowtie_indices_color.loc' for tool data table 'tophat_indexes_color'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'tophat_indexes_color'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'tophat2_indexes'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'ccat_configurations'
+galaxy.tools.data DEBUG 2013-07-16 15:27:28,768 Loaded tool data table 'mosaik_indexes'
+galaxy.jobs WARNING 2013-07-16 15:27:28,769 Job configuration "./job_conf.xml" does not exist, using legacy job configuration from Galaxy config file "/home/fmareuil/Travail/Galaxy/galaxy-dist/universe_wsgi.ini" instead
+galaxy.jobs DEBUG 2013-07-16 15:27:28,769 Loading job configuration from /home/fmareuil/Travail/Galaxy/galaxy-dist/universe_wsgi.ini
+galaxy.jobs DEBUG 2013-07-16 15:27:28,769 Done loading job configuration
+galaxy.tools INFO 2013-07-16 15:27:28,774 Parsing the tool configuration ./tool_conf.xml
+galaxy.tools ERROR 2013-07-16 15:27:28,778 Error reading tool from path: ../../../repos/deseq_yufei/deseq/deseq.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/../../../repos/deseq_yufei/deseq/deseq.xml'
+docutils WARNING 2013-07-16 15:27:28,883 <string>:37: (ERROR/3) Document may not end with a transition.
+
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'samout (flag) --> yes', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'samout (flag) --> no', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'samout (flag) --> yes', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'samout (flag) --> no', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'quiet (flag) --> yes', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:28,949 Tool htseqCount: a when tag has not been defined for 'quiet (flag) --> no', assuming empty inputs.
+docutils WARNING 2013-07-16 15:27:28,953 <string>:17: (WARNING/2) Literal block expected; none found.
+
+galaxy.tools WARNING 2013-07-16 15:27:29,402 Tool clc_unmapped_reads: a when tag has not been defined for 'paired_selector (flag_paired) --> yes', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:29,402 Tool clc_unmapped_reads: a when tag has not been defined for 'paired_selector (flag_paired) --> no', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:29,402 Tool clc_unmapped_reads: a when tag has not been defined for 'paired_selector (flag_paired) --> yes', assuming empty inputs.
+galaxy.tools WARNING 2013-07-16 15:27:29,402 Tool clc_unmapped_reads: a when tag has not been defined for 'paired_selector (flag_paired) --> no', assuming empty inputs.
+galaxy.tools ERROR 2013-07-16 15:27:33,871 Error reading tool from path: variant_detection/freebayes.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/variant_detection/freebayes.xml'
+galaxy.tools WARNING 2013-07-16 15:27:34,406 Tool fastq_manipulation: a when tag has been defined for 'manipulation (manipulation_selector) --> modify_each_score', but does not appear to be selectable.
+galaxy.tools ERROR 2013-07-16 15:27:34,922 Error reading tool from path: sr_mapping/bowtie_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/bowtie_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,922 Error reading tool from path: sr_mapping/bowtie2beta_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/bowtie2beta_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,923 Error reading tool from path: sr_mapping/bwa_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/bwa_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,923 Error reading tool from path: sr_mapping/pbwa_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/pbwa_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,923 Error reading tool from path: sr_mapping/lastz_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/lastz_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,974 Error reading tool from path: sr_mapping/bowtie_color_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/bowtie_color_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:34,974 Error reading tool from path: sr_mapping/bwa_color_wrapper.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/sr_mapping/bwa_color_wrapper.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,011 Error reading tool from path: variant_detection/freebayes.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/variant_detection/freebayes.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,096 Error reading tool from path: variant_detection/freebayes.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/variant_detection/freebayes.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/picard_FastqToSam.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_FastqToSam.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/picard_SamToFastq.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_SamToFastq.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/picard_BamIndexStats.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_BamIndexStats.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/rgPicardASMetrics.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardASMetrics.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/rgPicardGCBiasMetrics.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardGCBiasMetrics.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/rgPicardLibComplexity.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardLibComplexity.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/rgPicardInsertSize.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardInsertSize.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,409 Error reading tool from path: picard/rgPicardHsMetrics.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardHsMetrics.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,410 Error reading tool from path: picard/picard_AddOrReplaceReadGroups.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_AddOrReplaceReadGroups.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,410 Error reading tool from path: picard/picard_ReorderSam.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_ReorderSam.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,410 Error reading tool from path: picard/picard_ReplaceSamHeader.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/picard_ReplaceSamHeader.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,410 Error reading tool from path: picard/rgPicardFixMate.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardFixMate.xml'
+galaxy.tools ERROR 2013-07-16 15:27:36,410 Error reading tool from path: picard/rgPicardMarkDups.xml
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 475, in load_tool_tag_set
+    tool = self.load_tool( os.path.join( tool_path, path ), guid=guid, repository_id=repository_id )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './tools/picard/rgPicardMarkDups.xml'
+galaxy.tools INFO 2013-07-16 15:27:36,923 Parsing the tool configuration ./shed_tool_conf.xml
+galaxy.tools INFO 2013-07-16 15:27:37,518 Parsing the tool configuration ./migrated_tools_conf.xml
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loading section: MyTools
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: pe_filter, version: 0.01 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: ReadFastaFile, version: 0.38 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: GetDistance, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: htseqCount, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: export, version: 2.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,518 Loaded tool id: aria_convert, version: 2.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: aria_launchor, version: 2.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: fa_gc_content_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: rankoptimizer, version: 2.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: sleep, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: clc_novo_assemble, version: 3.22.55705 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: snpEff2, version: 0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: ptaxoptimizer, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: findpromoter, version: 1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: setuppromoter, version: 1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: fqconvert, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: GemReads, version: 0.1 beta into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: clc_unmapped_reads, version: 4.010.83648 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: clean_ngs, version: 0.7 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loading section: Get Data
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: upload1, version: 1.1.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: ucsc_table_direct1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: ucsc_table_direct_archaea1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: bx_browser, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: ebi_sra_main, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: biomart, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: gramenemart, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,519 Loaded tool id: flymine, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: modENCODEfly, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: modmine, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: ratmine, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: yeastmine, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: modENCODEworm, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: wormbase, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: eupathdb, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: encode_db1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: epigraph_import, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loading section: Send Data
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: export, version: 2.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: epigraph_export, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loading section: ENCODE Tools
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: gencode_partition1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: random_intervals1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loading section: Lift-Over
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: liftOver1, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loading section: Text Manipulation
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: addValue, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: Add_a_column1, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: cat1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,520 Loaded tool id: Condense characters1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Convert characters1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: mergeCols1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: createInterval, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Cut1, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: ChangeCase, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Paste1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Remove beginning1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: random_lines1, version: 2.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Show beginning1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: Show tail1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: trimmer, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: wc_gnu, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: secure_hash_message_digest, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loading section: Convert Formats
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: bed2gff1, version: 2.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: fasta2tab, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: gff2bed1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: MAF_To_BED1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: MAF_To_Interval1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: MAF_To_Fasta1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: tab2fasta, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,521 Loaded tool id: fastq_to_fasta_python, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: Sff_extractor, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: wig_to_bigWig, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: bed_to_bigBed, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loading section: FASTA manipulation
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: fasta_compute_length, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: fasta_filter_by_length, version: 1.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: fasta_concatenate0, version: 0.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: fasta2tab, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: tab2fasta, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: cshl_fasta_formatter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: cshl_fasta_nucleotides_changer, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: cshl_fastx_collapser, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loading section: Filter and Sort
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: Filter1, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: sort1, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: Grep1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: dna_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded label: GFF
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: Extract_features1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: gff_filter_by_attribute, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,522 Loaded tool id: gff_filter_by_feature_count, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: gtf_filter_by_attribute_values_list, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loading section: Join, Subtract and Group
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: join1, version: 2.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: comp1, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: subtract_query1, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: Grouping1, version: 2.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: column_join, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loading section: Extract Features
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: gene2exon1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loading section: Fetch Sequences
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: Extract genomic DNA 1, version: 2.2.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loading section: Fetch Alignments
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: Interval2Maf_pairwise1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: Interval2Maf1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: Interval_Maf_Merged_Fasta2, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: GeneBed_Maf_Fasta2, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: maf_stats1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: MAF_Thread_For_Species1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: MAF_Limit_To_Species1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: maf_limit_size1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: maf_by_block_number1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,523 Loaded tool id: MAF_filter, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: MAF_Reverse_Complement_1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loading section: Get Genomic Scores
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: wiggle2simple1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: aggregate_scores_in_intervals2, version: 1.1.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: phastOdds_for_intervals, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loading section: Operate on Genomic Intervals
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_intersect_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_subtract_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_merge_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_concat_1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_basecoverage_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_coverage_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_complement_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_cluster_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: gops_join_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: get_flanks1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: flanking_features_1, version: 4.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,524 Loaded tool id: Annotation_Profiler_0, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loading section: Statistics
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: Summary_Statistics1, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: Count1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: cor2, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: generate_matrix_for_pca_and_lda1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: lda_analy1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: plot_for_lda_output1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loading section: Graph/Display Data
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: histogram_rpy, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: scatterplot_rpy, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: XY_Plot_1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: qual_stats_boxplot, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: gmaj_1, version: 2.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: build_ucsc_custom_track_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: vcf_to_maf_customtrack1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: mutation_visualize, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loading section: Regional Variation
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: winSplitter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: featureCoverage1, version: 2.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,525 Loaded tool id: wtavg, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: qualityFilter, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: cpgFilter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: getIndels_2way, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: indels_3way, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: indelRates_3way, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: substitutions1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: subRate1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: microsats_align1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: microsats_mutability1, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loading section: Multiple regression
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: LinearRegression1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: LogisticRegression, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: BestSubsetsRegression1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: rcve1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: partialRsq, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loading section: Multivariate Analysis
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: pca1, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: cca1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: kpca1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loaded tool id: kcca1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,526 Loading section: Evolution
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hyphy_branch_lengths_wrapper1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hyphy_nj_tree_wrapper1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: mutate_snp_codon_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loading section: Motif Tools
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: rgweblogo3, version: 0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loading section: Multiple Alignments
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: clustalw, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loading section: Metagenomic analyses
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: Fetch Taxonomic Ranks, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: t2t_report, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: Draw_phylogram, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: find_diag_hits, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: lca1, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: poisson2test, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loading section: Phenotype Association
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hgv_codingSnps, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hgv_add_scores, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hgv_sift, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hgv_linkToGProfile, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: hgv_david, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,527 Loaded tool id: ctdBatch_1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_funDo, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_snpFreq, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_ldtools, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_pass, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_gpass, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_beam, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_lps, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: hgv_hilbertvis, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: freebayes_wrapper, version: 0.5.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: master2pgSnp, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: vcf2pgSnp, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: dividePgSnp, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loading section: NGS: QC and manipulation
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded label: Illumina data
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: fastq_groomer, version: 1.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: fastq_paired_end_splitter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: fastq_paired_end_joiner, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: fastq_stats, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded label: Roche-454 data
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: quality_score_distribution, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,528 Loaded tool id: trim_reads, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_combiner, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded label: AB-SOLiD data
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: solid2fastq, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: solid_qual_stats, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: solid_qual_boxplot, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded label: Generic FASTQ manipulation
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_trimmer, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_quality_trimmer, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_masker_by_quality, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_manipulation, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_to_fasta_python, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: fastq_to_tabular, version: 1.1.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: tabular_to_fastq, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded label: FASTX-Toolkit for FASTQ data
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastq_quality_converter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastx_quality_statistics, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastq_quality_boxplot, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastx_nucleotides_distribution, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastq_to_fasta, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastq_quality_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,529 Loaded tool id: cshl_fastx_artifacts_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_barcode_splitter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_clipper, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_collapser, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_renamer, version: 0.0.11 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_reverse_complement, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: cshl_fastx_trimmer, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded label: FASTQ QC
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: fastqc, version: 0.51 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loading section: NGS: Mapping
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded label: Illumina
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded label: Roche-454
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: megablast_wrapper, version: 1.2.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: megablast_xml_parser, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded label: AB-SOLiD
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loading section: NGS: SAM Tools
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: sam_bw_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: sam2interval, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: sam_to_bam, version: 1.1.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: bam_to_sam, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: sam_merge2, version: 1.1.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: samtools_mpileup, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: sam_pileup, version: 1.1.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,530 Loaded tool id: pileup_parser, version: 1.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: pileup_interval, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: samtools_flagstat, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: samtools_rmdup, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loading section: NGS: GATK Tools (beta)
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Alignment Utilities
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_depth_of_coverage, version: 0.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_print_reads, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Realignment
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_realigner_target_creator, version: 0.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_indel_realigner, version: 0.0.6 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Base Recalibration
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_count_covariates, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_table_recalibration, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_analyze_covariates, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Genotyping
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_unified_genotyper, version: 0.0.6 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Annotation
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_variant_annotator, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Filtration
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_variant_filtration, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_variant_select, version: 0.0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded label: Variant Quality Score Recalibration
+galaxy.tools DEBUG 2013-07-16 15:27:37,531 Loaded tool id: gatk_variant_recalibrator, version: 0.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: gatk_variant_apply_recalibration, version: 0.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded label: Variant Utilities
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: gatk_validate_variants, version: 0.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: gatk_variant_eval, version: 0.0.8 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: gatk_variant_combine, version: 0.0.4 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loading section: NGS: Variant Detection
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loading section: NGS: Indel Analysis
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: sam_indel_filter, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: indel_sam2interval, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: indel_analysis, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loading section: NGS: Peak Calling
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: peakcalling_macs, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: peakcalling_sicer, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: bed2genetrack, version: 1.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: predict2genetrack, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loading section: NGS: RNA Analysis
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded label: RNA-seq
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: tophat, version: 1.5.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: cufflinks, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: cuffcompare, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: cuffmerge, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,532 Loaded tool id: cuffdiff, version: 0.0.5 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: Filtering
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: filter_combined_via_tracking, version: 0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loading section: NGS: Picard (beta)
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: Conversion
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: QC/Metrics for sam/bam
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: bam/sam Cleaning
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loading section: SNP/WGA: Data; Filters
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: Data: Import and upload
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: upload1, version: 1.1.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: library_access1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: hapmapmart, version: 0.0.01 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: Data: Filter and Clean
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgClean1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgPedSub1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgLDIndep1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: Simulate
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: fakePhe1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgfakePed1, version: 0.02 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loading section: SNP/WGA: QC; LD; Plots
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: QC; Eigenstrat
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgQC1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgEigPCA1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded label: LD; Manhattan/QQ; GRR
+galaxy.tools DEBUG 2013-07-16 15:27:37,533 Loaded tool id: rgHaploView1, version: 0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgManQQ1, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgGRR1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loading section: SNP/WGA: Statistical Models
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgCaCo1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgTDT1, version: 1.0.0 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgGLM1, version: 0.2 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: rgManQQ1, version: 1.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loading section: NCBI-BLAST
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_tblastn_wrapper/0.0.17, version: 0.0.17 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastp_wrapper/0.0.17, version: 0.0.17 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_makeblastdb/0.0.1, version: 0.0.1 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/blastxml_to_tabular/0.0.10, version: 0.0.10 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastdbcmd_wrapper/0.0.3, version: 0.0.3 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastn_wrapper/0.0.17, version: 0.0.17 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_tblastx_wrapper/0.0.17, version: 0.0.17 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastx_wrapper/0.0.17, version: 0.0.17 into tool panel.
+galaxy.tools DEBUG 2013-07-16 15:27:37,534 Loaded tool id: toolshed.g2.bx.psu.edu/repos/devteam/ncbi_blast_plus/ncbi_blastdbcmd_info/0.0.2, version: 0.0.2 into tool panel.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,597 Loaded display application 'ucsc_bam' for datatype 'bam', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,599 Loaded display application 'ensembl_bam' for datatype 'bam', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,600 Loaded display application 'igv_bam' for datatype 'bam', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,600 Loaded display application 'igb_bam' for datatype 'bam', inherit=False.
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,600 Error loading display application (./display_applications/genetrack.xml): [Errno 2] No such file or directory: './display_applications/genetrack.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 524, in load_display_applications
+    display_app = DisplayApplication.from_file( config_path, self )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/display_applications/application.py", line 163, in from_file
+    return cls.from_elem( parse_xml( filename ).getroot(), datatypes_registry )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './display_applications/genetrack.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,601 Loaded display application 'igb_bed' for datatype 'bed', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,603 Loaded display application 'ucsc_bigbed' for datatype 'bigbed', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,603 Loaded display application 'igb_bb' for datatype 'bigbed', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,605 Loaded display application 'ucsc_bigwig' for datatype 'bigwig', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,605 Loaded display application 'igb_bigwig' for datatype 'bigwig', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,608 Loaded display application 'ensembl_gff' for datatype 'gff', inherit=True.
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,608 Error loading display application (./display_applications/genetrack.xml): [Errno 2] No such file or directory: './display_applications/genetrack.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 524, in load_display_applications
+    display_app = DisplayApplication.from_file( config_path, self )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/display_applications/application.py", line 163, in from_file
+    return cls.from_elem( parse_xml( filename ).getroot(), datatypes_registry )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './display_applications/genetrack.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,611 Loaded display application 'ensembl_interval' for datatype 'interval', inherit=True.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,615 Loaded display application 'gbrowse_interval_as_bed' for datatype 'interval', inherit=True.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,615 Loaded display application 'rviewer_interval' for datatype 'interval', inherit=True.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,617 Loaded display application 'ucsc_maf_customtrack' for datatype 'mafcustomtrack', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,618 Loaded display application 'ucsc_vcf' for datatype 'vcf', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,619 Loaded display application 'igv_vcf' for datatype 'vcf', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,620 Loaded display application 'rviewer_vcf' for datatype 'vcf', inherit=True.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,620 Loaded display application 'igb_wig' for datatype 'wig', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Loaded display application 'igv_vcf' for datatype 'vcf_bgzip', inherit=False.
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'ensembl_gff' to datatype 'gtf'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'ensembl_interval' to datatype 'bedstrict'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'bedstrict'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'rviewer_interval' to datatype 'bedstrict'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'ensembl_interval' to datatype 'bedgraph'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'bedgraph'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'rviewer_interval' to datatype 'bedgraph'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'ensembl_interval' to datatype 'bed12'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'bed12'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'rviewer_interval' to datatype 'bed12'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'ensembl_interval' to datatype 'chrint'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'chrint'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,622 Adding inherited display application 'rviewer_interval' to datatype 'chrint'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'ensembl_interval' to datatype 'bed'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'bed'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'rviewer_interval' to datatype 'bed'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'ensembl_gff' to datatype 'gff3'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'ensembl_interval' to datatype 'bed6'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'bed6'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'rviewer_interval' to datatype 'bed6'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'ensembl_interval' to datatype 'encodepeak'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'gbrowse_interval_as_bed' to datatype 'encodepeak'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,623 Adding inherited display application 'rviewer_interval' to datatype 'encodepeak'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,627 Loaded converter: CONVERTER_Bam_Bai_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,627 Error loading converter (./lib/galaxy/datatypes/converters/bam_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bam_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bam_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,631 Loaded converter: CONVERTER_bed_to_gff_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,635 Loaded converter: CONVERTER_interval_to_coverage_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,638 Loaded converter: CONVERTER_bed_to_bgzip_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,642 Loaded converter: CONVERTER_bed_to_tabix_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,642 Error loading converter (./lib/galaxy/datatypes/converters/bed_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bed_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bed_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,645 Loaded converter: CONVERTER_bed_to_fli_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,649 Loaded converter: CONVERTER_bedgraph_to_bigwig
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,649 Error loading converter (./lib/galaxy/datatypes/converters/bed_to_genetrack_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bed_to_genetrack_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/bed_to_genetrack_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,653 Loaded converter: CONVERTER_len_to_linecount
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,657 Loaded converter: CONVERTER_interval_to_bgzip_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,661 Loaded converter: CONVERTER_interval_to_tabix_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,661 Error loading converter (./lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,665 Loaded converter: CONVERTER_fasta_to_tabular
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,668 Loaded converter: CONVERTER_fasta_to_bowtie_base_index
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,672 Loaded converter: CONVERTER_fasta_to_bowtie_color_index
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,675 Loaded converter: CONVERTER_fasta_to_2bit
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,678 Loaded converter: CONVERTER_fasta_to_len
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,682 Loaded converter: CONVERTER_fastq_to_fqtoc0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,685 Loaded converter: CONVERTER_fastq_to_fqtoc0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,689 Loaded converter: CONVERTER_fastq_to_fqtoc0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,694 Loaded converter: CONVERTER_fastq_to_fqtoc0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,697 Loaded converter: CONVERTER_fastq_to_fqtoc0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,700 Loaded converter: CONVERTER_gff_to_bed_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,704 Loaded converter: CONVERTER_gff_to_interval_index_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,704 Error loading converter (./lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,707 Loaded converter: CONVERTER_gff_to_fli_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,711 Loaded converter: CONVERTER_gff_to_interval_index_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,711 Error loading converter (./lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/gff_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,714 Loaded converter: CONVERTER_interval_to_bed_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,718 Loaded converter: CONVERTER_interval_to_bedstrict_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,722 Loaded converter: CONVERTER_interval_to_bed6_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,725 Loaded converter: CONVERTER_interval_to_bed12_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,728 Loaded converter: CONVERTER_interval_to_bgzip_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,732 Loaded converter: CONVERTER_interval_to_tabix_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,732 Error loading converter (./lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/interval_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,737 Loaded converter: CONVERTER_picard_interval_list_to_bed6
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,740 Loaded converter: CONVERTER_maf_to_fasta_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,744 Loaded converter: CONVERTER_maf_to_interval_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,747 Loaded converter: CONVERTER_encodepeak_to_tabix_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,751 Loaded converter: CONVERTER_encodepeak_to_bgzip_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,751 Error loading converter (./lib/galaxy/datatypes/converters/encodepeak_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/encodepeak_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/encodepeak_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,754 Loaded converter: CONVERTER_sam_to_bam
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,754 Error loading converter (./lib/galaxy/datatypes/converters/sam_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/sam_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/sam_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,758 Loaded converter: CONVERTER_vcf_to_bgzip_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,761 Loaded converter: CONVERTER_vcf_to_vcf_bgzip_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,765 Loaded converter: CONVERTER_vcf_to_tabix_0
+galaxy.datatypes.registry ERROR 2013-07-16 15:27:37,765 Error loading converter (./lib/galaxy/datatypes/converters/vcf_to_summary_tree_converter.xml): [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/vcf_to_summary_tree_converter.xml'
+Traceback (most recent call last):
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/datatypes/registry.py", line 468, in load_datatype_converters
+    converter = toolbox.load_tool( config_path )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/__init__.py", line 584, in load_tool
+    tree = load_tool( config_file )
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/tools/loader.py", line 13, in load_tool
+    tree = parse_xml(path)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/lib/galaxy/util/__init__.py", line 132, in parse_xml
+    tree = ElementTree.parse(fname)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 859, in parse
+    tree.parse(source, parser)
+  File "/home/fmareuil/Travail/Galaxy/galaxy-dist/eggs/elementtree-1.2.6_20050316-py2.7.egg/elementtree/ElementTree.py", line 576, in parse
+    source = open(source, "rb")
+IOError: [Errno 2] No such file or directory: './lib/galaxy/datatypes/converters/vcf_to_summary_tree_converter.xml'
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,769 Loaded converter: CONVERTER_wig_to_bigwig
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,769 Loaded converter: CONVERTER_wiggle_to_interval_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,773 Loaded converter: CONVERTER_vcf_bgzip_to_tabix_0
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,776 Loaded converter: lped2fpedconvert
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,781 Loaded converter: lped2pbedconvert
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,784 Loaded converter: pbed2lpedconvert
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,873 Loaded converter: pbed2ldindepconvert
+galaxy.datatypes.registry DEBUG 2013-07-16 15:27:37,874 Loaded external metadata tool: __SET_METADATA__
+galaxy.tools.imp_exp DEBUG 2013-07-16 15:27:37,874 Loaded history export tool: __EXPORT_HISTORY__
+galaxy.tools.imp_exp DEBUG 2013-07-16 15:27:37,875 Loaded history import tool: __IMPORT_HISTORY__
+galaxy.tools.genome_index DEBUG 2013-07-16 15:27:37,876 Loaded genome index tool: __GENOME_INDEX__
+galaxy.jobs.manager DEBUG 2013-07-16 15:27:37,876 Starting job handler
+galaxy.jobs.runners DEBUG 2013-07-16 15:27:37,876 Starting 5 LocalRunner workers
+galaxy.jobs DEBUG 2013-07-16 15:27:37,877 Loaded job runner 'galaxy.jobs.runners.local:LocalJobRunner' as 'local'
+galaxy.jobs.runners DEBUG 2013-07-16 15:27:37,882 Starting 3 LWRRunner workers
+galaxy.jobs DEBUG 2013-07-16 15:27:37,883 Loaded job runner 'galaxy.jobs.runners.lwr:LwrJobRunner' as 'lwr'
+galaxy.jobs DEBUG 2013-07-16 15:27:37,883 Legacy destination with id 'local:///', url 'local:///' converted, got params:
+galaxy.jobs.handler DEBUG 2013-07-16 15:27:37,883 Loaded job runners plugins: lwr:local
+galaxy.jobs.handler INFO 2013-07-16 15:27:37,883 job handler stop queue started
+galaxy.jobs.handler INFO 2013-07-16 15:27:37,890 job handler queue started
+galaxy.sample_tracking.external_service_types DEBUG 2013-07-16 15:27:37,891 Loaded external_service_type: Simple unknown sequencer 1.0.0
+galaxy.sample_tracking.external_service_types DEBUG 2013-07-16 15:27:37,892 Loaded external_service_type: Applied Biosystems SOLiD 1.0.0
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,893 Enabling 'error' controller, class: Error
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,898 Enabling 'data_manager' controller, class: DataManager
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,899 Enabling 'tag' controller, class: TagsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,900 Enabling 'external_services' controller, class: ExternalServiceController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,900 Enabling 'mobile' controller, class: Mobile
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,903 Enabling 'page' controller, class: PageController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,904 Enabling 'user' controller, class: User
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,914 Enabling 'visualization' controller, class: VisualizationController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:37,916 Enabling 'forms' controller, class: Forms
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,072 Enabling 'admin_toolshed' controller, class: AdminGalaxy
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,072 Enabling 'admin_toolshed' controller, class: AdminToolshed
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,075 Enabling 'dataset' controller, class: DatasetInterface
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,076 Enabling 'biostar' controller, class: BiostarController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,076 Enabling 'library' controller, class: Library
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,076 Enabling 'library_admin' controller, class: LibraryAdmin
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,079 Enabling 'data_admin' controller, class: DataAdmin
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,080 Enabling 'tool_runner' controller, class: ToolRunner
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,080 Enabling 'ucsc_proxy' controller, class: UCSCProxy
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,091 Enabling 'requests_admin' controller, class: RequestsAdmin
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,091 Enabling 'workflow' controller, class: WorkflowController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,092 Enabling 'root' controller, class: RootController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,092 Enabling 'request_type' controller, class: RequestType
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,093 Enabling 'library_common' controller, class: LibraryCommon
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,093 Enabling 'external_service' controller, class: ExternalService
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,093 Enabling 'admin' controller, class: AdminGalaxy
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,093 Enabling 'async' controller, class: ASync
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,094 Enabling 'requests_common' controller, class: RequestsCommon
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,094 Enabling 'requests' controller, class: Requests
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,094 Enabling 'search' controller, class: SearchController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,095 Enabling 'history' controller, class: HistoryController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,101 Enabling 'cloudlaunch' controller, class: CloudController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,102 Enabling 'history_content_tags' API controller, class: HistoryContentTagsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,102 Enabling 'history_tags' API controller, class: HistoryTagsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,102 Enabling 'workflow_tags' API controller, class: WorkflowTagsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,103 Enabling 'folder_contents' API controller, class: FolderContentsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,103 Enabling 'library_contents' API controller, class: LibraryContentsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,104 Enabling 'quotas' API controller, class: QuotaAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,104 Enabling 'datasets' API controller, class: DatasetsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,107 Enabling 'visualizations' API controller, class: VisualizationsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,107 Enabling 'forms' API controller, class: FormDefinitionAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,107 Enabling 'folders' API controller, class: FoldersController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'history_contents' API controller, class: HistoryContentsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'group_users' API controller, class: GroupUsersAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'workflows' API controller, class: WorkflowsAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'roles' API controller, class: RoleAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'libraries' API controller, class: LibrariesController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,108 Enabling 'configuration' API controller, class: ConfigurationController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,109 Enabling 'group_roles' API controller, class: GroupRolesAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,109 Enabling 'genomes' API controller, class: GenomesController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,109 Enabling 'samples' API controller, class: SamplesAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,109 Enabling 'permissions' API controller, class: PermissionsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,110 Enabling 'tools' API controller, class: ToolsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,110 Enabling 'request_types' API controller, class: RequestTypeAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,110 Enabling 'users' API controller, class: UserAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,111 Enabling 'groups' API controller, class: GroupAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,113 Enabling 'history_annotations' API controller, class: HistoryAnnotationsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,113 Enabling 'history_content_annotations' API controller, class: HistoryContentAnnotationsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,113 Enabling 'workflow_annotations' API controller, class: WorkflowAnnotationsController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,114 Enabling 'tool_shed_repositories' API controller, class: ToolShedRepositoriesController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,114 Enabling 'requests' API controller, class: RequestsAPIController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,122 Enabling 'search' API controller, class: SearchController
+galaxy.web.framework.base DEBUG 2013-07-16 15:27:38,122 Enabling 'histories' API controller, class: HistoriesController
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,122 app.config.api_folders: False
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,259 Enabling 'httpexceptions' middleware
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,259 Enabling 'recursive' middleware
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,278 Enabling 'eval exceptions' middleware
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,278 Enabling 'trans logger' middleware
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,278 Enabling 'x-forwarded-host' middleware
+galaxy.webapps.galaxy.buildapp DEBUG 2013-07-16 15:27:38,278 Enabling 'Request ID' middleware

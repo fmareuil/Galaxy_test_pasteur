@@ -1,0 +1,132 @@
+<tool id="clusterizeBySlidingWindows" name="clusterize By SlidingWindows">
+	<description>Produces a GFF3 file that clusters a list of transcripts using a sliding window. Cluster the data into regions (defined by size and overlap with next region) and keep only highest peaks.</description>
+	<command interpreter="python">
+		../Java/Python/clusterizeBySlidingWindows.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if
+		-s $size
+		-e $overlap
+		-o $outputFileGff 
+		$normalize
+		$strands
+		
+		#if $OptionTag.tag == "Yes":
+			-g $OptionTag.value
+		#end if	
+
+		#if $OptionsOperation.operation == "Yes":
+			-r $OptionsOperation.value
+		#end if
+		
+		#if $OptionWriteTag.writeTag == "Yes":
+			-w $OptionWriteTag.value
+		#end if	
+		
+		$strand
+		$plot $plotPng
+		$excel $excelOutput
+		
+		
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input File"/>
+			</when>
+		</conditional>
+
+
+		<param name="size" type="text" value="50000" label="Size option" help="Size of the regions."/>
+		<param name="overlap" type="text" value="50" label="Overlap option" help="Overlap between two consecutive regions."/>	
+		<param name="normalize" type="boolean" truevalue="-m" falsevalue="" checked="false" label="Normalize option for only GFF3 file format" help="This option normalizes (Warning!! Only for GFF3 file!)"/>
+		<param name="strands" type="boolean" truevalue="-2" falsevalue="" checked="false" label="strands option" help="Consider the two strands separately."/>
+
+		<conditional name="OptionTag">
+			<param name="tag" type="select" label="use a given tag as input (instead of summing number of features)">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="value" type="text" value="None" label="tag option" help="write a tag name you want to observe."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+
+		<conditional name="OptionsOperation">
+			<param name="operation" type="select" label="combine tag value with given operation [choice (sum, avg, med, min, max)]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="value" type="text" value="None" label="operation option" help="You can ONLY choose one of fowlling operation : sum, avg, med, min, max."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		
+		<conditional name="OptionWriteTag">
+			<param name="writeTag" type="select" label="write a new tag in output file">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="value" type="text" value="nbElements" label="write tag option" help="print the result in the given tag (default usually is 'nbElements')"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<param name="strand" type="boolean" truevalue="-2" falsevalue="" checked="false" label="strand option" help="This option considers the two strands separately."/>
+		<param name="plot" type="boolean" truevalue="-p" falsevalue="" checked="false" label="plot option" help="This option creates a png file."/>
+		<param name="excel" type="boolean" truevalue="-x" falsevalue="" checked="false" label="excel option" help="This option creates a csv file."/>
+
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3"/>
+		<data name="excelOutput" format="csv">
+			<filter>excel</filter>
+		</data>	
+		<data name="plotPng" format="png">
+			<filter>plot</filter>
+		</data>	
+	</outputs> 
+</tool>

@@ -1,0 +1,1063 @@
+"""
+
+          ARIA -- Ambiguous Restraints for Iterative Assignment
+
+                 A software for automated NOE assignment
+
+                               Version 2.3
+
+
+Copyright (C) Benjamin Bardiaux, Michael Habeck, Therese Malliavin,
+              Wolfgang Rieping, and Michael Nilges
+
+All rights reserved.
+
+
+NO WARRANTY. This software package is provided 'as is' without warranty of
+any kind, expressed or implied, including, but not limited to the implied
+warranties of merchantability and fitness for a particular purpose or
+a warranty of non-infringement.
+
+Distribution of substantively modified versions of this module is
+prohibited without the explicit permission of the copyright holders.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:24 $
+"""
+
+
+
+from aria.TypeChecking import *
+from threading import Thread, Lock
+from aria.ariabase import *
+from aria.Settings import *
+from aria.xmlutils import XMLElement, XMLBasePickler
+lock = Lock()
+
+## Mareuil <
+class HostSettings(Settings):
+
+    def create(self):
+
+        d = {}
+
+        d['n_cpu'] = PositiveInteger()
+        d['submit_command'] = String()
+        d['state_command'] = String()
+        d['output_command'] = String()
+        d['executable'] = Path(exists = 0)
+        d['enabled'] = YesNoChoice()
+
+        descr = """If set to '%s' (default), we use the absolute path of the csh-script to launch the calculation. Otherwise, only its basename is used."""
+        
+        d['use_absolute_path'] = YesNoChoice(description = descr % str(YES))
+
+        return d
+
+    def create_default_values(self):
+
+        d = {}
+
+        d['n_cpu'] = 1
+        d['submit_command'] = 'csh -f'
+        d['state_command'] = ''
+        d['output_command'] = ''
+        d['enabled'] = YES
+        d['use_absolute_path'] = YES
+
+        return d
+
+class JobSchedulerSettings(Settings):
+
+    def create(self):
+
+        #s = 'Default command to run a remote job, e.g. "csh", "ssh [hostname] csh" or "rsh [hostname] csh", etc. A job (csh script) is then started as follows: COMMAND job.'
+        s = 'Mode command to run ARIA, if you execute ARIA on a local computer, choose LOCAL mode, if you execute ARIA on a cluster, choose CLUSTER mode, and on a grid, choose GRID mode.'
+        
+        keywords = {'host_list': TypeEntity(LIST),
+                    'default_command': String(description = s)}
+        
+        return keywords
+
+class JobManager(AriaBaseClass):
+    """
+    base-class common to all job-managers
+    """
+
+    def shutdown(self):
+        pass
+
+class JobSettings(Settings):
+    def create(self):
+        from aria.Settings import Path, String
+        
+        d = {}
+        
+        d['default_command'] = String()
+        d['run_cns'] = String()
+        d['run'] = String()
+        d['submit_command'] = String()
+        d['state_command'] = String()
+        d['output_command'] = String()
+        d['script'] = Path()
+        d['pdb'] = Path()
+        d['iteration_path'] = Path()
+        d['working_directory'] = Path()
+        d['use_absolute_path'] = YesNoChoice()
+
+        return d
+## Mareuil >
+class Job(Thread, AriaBaseClass):
+    ## Mareuil <
+    cmd_template = 'cd %(working_directory)s; %(submit_command)s %(script)s'
+    ## Mareuil >
+    def __init__(self, settings, *args, **kw):
+
+        check_type(settings, 'JobSettings')
+        Thread.__init__(self, *args, **kw)
+        AriaBaseClass.__init__(self, settings)
+
+        self.__stop = 0
+        
+        ## callbacks
+        self.setCallback(None)
+
+    def stop(self):
+        self.__stop = 1
+
+    def isStopped(self):
+        return self.__stop
+
+    def setCallback(self, f):
+        self.__callback = f
+
+    def getCallback(self):
+        return self.__callback
+
+    def patch(self, host):
+        """
+        attempts to patch host-specific settings'
+        """
+        import os
+        settings = self.getSettings()
+        settings.update(host)
+        ## < Mareuil
+        if settings['default_command'] == "GRID":
+            cp_cns = 'cp %s %s' % (host['executable'],settings['working_directory'])
+            os.system(cp_cns)
+            d= {'executable' : os.path.basename(host['executable'])}
+        else:
+            d = {'executable': host['executable']}
+        
+        script_path = settings['script']
+        f = open(script_path)
+        s = f.read() % d
+        f.close()
+        ## write new csh script
+        f = open(script_path, 'w')
+        f.write(s)
+        f.close()
+        ## Mareuil >
+
+## < Mareuil
+    def tar_job_grid(self,d, name_tar, run_path):
+        """
+        Creating archive to execute cns job on grid computing
+        """
+        import os
+        lock.acquire()
+	new_cwd = 0
+        while new_cwd < 10:
+            if os.getcwd() != run_path:
+                os.chdir(run_path)
+                new_cwd += 1
+            else:
+                new_cwd = 10
+	if os.getcwd() != run_path:
+            msg = "There is a problem with a change of current directory, %s to %s" % (os.getcwd(),run_path)
+	    self.warning(msg)
+        tbl = self.revpathJM(os.path.join(d['iteration_path'],'*.tbl'))
+        if d['pdb'] != "<not initialized>":
+            cmd_tar = 'tar -czf %s %s %s %s %s' % (name_tar, self.revpathJM(d['run_cns']), tbl, self.revpathJM(d['working_directory']), self.revpathJM(d['pdb']))
+        else:
+            cmd_tar = 'tar -czf %s %s %s %s' % (name_tar, self.revpathJM(d['run_cns']), tbl, self.revpathJM(d['working_directory']))
+            
+        self.message('Creating an archive: %s' % cmd_tar)
+        os.system(cmd_tar)
+        new_cwd = 0
+        while new_cwd < 10:
+            if os.getcwd() != d['working_directory']:
+                os.chdir(d['working_directory'])
+                new_cwd += 1
+	    else:
+                new_cwd = 10
+	if os.getcwd() != d['working_directory']:
+            msg = "There is a problem with a change of current directory, %s to %s" % (os.getcwd(),d['working_directory'])
+	    self.warning(msg)
+        lock.release()
+        return name_tar, run_path
+
+    def revpathJM(self,path):
+        """
+        return the relative path of an absolute path
+        """
+        import os, string
+        real = string.split(os.getcwd(),"/")
+        pathtemp = string.split(path,"/")
+        diff = 0
+        compt = 0
+        while not diff:
+            if compt < len(real) and compt < len(pathtemp):
+                if real[compt] == pathtemp[compt]:
+                    compt += 1
+                else:
+                    diff = 1
+            else:
+                diff = 1
+            num = len(real) - compt
+            realpath = ""
+            for i in range(num):
+                realpath = realpath + "../"
+            realpath = realpath + "."
+            for i in pathtemp[compt:]:
+                realpath = realpath + "/" + i
+        return realpath 
+	
+    def newOsSystem(self, cmd, d):
+        import os, time, string
+	try:
+            os.remove(d["working_directory"] + "/.ossystem.temp")
+	except:
+            pass
+	temp = " > .ossystem.temp"
+	cmd = cmd + temp
+        OSok = 0
+	Job_id = None
+        while OSok < 10 and Job_id == None:
+            os.system(cmd)
+            time.sleep(60.)
+            Job_id = self.check_ossytem(d)
+            if Job_id:
+                OSok = 10
+            if Job_id == None and OSok < 10:
+                msg = "%s don't start, relaunch" % cmd
+                self.message(msg)
+		time.sleep(60.)
+                OSok = OSok + 1
+        if Job_id == None and OSok == 10:
+            msg = "%s impossible to start" % cmd
+	    self.error(msg)
+        return
+	
+    def check_ossytem(self,d):
+        import time, string, os
+        Job_id = None
+        try:
+            tempopen = open(d["working_directory"] + "/.ossystem.temp", "r")
+            for i in tempopen:
+                if 'has been submitted' in i:
+                    actualtime = time.localtime()
+                    msg = '%s/%s/%s %s:%s: %s' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],i)
+                    self.message(msg) 
+                    Job_id = string.split(i)[2]
+            tempopen.close()
+        except:
+            pass
+        return Job_id                                                                       
+
+    def newPopen(self, shlex_cmd, cmd):
+        import os, shlex, subprocess, time
+        popenok = 0
+        while popenok < 10:
+            try:
+                stdpopen = subprocess.Popen(shlex_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                popenok = 11
+            except:
+                msg = "%s don't start, relaunch" % cmd
+                self.message(msg)
+		time.sleep(120.)
+		popenok += 1
+        if popenok == 10:
+            msg = "%s don't start, error" % cmd
+            self.warning(msg)
+        return stdpopen
+
+    def check_grid_submit(self,command, Jobid):
+        """
+        Submit a csh/cns script to the grid and check it
+        """
+        import os, time, subprocess, shlex, string, signal
+        success = 0
+        command_shlex = shlex.split(command)
+        stdgrid = self.newPopen(command_shlex, command)
+	comp = 0
+	comptime = 0
+	while not comp:
+            time.sleep(30.)
+	    if stdgrid.poll() == 0:
+	        comp = 1
+		readgrid = string.split(stdgrid.communicate()[0],'\n')
+                actualtime = time.localtime()
+                for i in readgrid:
+                    if 'Proxy validity Error' in i:
+                        msg = 'Your proxy credential has expired'
+                        self.warning(msg)
+                        self.halt()
+                    if 'Error - Operation failed' in i:
+                        msg = 'Error during submission check your proxy'
+                        self.warning(msg)
+                        self.halt()
+                    if 'The job has been successfully submitted to the WMProxy' in i:
+                        msg = '%s/%s/%s %s:%s: The job %s has been successfully submitted to the WMProxy' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir)
+                        self.message(msg)
+                        success = 1
+                    if success and "https" in i:
+                        msg = '%s job identifier is: %s' % (self.work_dir, i)
+                        self.message(msg)
+                        Jobid = i
+	    else:
+	        actualtime = time.localtime()
+		comptime += 1
+		if comptime == 8:
+                    try:
+                        os.kill(stdgrid.pid,signal.SIGTERM)
+                    except:
+                        msg = "Problem with %s PID %s can't be killed" % (stdgrid.pid,command)
+			self.message(msg)
+                    comp = 1
+        if not success or not Jobid:
+            msg = '%s/%s/%s %s:%s: %s job has not been successfully submitted to the WMProxy, resubmission' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir)
+            self.message(msg)
+            time.sleep(10.)
+        return Jobid
+    
+    def check_grid_state(self, d, terminated, done, Jobid):
+        """
+        Checks the status of a job
+        """
+        import os, time, subprocess, shlex, string, signal
+	cmd_state = '%s %s' % (d['state_command'], Jobid)
+        cmd_state_shlex = shlex.split(cmd_state)
+        stdstate = self.newPopen(cmd_state_shlex, cmd_state)
+        comp = 0
+	comptime = 0
+	while not comp:
+            time.sleep(30.)
+	    if stdstate.poll() == 0:
+	        comp = 1
+	        readstate = string.split(stdstate.communicate()[0],'\n')
+                actualtime = time.localtime()
+                for i in readstate:
+                    if "Current Status:" in i:
+                        msg = "%s/%s/%s %s:%s: Job %s %s" % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir,i)
+                        self.message(msg)
+                        if "Done" in i:
+                            terminated = 1
+                            if "(Success)" in i:
+                                msg = '%s/%s/%s %s:%s: Job %s, Jobid %s  is done successfully' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                                self.message(msg)
+                                done = 1
+                            if not done:
+                                msg = '%s/%s/%s %s:%s: Job %s, Jobid %s  is done but not success, resubmission' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                                self.message(msg)
+                                Jobid = 0
+                        if "Aborted" in i:
+                            terminated = 1
+                            msg = '%s/%s/%s %s:%s: Job %s, Jobid %s is Aborted, resubmission' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                            self.message(msg)
+                            Jobid = "Not_run"
+                        if "Cancelled" in i:
+                            terminated = 1
+                            msg = '%s/%s/%s %s:%s: Job %s, Jobid %s is Canceled, resubmission' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                            self.message(msg)
+                            Jobid = "Not_run"
+                        if "Cleared" in i:
+                            terminated = 1
+			    retry = 1
+                            msg = '%s/%s/%s %s:%s: Job %s, Jobid %s is already Cleared' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                            self.message(msg)
+                            Jobid = "Cleared"
+	    else:
+	        actualtime = time.localtime()
+		comptime += 1
+		if comptime == 8:
+                    try:
+		        os.kill(stdstate.pid,signal.SIGTERM)
+                    except:
+                        msg = "Problem with %s PID %s can't be killed" % (stdstate.pid,cmd_state)
+			self.message(msg)
+                    comp = 1
+        return Jobid, terminated, done
+	
+    def check_out_cns(self, path, Jobid, retry):
+        openfile = open(path,"r")
+        for i in openfile:
+            if "Error accessing file" in i:
+                msg = "There is a problem during the cns execution for %s, Jobid : %s, resubmission" % (self.work_dir, Jobid)
+                self.warning(msg)
+                Jobid = "Not_run"
+                retry = 0
+                pass
+        openfile.close()
+	return Jobid, retry
+	
+    def check_grid_output(self, d, retry, run_path, Jobid, old_work_dir):
+        """
+        Get a job done
+        """	
+        import os, time, string, subprocess, shlex
+        name_cns_job = os.path.join(run_path,'%s_%s.tar.gz' % (os.path.basename(d['run']), self.work_dir))
+        Dir_Job = os.path.join(run_path,'%s_%s' % (os.getenv('USER'),string.split(Jobid,"/")[-1]))
+        cmd_Job = 'mv %s/* %s;rm -r %s;cd %s;tar -xzf %s;rm %s;cd %s' % (Dir_Job, run_path, Dir_Job, run_path, name_cns_job, name_cns_job, self.path_work_dir)
+        cmd_output = '%s %s %s' % (d['output_command'], run_path, Jobid)
+        cmd_output_shlex = shlex.split(cmd_output)
+                
+        self.message("Download job: %s" % cmd_output)
+        stdoutput = self.newPopen(cmd_output_shlex, cmd_output)
+	comp = 0
+	comptime = 0
+	while not comp:
+            time.sleep(30.)
+	    if stdoutput.poll() == 0:
+	        comp = 1
+                readoutput = string.split(stdoutput.communicate()[0],'\n')
+                actualtime = time.localtime()
+                for i in readoutput:
+                    if "have been successfully retrieved and stored in the directory" in i:
+                        msg = '%s/%s/%s %s:%s: The job %s has been successfully retrieved and stored' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir)
+                        self.message(msg)
+                        if os.path.isfile(name_cns_job):
+                            os.remove(name_cns_job)
+			lock.acquire()
+                        os.system(cmd_Job)
+                        if old_work_dir != self.path_work_dir:
+                            cmd_mv_work = "mv %s/* %s/. ; rm -r %s" % (old_work_dir,self.path_work_dir,os.path.split(old_work_dir)[0])
+                            os.system(cmd_mv_work)
+                        lock.release()
+                        retry = 1
+                        Jobid = "Cleared"  
+                if not retry:
+                    msg = '%s/%s/%s %s:%s: The job %s, Jobid %s has not been successfully retrieved, resubmission' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir, Jobid)
+                    self.message(msg)
+                    Jobid = "Not_run"
+	    else:
+	        actualtime = time.localtime()
+		comptime += 1
+		if comptime == 8:
+                    try:
+		        os.kill(stdoutput.pid, signal.SIGTERM)
+                    except:
+                        msg = "Problem with %s PID %s can't be killed" % (stdoutput.pid,cmd_output)
+			self.message(msg)
+                    comp = 1
+        if retry:
+            path_cns_out = '%sout' % d['script'][0:-3]
+            Jobid, retry = self.check_out_cns(path_cns_out, Jobid, retry)
+        return retry, Jobid
+    
+    def infoJob(self, Jobid):
+        """
+        Checks if possible on what computing element running a job
+        """ 
+        import subprocess, shlex, string
+        cmd_info_s = "glite-wms-job-logging-info -v 1 %s" % Jobid
+        cmd_info = shlex.split(cmd_info_s)
+        try: 
+            stdinfo = self.newPopen(cmd_info, cmd_info_s)
+            readinfo = string.split(stdinfo.communicate()[0],'\n')
+            for i in readinfo:
+                if "- Dest id" in i:
+                    splitted = string.split(i)
+                    info = splitted[-1]
+                    break
+            msg = "Your Job %s is running on %s" % (Jobid, info)
+            self.message(msg)
+        except:
+            msg = "You are not in a glite default system or destination information is not given \naria can't give you informations about the destination job %s" % (Jobid)
+            self.message(msg)
+  
+    def write_pid(self, filepid, Jobid1, Jobid2, name_cns_job):
+        """
+        Saves jobids of jobs to enable their recovery in case of error
+        """
+        import string, os
+        lock.acquire()
+        Pids = {}
+        fileJobids = '%s_Jobids' % (filepid)
+        listpid = open(filepid,'r')
+        for i in listpid:
+            splitted = string.split(i)
+            if len(splitted) == 5:
+                Pids[splitted[0]] = [splitted[1],splitted[2],splitted[3],splitted[4]]
+	listpid.close()
+        Pids[name_cns_job] = [Jobid1,Jobid2,self.path_work_dir,self.iteration]
+        listpid = open(filepid,'w')
+        for j in Pids:
+            listpid.write("%s\t%s\t%s\t%s\t%s\n" % (j,Pids[j][0],Pids[j][1],Pids[j][2],Pids[j][3]))
+        listpid.close()
+	
+        listJobids = open(fileJobids,'a')
+        if not Jobid1 in ("Not_run","Cleared") and not Jobid2 in ("Not_run","Cleared"):
+            listJobids.write("%s\n%s\n" % (Jobid1,Jobid2))
+        listJobids.close()
+        lock.release()
+
+    def check_jobid(self, filepid, name_cns_job, terminated, retry):
+        """
+        Checks if the jobs have already been launched on the grid
+        """
+        import string, os
+        lock.acquire()
+        listpid = open(filepid,'r')
+        Jobid1 = "Not_run"
+        Jobid2 = "Not_run"
+	old_work_dir = self.path_work_dir
+        for i in listpid:
+            splitted = string.split(i)
+	    if len(splitted) != 0:
+                if splitted[0] == name_cns_job:
+                    if not splitted[1] in ("Not_run","Cleared") and not splitted[2] in ("Not_run","Cleared"):
+                        Jobid1 = splitted[1]
+                        Jobid2 = splitted[2]
+		        old_work_dir = splitted[3]
+                        msg = "Your job %s have been already executed with Jobids %s and %s" % (splitted[3], Jobid1, Jobid2)
+		        self.message(msg)
+                    if splitted[1] == "Cleared" and splitted[2] == "Cleared":
+                        if splitted[4] == self.iteration:
+                            Jobid1 = "Cleared"
+                            Jobid2 = "Cleared"
+                            terminated = 1
+                            retry = 1
+                        if splitted[4] != self.iteration:
+                            Jobid1 = "Not_run"
+                            Jobid2 = "Not_run"
+        listpid.close()
+        lock.release()
+        return Jobid1, Jobid2, old_work_dir, terminated, retry
+		   
+
+    def run(self):
+
+        import os, time
+        
+        MODE = self.getSettings()['default_command']
+        
+        if MODE == "LOCAL" or MODE == "CLUSTER" or MODE == None:
+        ## compile filename that will be polled during runtime
+            filename = os.path.join(self.getSettings()['working_directory'],'done')
+            try:
+                os.unlink(filename)
+            except:
+                pass
+        
+            ## start job
+
+            d = self.getSettings().as_dict()
+            ## if use shall use the local filename of the script,
+            ## modify name. this gimmick is necessary for certain
+            ## queuing systems.
+            
+            if d['use_absolute_path'] <> YES:
+                d['script'] = os.path.basename(d['script']) 
+		
+            actualtime = time.localtime()
+            command = self.cmd_template % d
+	    
+	    #self.submit_cluster(command, d)
+	    self.newOsSystem(command, d)
+	    
+            terminated = 0
+
+            while not terminated and not self.isStopped():
+                terminated = os.path.exists(filename)
+                time.sleep(5.)
+            
+            actualtime = time.localtime()
+            if not self.isStopped():
+	        f = self.getCallback()
+                msg = "%s/%s/%s %s:%s: Job %s completed." % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+                self.message(msg)
+
+            else:
+                msg = "%s/%s/%s %s:%s: Job %s has been canceled." % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+                self.debug(msg)
+
+        ## notify that we are done.
+
+            if not self.isStopped():
+                f = self.getCallback()
+
+            if f is not None:
+                f(self)
+        
+        elif MODE == "GRID":
+            import subprocess, shlex
+            d = self.getSettings().as_dict()
+            self.path_work_dir = d['working_directory']
+            self.work_dir = os.path.basename(self.path_work_dir)
+            self.iteration = os.path.basename(d['iteration_path'])
+	    path_yes = os.path.join(self.path_work_dir,".yes")
+	    os.system("echo yes > %s" % path_yes)
+            filepid = '%s/.%s' % (d['run'],os.path.basename(d['run']))
+	    os.system("touch %s" % filepid)
+            run_path = os.path.split(os.path.split(d['working_directory'])[0])[0]
+            name_cns_job = os.path.join(run_path,'%s_%s.tar.gz' % (os.path.basename(d['run']), self.work_dir))
+    
+            if d['use_absolute_path'] <> YES:
+                d['script'] = os.path.basename(d['script'])
+            
+            d['script'] = '%sjdl' % d['script'][0:-3]
+    
+            actualtime = time.localtime()
+            command = '%s %s' % (d['submit_command'],d['script'])
+            msg = '%s/%s/%s %s:%s: Starting job: %s' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+            self.message(msg)
+    
+            retry = 0 
+            while not retry and not self.isStopped():
+	        terminated = 0
+                done = 0
+                Jobid1, Jobid2, old_work_dir, terminated, retry = self.check_jobid(filepid, name_cns_job, terminated, retry)
+                self.write_pid(filepid, Jobid1, Jobid2, name_cns_job)
+                while Jobid1 == "Not_run" or Jobid2 == "Not_run":
+                    self.tar_job_grid(d, name_cns_job, run_path)
+                    if Jobid1 == "Not_run":
+                        Jobid1 = self.check_grid_submit(command, Jobid1)
+                        if Jobid1 != "Not_run":
+                            self.infoJob(Jobid1)
+                    if Jobid2 == "Not_run":
+                        Jobid2 = self.check_grid_submit(command, Jobid2)
+                        if Jobid2 != "Not_run":
+                            self.infoJob(Jobid2)
+
+                self.write_pid(filepid, Jobid1, Jobid2, name_cns_job)
+                    
+                compt_time = 0
+                while not terminated:
+                    Jobid1, terminated, done = self.check_grid_state(d, terminated, done, Jobid1)
+                    if terminated and done:
+                        Jobid = Jobid1
+                        try:
+                            cmd_cancel = "glite-wms-job-cancel %s < %s >& /dev/null" % (Jobid2,path_yes)
+                            os.system(cmd_cancel)
+                        except:
+                            msg = "No glite system, second isn't canceled"
+                            self.message(msg)    
+                        continue
+			
+                    Jobid2, terminated, done = self.check_grid_state(d, terminated, done, Jobid2)
+                    if terminated and done:
+                        Jobid = Jobid2
+                        try:
+                            cmd_cancel = "glite-wms-job-cancel %s < %s >& /dev/null" % (Jobid1,path_yes)
+                            os.system(cmd_cancel)
+                        except:
+                            msg = "No glite system, second isn't canceled"
+                            self.message(msg)
+                        continue
+
+                    if not terminated:
+                        actualtime = time.localtime()
+                        msg = '%s/%s/%s %s:%s: Job %s, Jobids %s or %s is not done' % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],self.work_dir,Jobid1,Jobid2)
+                        self.message(msg)
+                        compt_time += 1
+                        if compt_time == 12:
+                            msg = "%s/%s/%s %s:%s: Job %s lasts too long, resubmission" % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+                            self.message(msg)
+                            terminated = 1
+                            try:
+                                cmd_cancel = "glite-wms-job-cancel %s < %s >& /dev/null" % (Jobid1,path_yes)
+                                os.system(cmd_cancel)
+                                cmd_cancel = "glite-wms-job-cancel %s < %s >& /dev/null" % (Jobid2,path_yes)
+                                os.system(cmd_cancel)
+                            except:
+                                msg = "No glite system, Jobs not canceled"
+                                self.message(msg)
+			else:
+                            time.sleep(600.)
+                if terminated and not done and Jobid1 != "Cleared" and Jobid2 != "Cleared":
+                    self.write_pid(filepid, "Not_run", "Not_run", name_cns_job)	
+                if Jobid1 == "Cleared" or Jobid2 == "Cleared":
+                    self.write_pid(filepid, "Cleared", "Cleared", name_cns_job)
+                    os.system("touch %s" % os.path.join(self.path_work_dir,"done"))
+                if terminated and done: 
+                    retry, Jobid = self.check_grid_output(d, retry, run_path, Jobid, old_work_dir)
+                    self.write_pid(filepid, Jobid, Jobid, name_cns_job)
+            
+            actualtime = time.localtime()
+            if not self.isStopped():
+                f = self.getCallback()
+                os.system("rm %s" % path_yes)
+                msg = "%s/%s/%s %s:%s: Job %s completed." % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+                self.message(msg)
+            else:
+                msg = "%s/%s/%s %s:%s: Job %s has been canceled." % (actualtime[0],actualtime[1],actualtime[2],actualtime[3],actualtime[4],command)
+                self.debug(msg)
+
+        ## notify that we are done.
+            if f is not None:
+                f(self)
+##  Mareuil >        
+
+class JobScheduler(JobManager):
+    
+    def __init__(self, settings):
+
+        check_type(settings, 'JobSchedulerSettings')
+        AriaBaseClass.__init__(self, settings, name = 'Job manager')
+        self.set_callback(None)
+
+    def __check_content(self, filename, match):
+        """
+        reads the file 'filename'. if not equal
+        to 'match' a string giving the reason is returned, None otherwise.
+        """
+
+        reason = None
+
+        try:
+            f = open(filename)
+        except:
+            reason = 'connection failed or unable to open temporary file.'
+
+        if reason is None:
+
+            s = 'dummy'
+
+            try:
+                s = f.read()[:-1]
+            except:
+                reason = """could not read temporary file or temporary file is empty.'"""
+
+            if s <> match:
+                reason = ''
+
+        try:
+            f.close()
+        except:
+            pass
+
+        return reason
+
+    def probeHosts(self, project):
+        """
+        Probes the commands specfied for every item in the host-list.
+        'project' is actually an InfraStructure instance. Infrastructure,
+        however, will be absorbed in Project anyway...
+        """
+        ## < Mareuil
+        cmd_template = 'cd %(working_directory)s; %(submit_command)s %(script)s' + \
+                       ' %(message)s %(output_filename)s'
+        ## Mareuil >
+        import os, random
+        hosts = self.getSettings()['host_list']
+
+        temp = project.get_temp_path()
+        working_dir = os.path.join(project.get_aria_path(), 'src/csh')
+        src = os.path.join(working_dir, 'check_host.csh')
+        
+        #script = os.path.join(working_dir, 'check_host.csh')
+
+        #d = {'working_directory': working_dir}
+
+        passed = 1
+
+        ## BARDIAUX 2.2
+        # move src/csh/check_host.csh to tempdir/check_host.csh before running
+        from aria.tools import copy_file
+        script = os.path.join(temp, 'check_host.csh')
+        
+        try:
+            copy_file(src, script)
+        except Exception, msg:
+            msg = 'Could not copy %s to %s' % (src, script)            
+            self.error(Exception, msg)
+
+        d = {'working_directory': temp}
+        ##
+        
+        for host in hosts:
+
+            if host['enabled'] <> YES:
+                continue
+            ## < Mareuil
+            d['submit_command'] = host['submit_command']
+
+            tag = str(random.random())
+            d['message'] = tag
+            
+            output_filename = os.path.join(temp, \
+                                           d['submit_command'].replace(' ', '_'))
+            
+            d['output_filename'] = output_filename
+
+            if host['use_absolute_path'] <> YES:
+                d['script'] = os.path.basename(script)
+            else:
+                d['script'] = script
+
+            os.system(cmd_template % d)
+
+            reason = self.__check_content(output_filename, tag)
+
+            if reason is not None:
+                
+                ## try to read file again, after a delay of 1s
+
+                import time
+                time.sleep(2.)
+
+                reason = self.__check_content(output_filename, tag)
+
+            msg = 'Command "%s" ... ' % d['submit_command']
+            ## Mareuil >
+            if reason is None:
+                self.message(msg + 'ok.')
+                
+            else:
+
+                if reason == '':
+                    msg += 'failed.'
+                else:
+                    msg += 'failed (%s)' % reason
+
+                self.warning(msg)
+
+            passed = passed and reason is None
+
+            if not passed:
+                break
+
+        return passed
+
+    def job_done(self, job):
+        host = self.running_jobs[job]
+        del self.running_jobs[job]
+
+        self.dispatch_job(host)
+
+    def dispatch_job(self, host):
+        if not len(self.jobs):
+            if not len(self.running_jobs):
+                self.done()
+
+        ## start new job
+            
+        else:
+            
+            ## Get script and remove it from job-list
+            job = self.jobs.pop()
+
+            ## patch host-specific settings
+            ## and set callback
+            job.patch(host)
+            job.setCallback(self.job_done)
+
+            self.running_jobs[job] = host
+            job_start = 0
+	    while job_start == 0:
+                try:
+                    job.start()
+                    job_start = 1
+                except:
+                    msg = "thread don't start, relaunch"
+		    self.message(msg)
+
+    def go(self, job_list):
+
+        check_list(job_list)
+
+        self.jobs = job_list
+        self.__done = 0
+
+        ## compile host-list
+
+        host_list = []
+
+        for host in self.getSettings()['host_list']:
+            if host['enabled'] == YES:
+                host_list += [host] * host['n_cpu']
+
+        ## if host-list is empty, we are done.
+
+        if not host_list:
+            s = 'Empty host-list. Ensure that at least 1 host is enabled.'
+            self.message(s)
+            self.done()
+
+        ## Start as many jobs as cpus are in host-list
+            
+        self.running_jobs = {}
+        [self.dispatch_job(host) for host in host_list]
+
+    def done(self):
+        
+        if self.__callback is not None:
+            self.__callback()
+            
+        self.__done = 1
+
+    def is_done(self):
+        return self.__done
+
+    def set_callback(self, f):
+        """
+        the callback, 'f', is called when all jobs have been
+        processed.
+        """
+
+        self.__callback = f
+
+    def get_callback(self):
+        return self.__callback
+
+    def shutdown(self):
+        """
+        called whenever an error occurs (only if AriaBaseClass.error
+        was called)
+        """
+
+        ## empty list of unfinished job
+        self.jobs = []
+
+        ## stop running jobs
+        [job.stop() for job in self.running_jobs]
+
+        self.message('shutdown.')
+## < Mareuil
+class HostSettingsXMLPickler(XMLBasePickler):
+
+    order = ('enabled', 'submit_command', 'state_command', 'output_command', 'executable', 'n_cpu', 'use_absolute_path')
+    
+    def _xml_state(self, x):
+
+        e = XMLElement(tag_order = self.order)
+
+        e.enabled = x['enabled']
+        e.n_cpu = x['n_cpu']
+        e.submit_command = x['submit_command']
+        e.state_command = x['state_command']
+        e.output_command = x['output_command']
+        e.executable = x['executable']
+        e.use_absolute_path = x['use_absolute_path']
+
+        return e
+
+    def load_from_element(self, e):
+        s = HostSettings()
+        
+        s['enabled'] = str(e.enabled)
+        s['n_cpu'] = int(e.n_cpu)
+        s['submit_command'] = str(e.submit_command)
+        if hasattr(e,'state_command'):
+            state = str(e.state_command)
+        else:
+            state = ''
+        s['state_command'] = state
+        
+        if hasattr(e,'output_command'):
+            output = str(e.output_command)
+        else:
+            output = ''
+        s['output_command'] = output
+        s['executable'] = str(e.executable)
+
+        ## TODO: remove for release version
+
+        if hasattr(e, 'use_absolute_path'):
+            value = str(e.use_absolute_path)
+        else:
+            value = YES
+            
+        s['use_absolute_path'] = value
+
+        return s
+## Mareuil >
+class JobManagerXMLPickler(XMLBasePickler):
+
+    def _xml_state(self, x):
+
+        e = XMLElement()
+
+        s = x.getSettings()
+
+        e.default_command = s['default_command']
+
+        ## If host-list is empty, do not pickle
+        ## any host.
+
+        entity = s.getEntity('host_list')
+
+        if entity.is_initialized():
+            e.host = entity.get()
+
+        return e
+## obsolete < Mareuil
+    def setup_host_list(self, s):
+
+        for host in s['host_list']:
+            if host['command'] == 'default':
+                host['command'] = s['default_command']
+## obsolete Mareuil >
+## < Mareuil
+    def check_host(self,s):
+        if s['default_command'] == "GRID":
+            for host in s['host_list']:
+                if host['submit_command'] == 'default':
+                    msg = "In GRID mode the default submit_command is glite-wms-job-submit -a"
+                    host['submit_command'] = "glite-wms-job-submit -a"
+                    self.message(msg)
+                if host['state_command'] == 'default':
+                    msg = "In GRID mode the default state_command is glite-wms-job-status"
+                    host['state_command'] = "glite-wms-job-status"
+                    self.message(msg)
+                if host['output_command'] == 'default':
+                    msg = "In GRID mode the default output_command is glite-wms-job-output --dir"
+                    host['output_command'] = "glite-wms-job-output --dir"
+                    self.message(msg)
+        elif s['default_command'] == "LOCAL":
+            for host in s['host_list']:
+                if host['submit_command'] == 'default':
+                    host['submit_command'] = "csh -f"
+                    msg = "In LOCAL mode the default submit_command is csh -f"
+                    self.message(msg)
+        elif s['default_command'] == "CLUSTER":
+            for host in s['host_list']:
+                if host['submit_command'] == 'default':
+                    msg = "In CLUSTER mode there is no default submit_command, define a submit_command"
+                    self.warning(msg)
+                    self.halt()
+        else:
+            msg = "default_command is not recognized, you must select LOCAL, CLUSTER or GRID mode"
+            self.warning(msg)
+            self.halt()
+
+    def load_from_element(self, e):
+
+        from aria.tools import as_tuple
+
+        s = JobSchedulerSettings()
+
+        s['default_command'] = str(e.default_command)
+
+        ## If the host-list is empty, we leave
+        ## the attached entity uninitialized.
+
+        if hasattr(e, 'host'):
+            s['host_list'] = list(as_tuple(e.host))
+            self.check_host(s)
+        else:
+            s['host_list'] = []
+            msg = "You must define at least one host"
+            self.warning(msg)
+            self.halt()
+
+        jm = JobScheduler(s)
+
+        return jm
+## Mareuil >
+
+HostSettings._xml_state = HostSettingsXMLPickler()._xml_state
+JobScheduler._xml_state = JobManagerXMLPickler()._xml_state
+

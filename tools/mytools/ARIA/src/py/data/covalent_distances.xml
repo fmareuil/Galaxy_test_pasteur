@@ -1,0 +1,205 @@
+<covalent_distances description="Maximum distances from Wuthrich et al. J. Mol. Biol. 1983">
+<!-- ALA,ARG,ASN,ASP,CYS,GLN,GLU,GLY,HIS,ILE,LEU,LYS,MET,PHE,PRO,SER,THR,TRP,TYR,VAL -->
+  <connection distance_max="2.85" separation="0">
+     <atoms1 names="H" residues="all"/>
+     <atoms2 names="HA" residues="all"/>
+  </connection>
+  <connection distance_max="4.68" separation="1">
+     <atoms1 names="H" residues="all"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="3.56" separation="1">
+     <atoms1 names="HA" residues="all"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.12" separation="0">
+     <atoms1 names="HB" residues="VAL,ILE,THR"/>
+     <atoms2 names="H" residues="VAL,ILE,THR"/>
+  </connection>
+  <connection distance_max="2.90" separation="0">
+     <atoms1 names="HB" residues="VAL,ILE,THR"/>
+     <atoms2 names="HA" residues="VAL,ILE,THR"/>
+  </connection>
+  <connection distance_max="4.68" separation="1">
+     <atoms1 names="HB" residues="VAL,ILE,THR"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="5.35" separation="0">
+     <atoms1 names="HG" residues="LEU"/>
+     <atoms2 names="H" residues="LEU"/>
+  </connection>
+  <connection distance_max="4.68" separation="0">
+     <atoms1 names="HG" residues="LEU"/>
+     <atoms2 names="HA" residues="LEU"/>
+  </connection>
+  <connection distance_max="2.74" separation="0">
+     <atoms1 names="HA2,HA3" residues="GLY"/>
+     <atoms2 names="H" residues="GLY"/>
+  </connection>
+  <connection distance_max="3.28" separation="1">
+     <atoms1 names="HA2,HA3" residues="GLY"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.01" separation="0">
+     <atoms1 names="HB2,HB3" residues="ARG,ASN,ASP,CYS,GLN,GLU,HIS,LEU,LYS,MET,PHE,PRO,SER,TRP,TYR"/>
+     <atoms2 names="H" residues="ARG,ASN,ASP,CYS,GLN,GLU,HIS,LEU,LYS,MET,PHE,PRO,SER,TRP,TYR"/>
+  </connection>
+  <connection distance_max="2.81" separation="0">
+     <atoms1 names="HB2,HB3" residues="ARG,ASN,ASP,CYS,GLN,GLU,HIS,LEU,LYS,MET,PHE,PRO,SER,TRP,TYR"/>
+     <atoms2 names="HA" residues="ARG,ASN,ASP,CYS,GLN,GLU,HIS,LEU,LYS,MET,PHE,PRO,SER,TRP,TYR"/>
+  </connection>
+  <connection distance_max="4.64" separation="1">
+     <atoms1 names="HB2,HB3" residues="ARG,ASN,ASP,CYS,GLN,GLU,HIS,LEU,LYS,MET,PHE,PRO,SER,TRP,TYR"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="5.25" separation="0">
+     <atoms1 names="HG2,HG3" residues="ARG,GLN,GLU,ILE,LYS,MET,PRO"/>
+     <atoms2 names="H" residues="ARG,GLN,GLU,ILE,LYS,MET,PRO"/>
+  </connection>
+  <connection distance_max="4.04" separation="0">
+     <atoms1 names="HG2,HG3" residues="ARG,GLN,GLU,ILE,LYS,MET,PRO"/>
+     <atoms2 names="HA" residues="ARG,GLN,GLU,ILE,LYS,MET,PRO"/>
+  </connection>
+  <connection distance_max="5.25" separation="0">
+     <atoms1 names="HG12,HG13" residues="ILE"/>
+     <atoms2 names="H" residues="ILE"/>
+  </connection>
+  <connection distance_max="4.04" separation="0">
+     <atoms1 names="HG12,HG13" residues="ILE"/>
+     <atoms2 names="HA" residues="ILE"/>
+  </connection>
+  <connection distance_max="5.25" separation="0">
+     <atoms1 names="HD2,HD3" residues="ARG,LYS,PRO"/>
+     <atoms2 names="HA" residues="ARG,LYS,PRO"/>
+  </connection>
+  <connection distance_max="3.62" separation="0">
+     <atoms1 names="HB1,HB2,HB3" residues="ALA"/>
+     <atoms2 names="H" residues="ALA"/>
+  </connection>
+  <connection distance_max="2.36" separation="0">
+     <atoms1 names="HB1,HB2,HB3" residues="ALA"/>
+     <atoms2 names="HA" residues="ALA"/>
+  </connection>
+  <connection distance_max="4.49" separation="1">
+     <atoms1 names="HB1,HB2,HB3" residues="ALA"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.80" separation="0">
+     <atoms1 names="HG21,HG22,HG23" residues="THR"/>
+     <atoms2 names="H" residues="THR"/>
+  </connection>
+  <connection distance_max="3.69" separation="0">
+     <atoms1 names="HG21,HG22,HG23" residues="THR"/>
+     <atoms2 names="HA" residues="THR"/>
+  </connection>
+  <connection distance_max="5.30" separation="1">
+     <atoms1 names="HG21,HG22,HG23" residues="THR"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.77" separation="0">
+     <atoms1 names="HG21,HG22,HG23" residues="ILE"/>
+     <atoms2 names="H" residues="ILE"/>
+  </connection>
+  <connection distance_max="3.66" separation="0">
+     <atoms1 names="HG21,HG22,HG23" residues="ILE"/>
+     <atoms2 names="HA" residues="ILE"/>
+  </connection>
+  <connection distance_max="5.28" separation="1">
+     <atoms1 names="HG21,HG22,HG23" residues="ILE"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.91" separation="0">
+     <atoms1 names="HD11,HG12,HG13" residues="ILE"/>
+     <atoms2 names="HA" residues="ILE"/>
+  </connection>
+  <connection distance_max="3.35" separation="0">
+     <atoms1 names="HG11,HG12,HG13,HG21,HG22,HG23" residues="VAL"/>
+     <atoms2 names="HA" residues="VAL"/>
+  </connection>
+  <connection distance_max="4.42" separation="0">
+     <atoms1 names="HG11,HG12,HG13,HG21,HG22,HG23" residues="VAL"/>
+     <atoms2 names="H" residues="VAL"/>
+  </connection>
+  <connection distance_max="4.93" separation="1">
+     <atoms1 names="HG11,HG12,HG13,HG21,HG22,HG23" residues="VAL"/>
+     <atoms2 names="H" residues="all"/>
+  </connection>
+  <connection distance_max="4.43" separation="0">
+     <atoms1 names="HD11,HD12,HD13,HD21,HD22,HD23" residues="LEU"/>
+     <atoms2 names="HA" residues="LEU"/>
+  </connection>
+  <connection distance_max="5.20" separation="0">
+     <atoms1 names="HD1,HD2" residues="PHE,TYR"/>
+     <atoms2 names="H" residues="PHE,TYR"/>
+  </connection>
+  <connection distance_max="4.16" separation="0">
+     <atoms1 names="HD1,HD2" residues="PHE,TYR"/>
+     <atoms2 names="HA" residues="PHE,TYR"/>
+  </connection>
+  <connection distance_max="5.14" separation="0">
+     <atoms1 names="HE3" residues="TRP"/>
+     <atoms2 names="HA" residues="TRP"/>
+  </connection>
+  <connection distance_max="4.97" separation="0">
+     <atoms1 names="HD1" residues="TRP"/>
+     <atoms2 names="HA" residues="TRP"/>
+  </connection>
+  <connection distance_max="5.06" separation="0">
+     <atoms1 names="HD2" residues="HIS"/>
+     <atoms2 names="HA" residues="HIS"/>
+  </connection>
+  <!-- side-chains 1 torsion -->
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HB2,HB3" residues="ARG,GLN,GLU,LYS,MET,PRO"/>
+     <atoms2 names="HG2,HG3" residues="ARG,GLN,GLU,LYS,MET,PRO"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HG2,HG3" residues="ARG,LYS,MET,PRO"/>
+     <atoms2 names="HD2,HD3" residues="ARG,LYS,MET,PRO"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HD2,HD3" residues="LYS"/>
+     <atoms2 names="HE2,HE3" residues="LYS"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HD2,HD3" residues="LYS"/>
+     <atoms2 names="HE2,HE3" residues="LYS"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HB" residues="ILE"/>
+     <atoms2 names="HG21,HG22,HG23" residues="ILE"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HB" residues="ILE"/>
+     <atoms2 names="HG12,HG13" residues="ILE"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HD11,HD12,HD13" residues="ILE"/>
+     <atoms2 names="HG12,HG13" residues="ILE"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HZ" residues="PHE"/>
+     <atoms2 names="HE1,HE2" residues="PHE"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HD2" residues="PHE,TYR,HIS"/>
+     <atoms2 names="HE2" residues="PHE,TYR,HIS"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HD1" residues="PHE,TYR,HIS"/>
+     <atoms2 names="HE2" residues="PHE,TYR,HIS"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HG" residues="LEU"/>
+     <atoms2 names="HD11,HD12,HD13,HD21,HD22,HD23" residues="LEU"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HB" residues="VAL"/>
+     <atoms2 names="HG11,HG12,HG13,HG21,HG22,HG23" residues="VAL"/>
+  </connection>
+  <connection distance_max="5.5" separation="0">
+     <atoms1 names="HB" residues="THR"/>
+     <atoms2 names="HG21,HG22,HG23" residues="THR"/>
+  </connection>
+</covalent_distances>
+

@@ -1,0 +1,751 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: print_noes.inp,v $
+! print_noe.inp
+! make statistics over separate noe classes
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+set abort normal end
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+!!! @SPECTRUM:spectrum.cns(spectrum=$spectrum;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+
+!! BARDIAUX araia 2. 2
+evaluate ($n_rest = $data.nrestraints)
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+! the following lines are only to avoid error messages
+evaluate ($test_rms = 0)
+evaluate ($cdih = 0)
+
+! define methyle groups and other equivalent groups - store in store2
+! we cannot do this before the data are read because the .tbl uses
+! store1 and store2
+@RUN:protocols/define_methyls_all.cns
+@RUN:begin/setup_swap_list.tbl
+do    (store2 = store1) (all)
+do    (store9 = store1) (all)
+
+set display ANALYSIS:noe.disp end
+
+flags exclude * include noe end
+
+display #all distance restraints
+display #structure rms-noe #viol>0.5A #viol>0.3A #viol>0.1A #Enoe
+
+evaluate ($sum_enoe = 0)
+evaluate ($sumsq_enoe = 0)
+evaluate ($sum_rms_noe = 0)
+evaluate ($sumsq_rms_noe = 0)
+evaluate ($sum_trms_noe = 0)
+evaluate ($sumsq_trms_noe = 0)
+evaluate ($sum_viol_noe1 = 0)
+evaluate ($sumsq_viol_noe1 = 0)
+evaluate ($sum_viol_noe2 = 0)
+evaluate ($sumsq_viol_noe2 = 0)
+evaluate ($sum_viol_noe3 = 0)
+evaluate ($sumsq_viol_noe3 = 0)
+evaluate ($violations = 0)
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 0)
+evaluate ($TotalNstruct = 0)
+while ($count lt $Iterations.Structures) loop main
+   evaluate ($count=$count+1)
+   evaluate ($file = $filenames.bestfile_$count)
+   if ($file ne "") then
+      evaluate ($TotalNstruct = $TotalNstruct + 1)
+   end if
+end loop main
+
+if ($Iterations.Assignstruct > $TotalNstruct) then
+  evaluate ($Iterations.Assignstruct = $ToTalNstruct)
+end if
+
+!set message on echo on end
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+evaluate ($outroot  = "ANALYSIS:" + $Filenames.fileroot)
+while ($count lt $Iterations.Assignstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   coor init end
+   if ($file ne "") then 
+     coor @@$file
+     delete selection=(resname ANI) end
+     evaluate ($nstruc = $nstruc + 1)
+     eval ($floatfile = $file - ".pdb" + ".float")
+     fileexist $floatfile end
+     eval ($qfloatfile = $result)
+
+     noe
+        set echo off message off end 
+        reset
+        nrestraints = 100000   ! allocate space for NOEs
+        ceiling 100
+	
+        class      dist @@NEWIT:unambig.tbl
+        class      ambi @@NEWIT:ambig.tbl
+        class      hbon @@RUN:data/hbonds/hbonds.tbl
+
+        averaging  * sum
+        potential  * soft
+        scale      * $Data.unamb_cool2                         
+        sqconstant * 1.0
+        sqexponent * 2
+        soexponent * 1
+        rswitch    * 1.0
+        sqoffset   * 0.0
+        asymptote  * 2.0
+
+        msoexponent * 1
+        masymptote  * -2.0
+        mrswitch    * 1.0
+
+        avexpo hbond 20
+        set echo on message on end
+     end
+
+     if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+     evaluate ($violfile=$outroot + "_" + encode($count) + ".noe.viol")
+     set print-file $violfile end
+     print threshold=0 noe
+     set print=RUN_CNS:junk.dat end
+     close $violfile end
+
+     evaluate ($noe = 0)
+     energy end
+
+     evaluate ($sum_enoe = $sum_enoe + $noe)
+     evaluate ($sumsq_enoe = $sumsq_enoe + $noe**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.025 end
+     evaluate ($rms_noe = $result)
+     evaluate ($sum_rms_noe = $sum_rms_noe + $rms_noe)
+     evaluate ($sumsq_rms_noe = $sumsq_rms_noe + $rms_noe**2)
+     evaluate ($sum_trms_noe = $sum_trms_noe + $test_rms)
+     evaluate ($sumsq_trms_noe = $sumsq_trms_noe + $test_rms**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.5 end
+     evaluate ($sum_viol_noe1 = $sum_viol_noe1 + $violations)
+     evaluate ($sumsq_viol_noe1 = $sumsq_viol_noe1 + $violations**2)
+     evaluate ($violations1 = $violations)
+
+     set print=ANALYSIS:print_dist_all.disp end     
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.3 end
+
+     set print=ANALYSIS:print_noe.disp end
+     evaluate ($sum_viol_noe2 = $sum_viol_noe2 + $violations)
+     evaluate ($sumsq_viol_noe2 = $sumsq_viol_noe2 + $violations**2)
+     evaluate ($violations2 = $violations)
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.1 end
+     evaluate ($sum_viol_noe3 = $sum_viol_noe3 + $violations)
+     evaluate ($sumsq_viol_noe3 = $sumsq_viol_noe3 + $violations**2)
+     evaluate ($violations3 = $violations)
+
+!     evaluate ($filename = $file - "NEWIT:")
+
+     display $file $rms_noe $violations1 $violations2 $violations3 $noe
+
+   end if
+end loop main
+
+evaluate ($mean_enoe = $sum_enoe / $nstruc)
+evaluate ($stdev_enoe =
+          sqrt(($sumsq_enoe - $nstruc*$mean_enoe**2)/ $nstruc))
+evaluate ($mean_rms_noe = $sum_rms_noe / $nstruc)
+evaluate ($stdev_rms_noe =
+          sqrt(($sumsq_rms_noe - $nstruc*$mean_rms_noe**2)/ $nstruc))
+evaluate ($mean_viol_noe1 = $sum_viol_noe1 / $nstruc)
+evaluate ($stdev_viol_noe1 =
+          sqrt(($sumsq_viol_noe1 - $nstruc*$mean_viol_noe1**2)/ $nstruc))
+evaluate ($mean_viol_noe2 = $sum_viol_noe2 / $nstruc)
+evaluate ($stdev_viol_noe2 =
+          sqrt(($sumsq_viol_noe2 - $nstruc*$mean_viol_noe2**2)/ $nstruc))
+evaluate ($mean_viol_noe3 = $sum_viol_noe3 / $nstruc)
+evaluate ($stdev_viol_noe3 =
+          sqrt(($sumsq_viol_noe3 - $nstruc*$mean_viol_noe3**2)/ $nstruc))
+display mean values
+display Enoe $mean_enoe (+/- $stdev_enoe )
+display noe rms $mean_rms_noe (+/- $stdev_rms_noe )
+display violations > 0.5A $mean_viol_noe1 (+/- $stdev_viol_noe1 )
+display violations > 0.3A $mean_viol_noe2 (+/- $stdev_viol_noe2 )
+display violations > 0.1A $mean_viol_noe3 (+/- $stdev_viol_noe3 )
+
+display
+display #only unambiguous
+display #structure rms-noe #viol>0.5A #viol>0.3A #viol>0.1A #Enoe
+evaluate ($sum_enoe = 0)
+evaluate ($sumsq_enoe = 0)
+evaluate ($sum_rms_noe = 0)
+evaluate ($sumsq_rms_noe = 0)
+evaluate ($sum_trms_noe = 0)
+evaluate ($sumsq_trms_noe = 0)
+evaluate ($sum_viol_noe1 = 0)
+evaluate ($sumsq_viol_noe1 = 0)
+evaluate ($sum_viol_noe2 = 0)
+evaluate ($sumsq_viol_noe2 = 0)
+evaluate ($sum_viol_noe3 = 0)
+evaluate ($sumsq_viol_noe3 = 0)
+evaluate ($violations = 0)
+
+
+!set message off echo off end
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+while ($count lt $Iterations.Assignstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   coor init end
+   if ($file ne "") then 
+     coor @@$file
+     delete selection=(resname ANI) end
+     evaluate ($nstruc = $nstruc + 1)
+     eval ($floatfile = $file - ".pdb" + ".float")
+     fileexist $floatfile end
+     eval ($qfloatfile = $result)
+
+     set echo off message off end 
+     noe
+        reset
+        nrestraints = 100000   ! allocate space for NOEs 
+        ceiling 100
+	
+        class      dist @@NEWIT:unambig.tbl
+!!!        class      ambi @@NEWIT:ambig.tbl
+!!!        class      hbon @@RUN:data/hbonds/hbonds.tbl
+
+        averaging  * sum
+        potential  * soft
+        scale      * $Data.unamb_cool2                         
+        sqconstant * 1.0
+        sqexponent * 2
+        soexponent * 1
+        rswitch    * 1.0
+        sqoffset   * 0.0
+        asymptote  * 2.0
+
+        msoexponent * 1
+        masymptote  * -2.0
+        mrswitch    * 1.0
+
+        avexpo hbond 20
+     end
+     set echo on message on end
+
+     if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+     energy end
+
+     evaluate ($sum_enoe = $sum_enoe + $noe)
+     evaluate ($sumsq_enoe = $sumsq_enoe + $noe**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.025 end  evaluate ($rms_noe = $result)
+     evaluate ($sum_rms_noe = $sum_rms_noe + $rms_noe)
+     evaluate ($sumsq_rms_noe = $sumsq_rms_noe + $rms_noe**2)
+     evaluate ($sum_trms_noe = $sum_trms_noe + $test_rms)
+     evaluate ($sumsq_trms_noe = $sumsq_trms_noe + $test_rms**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.5 end
+     evaluate ($sum_viol_noe1 = $sum_viol_noe1 + $violations)
+     evaluate ($sumsq_viol_noe1 = $sumsq_viol_noe1 + $violations**2)
+     evaluate ($violations1 = $violations)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     set print=ANALYSIS:print_noe_unambig.disp end     
+     noe  print thresh=0.3 end
+
+     set print=ANALYSIS:print_noe.disp end
+     evaluate ($sum_viol_noe2 = $sum_viol_noe2 + $violations)
+     evaluate ($sumsq_viol_noe2 = $sumsq_viol_noe2 + $violations**2)
+     evaluate ($violations2 = $violations)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.1 end
+     evaluate ($sum_viol_noe3 = $sum_viol_noe3 + $violations)
+     evaluate ($sumsq_viol_noe3 = $sumsq_viol_noe3 + $violations**2)
+     evaluate ($violations3 = $violations)
+
+     display $file $rms_noe $violations1 $violations2 $violations3 $noe
+   end if
+end loop main
+
+evaluate ($mean_enoe = $sum_enoe / $nstruc)
+evaluate ($stdev_enoe =
+          sqrt(($sumsq_enoe - $nstruc*$mean_enoe**2)/ $nstruc))
+evaluate ($mean_rms_noe = $sum_rms_noe / $nstruc)
+evaluate ($stdev_rms_noe =
+          sqrt(($sumsq_rms_noe - $nstruc*$mean_rms_noe**2)/ $nstruc))
+evaluate ($mean_viol_noe1 = $sum_viol_noe1 / $nstruc)
+evaluate ($stdev_viol_noe1 =
+          sqrt(($sumsq_viol_noe1 - $nstruc*$mean_viol_noe1**2)/ $nstruc))
+evaluate ($mean_viol_noe2 = $sum_viol_noe2 / $nstruc)
+evaluate ($stdev_viol_noe2 =
+          sqrt(($sumsq_viol_noe2 - $nstruc*$mean_viol_noe2**2)/ $nstruc))
+evaluate ($mean_viol_noe3 = $sum_viol_noe3 / $nstruc)
+evaluate ($stdev_viol_noe3 =
+          sqrt(($sumsq_viol_noe3 - $nstruc*$mean_viol_noe3**2)/ $nstruc))
+display mean values
+display Enoe $mean_enoe (+/- $stdev_enoe )
+display noe rms $mean_rms_noe (+/- $stdev_rms_noe )
+display violations > 0.5A $mean_viol_noe1 (+/- $stdev_viol_noe1 )
+display violations > 0.3A $mean_viol_noe2 (+/- $stdev_viol_noe2 )
+display violations > 0.1A $mean_viol_noe3 (+/- $stdev_viol_noe3 )
+
+
+display
+display #only ambiguous
+display #structure rms-noe #viol>0.5A #viol>0.3A #viol>0.1A #Enoe
+evaluate ($sum_enoe = 0)
+evaluate ($sumsq_enoe = 0)
+evaluate ($sum_rms_noe = 0)
+evaluate ($sumsq_rms_noe = 0)
+evaluate ($sum_trms_noe = 0)
+evaluate ($sumsq_trms_noe = 0)
+evaluate ($sum_viol_noe1 = 0)
+evaluate ($sumsq_viol_noe1 = 0)
+evaluate ($sum_viol_noe2 = 0)
+evaluate ($sumsq_viol_noe2 = 0)
+evaluate ($sum_viol_noe3 = 0)
+evaluate ($sumsq_viol_noe3 = 0)
+evaluate ($violations = 0)
+
+
+!set message off echo off end
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+while ($count lt $Iterations.Assignstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   coor init end
+   if ($file ne "") then 
+     coor @@$file
+     delete selection=(resname ANI) end
+     evaluate ($nstruc = $nstruc + 1)
+     eval ($floatfile = $file - ".pdb" + ".float")
+     fileexist $floatfile end
+     eval ($qfloatfile = $result)
+
+     set echo off message off end 
+     noe
+        reset
+        nrestraints = 100000   ! allocate space for NOEs
+        ceiling 100
+	
+!!!        class      dist @@NEWIT:unambig.tbl
+        class      ambi @@NEWIT:ambig.tbl
+!!!        class      hbon @@RUN:data/hbonds/hbonds.tbl
+
+        averaging  * sum
+        potential  * soft
+        scale      * $Data.unamb_cool2                         
+        sqconstant * 1.0
+        sqexponent * 2
+        soexponent * 1
+        rswitch    * 1.0
+        sqoffset   * 0.0
+        asymptote  * 2.0
+
+        msoexponent * 1
+        masymptote  * -2.0
+        mrswitch    * 1.0
+
+        avexpo hbond 20
+     end
+     set echo on message on end
+
+     if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+     energy end
+
+     evaluate ($sum_enoe = $sum_enoe + $noe)
+     evaluate ($sumsq_enoe = $sumsq_enoe + $noe**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.025 end  evaluate ($rms_noe = $result)
+     evaluate ($sum_rms_noe = $sum_rms_noe + $rms_noe)
+     evaluate ($sumsq_rms_noe = $sumsq_rms_noe + $rms_noe**2)
+     evaluate ($sum_trms_noe = $sum_trms_noe + $test_rms)
+     evaluate ($sumsq_trms_noe = $sumsq_trms_noe + $test_rms**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.5 end
+     evaluate ($sum_viol_noe1 = $sum_viol_noe1 + $violations)
+     evaluate ($sumsq_viol_noe1 = $sumsq_viol_noe1 + $violations**2)
+     evaluate ($violations1 = $violations)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     set print=ANALYSIS:print_noe_ambig.disp end     
+     noe  print thresh=0.3 end
+
+     set print=ANALYSIS:print_noe.disp end
+     evaluate ($sum_viol_noe2 = $sum_viol_noe2 + $violations)
+     evaluate ($sumsq_viol_noe2 = $sumsq_viol_noe2 + $violations**2)
+     evaluate ($violations2 = $violations)
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.1 end
+     evaluate ($sum_viol_noe3 = $sum_viol_noe3 + $violations)
+     evaluate ($sumsq_viol_noe3 = $sumsq_viol_noe3 + $violations**2)
+     evaluate ($violations3 = $violations)
+
+     display $file $rms_noe $violations1 $violations2 $violations3 $noe
+   end if
+end loop main
+
+evaluate ($mean_enoe = $sum_enoe / $nstruc)
+evaluate ($stdev_enoe =
+          sqrt(($sumsq_enoe - $nstruc*$mean_enoe**2)/ $nstruc))
+evaluate ($mean_rms_noe = $sum_rms_noe / $nstruc)
+evaluate ($stdev_rms_noe =
+          sqrt(($sumsq_rms_noe - $nstruc*$mean_rms_noe**2)/ $nstruc))
+evaluate ($mean_viol_noe1 = $sum_viol_noe1 / $nstruc)
+evaluate ($stdev_viol_noe1 =
+          sqrt(($sumsq_viol_noe1 - $nstruc*$mean_viol_noe1**2)/ $nstruc))
+evaluate ($mean_viol_noe2 = $sum_viol_noe2 / $nstruc)
+evaluate ($stdev_viol_noe2 =
+          sqrt(($sumsq_viol_noe2 - $nstruc*$mean_viol_noe2**2)/ $nstruc))
+evaluate ($mean_viol_noe3 = $sum_viol_noe3 / $nstruc)
+evaluate ($stdev_viol_noe3 =
+          sqrt(($sumsq_viol_noe3 - $nstruc*$mean_viol_noe3**2)/ $nstruc))
+display mean values
+display Enoe $mean_enoe (+/- $stdev_enoe )
+display noe rms $mean_rms_noe (+/- $stdev_rms_noe )
+display violations > 0.5A $mean_viol_noe1 (+/- $stdev_viol_noe1 )
+display violations > 0.3A $mean_viol_noe2 (+/- $stdev_viol_noe2 )
+display violations > 0.1A $mean_viol_noe3 (+/- $stdev_viol_noe3 )
+
+
+display
+display #all noe distance restraints
+display #structure rms-noe #viol>0.5A #viol>0.3A #viol>0.1A #Enoe
+evaluate ($sum_enoe = 0)
+evaluate ($sumsq_enoe = 0)
+evaluate ($sum_rms_noe = 0)
+evaluate ($sumsq_rms_noe = 0)
+evaluate ($sum_trms_noe = 0)
+evaluate ($sumsq_trms_noe = 0)
+evaluate ($sum_viol_noe1 = 0)
+evaluate ($sumsq_viol_noe1 = 0)
+evaluate ($sum_viol_noe2 = 0)
+evaluate ($sumsq_viol_noe2 = 0)
+evaluate ($sum_viol_noe3 = 0)
+evaluate ($sumsq_viol_noe3 = 0)
+evaluate ($violations = 0)
+
+
+!set message off echo off end
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+while ($count lt $Iterations.Assignstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   coor init end
+   if ($file ne "") then 
+     coor @@$file
+     delete selection=(resname ANI) end
+     evaluate ($nstruc = $nstruc + 1)
+     eval ($floatfile = $file - ".pdb" + ".float")
+     fileexist $floatfile end
+     eval ($qfloatfile = $result)
+
+     noe
+        set echo off message off end 
+        reset
+        nrestraints = 100000   ! allocate space for NOEs
+        ceiling 100
+	
+        class      dist @@NEWIT:unambig.tbl
+        class      ambi @@NEWIT:ambig.tbl
+!!!        class      hbon @@RUN:data/hbonds/hbonds.tbl
+
+        averaging  * sum
+        potential  * soft
+        scale      * $Data.unamb_cool2                         
+        sqconstant * 1.0
+        sqexponent * 2
+        soexponent * 1
+        rswitch    * 1.0
+        sqoffset   * 0.0
+        asymptote  * 2.0
+
+        msoexponent * 1
+        masymptote  * -2.0
+        mrswitch    * 1.0
+
+        avexpo hbond 20
+        set echo on message on end
+     end
+
+     if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+
+     energy end
+
+     evaluate ($sum_enoe = $sum_enoe + $noe)
+     evaluate ($sumsq_enoe = $sumsq_enoe + $noe**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.025 end  evaluate ($rms_noe = $result)
+     evaluate ($sum_rms_noe = $sum_rms_noe + $rms_noe)
+     evaluate ($sumsq_rms_noe = $sumsq_rms_noe + $rms_noe**2)
+     evaluate ($sum_trms_noe = $sum_trms_noe + $test_rms)
+     evaluate ($sumsq_trms_noe = $sumsq_trms_noe + $test_rms**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.5 end
+     evaluate ($sum_viol_noe1 = $sum_viol_noe1 + $violations)
+     evaluate ($sumsq_viol_noe1 = $sumsq_viol_noe1 + $violations**2)
+     evaluate ($violations1 = $violations)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     set print=ANALYSIS:print_noe_all.disp end     
+     noe  print thresh=0.3 end
+
+     set print=ANALYSIS:print_noe.disp end
+     evaluate ($sum_viol_noe2 = $sum_viol_noe2 + $violations)
+     evaluate ($sumsq_viol_noe2 = $sumsq_viol_noe2 + $violations**2)
+     evaluate ($violations2 = $violations)
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.1 end
+     evaluate ($sum_viol_noe3 = $sum_viol_noe3 + $violations)
+     evaluate ($sumsq_viol_noe3 = $sumsq_viol_noe3 + $violations**2)
+     evaluate ($violations3 = $violations)
+
+     evaluate ($filename = $file - "NEWIT:")
+	
+     display $file $rms_noe $violations1 $violations2 $violations3 $noe
+   end if
+end loop main
+
+evaluate ($mean_enoe = $sum_enoe / $nstruc)
+evaluate ($stdev_enoe =
+          sqrt(($sumsq_enoe - $nstruc*$mean_enoe**2)/ $nstruc))
+evaluate ($mean_rms_noe = $sum_rms_noe / $nstruc)
+evaluate ($stdev_rms_noe =
+          sqrt(($sumsq_rms_noe - $nstruc*$mean_rms_noe**2)/ $nstruc))
+evaluate ($mean_viol_noe1 = $sum_viol_noe1 / $nstruc)
+evaluate ($stdev_viol_noe1 =
+          sqrt(($sumsq_viol_noe1 - $nstruc*$mean_viol_noe1**2)/ $nstruc))
+evaluate ($mean_viol_noe2 = $sum_viol_noe2 / $nstruc)
+evaluate ($stdev_viol_noe2 =
+          sqrt(($sumsq_viol_noe2 - $nstruc*$mean_viol_noe2**2)/ $nstruc))
+evaluate ($mean_viol_noe3 = $sum_viol_noe3 / $nstruc)
+evaluate ($stdev_viol_noe3 =
+          sqrt(($sumsq_viol_noe3 - $nstruc*$mean_viol_noe3**2)/ $nstruc))
+display mean values
+display Enoe $mean_enoe (+/- $stdev_enoe )
+display noe rms $mean_rms_noe (+/- $stdev_rms_noe )
+display violations > 0.5A $mean_viol_noe1 (+/- $stdev_viol_noe1 )
+display violations > 0.3A $mean_viol_noe2 (+/- $stdev_viol_noe2 )
+display violations > 0.1A $mean_viol_noe3 (+/- $stdev_viol_noe3 )
+
+
+display
+display #only hydrogen bond
+display #structure rms-noe #viol>0.5A #viol>0.3A #viol>0.1A #Enoe
+evaluate ($sum_enoe = 0)
+evaluate ($sumsq_enoe = 0)
+evaluate ($sum_rms_noe = 0)
+evaluate ($sumsq_rms_noe = 0)
+evaluate ($sum_trms_noe = 0)
+evaluate ($sumsq_trms_noe = 0)
+evaluate ($sum_viol_noe1 = 0)
+evaluate ($sumsq_viol_noe1 = 0)
+evaluate ($sum_viol_noe2 = 0)
+evaluate ($sumsq_viol_noe2 = 0)
+evaluate ($sum_viol_noe3 = 0)
+evaluate ($sumsq_viol_noe3 = 0)
+evaluate ($violations = 0)
+
+!set message off echo off end
+evaluate ($count = 0)
+evaluate ($nstruc = 0)
+while ($count lt $Iterations.Assignstruct) loop main
+   evaluate ($count = $count + 1)
+   evaluate ($file = $filenames.bestfile_$count)
+   coor init end
+   if ($file ne "") then 
+     coor @@$file
+     delete selection=(resname ANI) end
+     evaluate ($nstruc = $nstruc + 1)
+     eval ($floatfile = $file - ".pdb" + ".float")
+     fileexist $floatfile end
+     eval ($qfloatfile = $result)
+
+     noe
+        set echo off message off end 
+        reset
+        nrestraints = 100000   ! allocate space for NOEs
+        ceiling 100
+	
+!!!        class      dist @@NEWIT:unambig.tbl
+!!!        class      ambi @@NEWIT:ambig.tbl
+        class      hbon @@RUN:data/hbonds/hbonds.tbl
+
+        averaging  * sum
+        potential  * soft
+        scale      * $Data.unamb_cool2                         
+        sqconstant * 1.0
+        sqexponent * 2
+        soexponent * 1
+        rswitch    * 1.0
+        sqoffset   * 0.0
+        asymptote  * 2.0
+
+        msoexponent * 1
+        masymptote  * -2.0
+        mrswitch    * 1.0
+
+        avexpo hbond 20
+        set echo on message on end
+     end
+
+     if ($qfloatfile eq true) then aria @@$floatfile end end if
+
+     energy end
+
+     evaluate ($sum_enoe = $sum_enoe + $noe)
+     evaluate ($sumsq_enoe = $sumsq_enoe + $noe**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.025 end
+     evaluate ($rms_noe = $result)
+     evaluate ($sum_rms_noe = $sum_rms_noe + $rms_noe)
+     evaluate ($sumsq_rms_noe = $sumsq_rms_noe + $rms_noe**2)
+     evaluate ($sum_trms_noe = $sum_trms_noe + $test_rms)
+     evaluate ($sumsq_trms_noe = $sumsq_trms_noe + $test_rms**2)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.5 end
+     evaluate ($sum_viol_noe1 = $sum_viol_noe1 + $violations)
+     evaluate ($sumsq_viol_noe1 = $sumsq_viol_noe1 + $violations**2)
+     evaluate ($violations1 = $violations)
+
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     set print=ANALYSIS:print_dist_hbond.disp end     
+     noe  print thresh=0.3 end
+
+     set print=ANALYSIS:print_noe.disp end
+     evaluate ($sum_viol_noe2 = $sum_viol_noe2 + $violations)
+     evaluate ($sumsq_viol_noe2 = $sumsq_viol_noe2 + $violations**2)
+     evaluate ($violations2 = $violations)
+     evaluate ($violations = 0)
+     evaluate ($result = 0)
+     noe  print thresh=0.1 end
+     evaluate ($sum_viol_noe3 = $sum_viol_noe3 + $violations)
+     evaluate ($sumsq_viol_noe3 = $sumsq_viol_noe3 + $violations**2)
+     evaluate ($violations3 = $violations)
+
+     display $file $rms_noe $violations1 $violations2 $violations3 $noe
+   end if
+end loop main
+
+evaluate ($mean_enoe = $sum_enoe / $nstruc)
+evaluate ($stdev_enoe =
+          sqrt(($sumsq_enoe - $nstruc*$mean_enoe**2)/ $nstruc))
+evaluate ($mean_rms_noe = $sum_rms_noe / $nstruc)
+evaluate ($stdev_rms_noe =
+          sqrt(($sumsq_rms_noe - $nstruc*$mean_rms_noe**2)/ $nstruc))
+evaluate ($mean_viol_noe1 = $sum_viol_noe1 / $nstruc)
+evaluate ($stdev_viol_noe1 =
+          sqrt(($sumsq_viol_noe1 - $nstruc*$mean_viol_noe1**2)/ $nstruc))
+evaluate ($mean_viol_noe2 = $sum_viol_noe2 / $nstruc)
+evaluate ($stdev_viol_noe2 =
+          sqrt(($sumsq_viol_noe2 - $nstruc*$mean_viol_noe2**2)/ $nstruc))
+evaluate ($mean_viol_noe3 = $sum_viol_noe3 / $nstruc)
+evaluate ($stdev_viol_noe3 =
+          sqrt(($sumsq_viol_noe3 - $nstruc*$mean_viol_noe3**2)/ $nstruc))
+display mean values
+display Enoe $mean_enoe (+/- $stdev_enoe )
+display noe rms $mean_rms_noe (+/- $stdev_rms_noe )
+display violations > 0.5A $mean_viol_noe1 (+/- $stdev_viol_noe1 )
+display violations > 0.3A $mean_viol_noe2 (+/- $stdev_viol_noe2 )
+display violations > 0.1A $mean_viol_noe3 (+/- $stdev_viol_noe3 )
+
+stop
+

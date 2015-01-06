@@ -1,0 +1,33 @@
+<tool id="getLetterDistribution1" name="Get Letter Distribution">
+    <description>Calculate distribution for each nucleotide per position for all short reads (S-MART)</description>
+    <command interpreter="python">
+	    /share/apps/galaxy-dist/tools/repet_pipe/SMART/galaxy/WrappGetLetterDistribution.py -i $inputFileName
+	#if $formatType.FormatInputFileName == 'fasta':
+		-f fasta
+	#else :
+		-f fastq
+	#end if
+	-c $ouputFileNameCSV -a $ouputFileNamePNG1 -b $ouputFileNamePNG2
+    </command>
+    <inputs>
+             <conditional name="formatType">
+      			<param name="FormatInputFileName" type="select" label="Input File Format">
+	        		<option value="fasta">fasta</option>
+       				<option value="fastq" selected="true">fastq</option>
+      			</param>
+      			<when value="fasta">
+             			<param name="inputFileName" format="fasta" type="data" label="Fasta Input File"/>
+      			</when>
+      			<when value="fastq">
+             			<param name="inputFileName" format="fastq" type="data" label="Fastq Input File"/>
+      			</when>
+             </conditional>
+    </inputs>
+        
+    <outputs>
+               	<data name="ouputFileNameCSV" format="tabular" label="[getLetterDistribution] CSV File"/>
+               	<data name="ouputFileNamePNG1" format="png" label="[getLetterDistribution] PNG File 1"/>
+               	<data name="ouputFileNamePNG2" format="png" label="[getLetterDistribution] PNG File 2"/>
+    </outputs> 
+</tool>
+

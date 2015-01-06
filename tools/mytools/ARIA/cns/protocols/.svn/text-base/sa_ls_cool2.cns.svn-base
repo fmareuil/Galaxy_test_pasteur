@@ -1,0 +1,176 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_ls_cool2.cns,v $
+
+module(SaProtocol; Data; Toppar;)
+
+! file sa_ls_cool2.cns
+! second cartesian cooling phase 
+
+evaluate ($tempstep = 50)
+evaluate ($ncycle = (&Saprotocol.final1_t-&Saprotocol.final2_t)/$tempstep)
+  
+
+evaluate ($k_vdw = 1.0)
+evaluate ($k_unamb= &Data.unamb_cool2)
+evaluate ($k_amb= &Data.amb_cool2)
+evaluate ($k_hbond= &Data.hbond_cool2)
+
+noe 
+    rswitch ambi &Data.Rswi_cool2 
+    rswitch dist &Data.Rswi_cool2
+    rswitch hbon &Data.Rswi_cool2
+
+    mrswitch ambi &Data.mRswi_cool2 
+    mrswitch dist &Data.mRswi_cool2
+    mrswitch hbon &Data.mRswi_cool2
+
+    asym ambi &Data.asy_cool2
+    asym dist &Data.asy_cool2
+    asym hbon &Data.asy_cool2
+
+    masym ambi &Data.masy_cool2 
+    masym dist &Data.masy_cool2
+    masym hbon &Data.masy_cool2
+
+    scale ambi &Data.amb_cool2 
+    scale dist &Data.unamb_cool2
+    scale hbon &Data.hbond_cool2
+
+end
+
+{* BERNARD logharmonic/auto_weight aria2.3 *}
+if ( $Data.logharmonic.on eq TRUE ) then
+  if ( $Data.logharmonic.auto_weight eq TRUE ) then
+    noe scale * 1.0 end
+  end if
+  evaluate ($sqdist  = &Data.unamb_cool1_fin)
+  evaluate ($sqambi  = &Data.amb_cool1_fin)
+  evaluate ($sqhbond = &Data.hbond_cool1_fin)
+end if
+
+couplings class c1 force &data.c1_cool2 end
+couplings class c2 force &data.c2_cool2 end
+couplings class c3 force &data.c3_cool2 end
+couplings class c4 force &data.c4_cool2 end
+couplings class c5 force &data.c5_cool2 end
+sani class rdc1 force &data.rdc1_cool2 end
+sani class rdc2 force &data.rdc2_cool2 end
+sani class rdc3 force &data.rdc3_cool2 end
+sani class rdc4 force &data.rdc4_cool2 end
+sani class rdc5 force &data.rdc5_cool2 end
+
+flags include improper end
+
+parameter                          
+   nbonds
+      repel=&Toppar.repel_radius                     
+      rexp=&Toppar.repel_rexpo irexp=&Toppar.repel_irexp rcon=&Toppar.repel_rcons
+      nbxmod=5                
+      wmin=0.01 
+      cutnb=6.0 ctonnb=2.99 ctofnb=3. 
+      tolerance=1.0
+      ?
+   end
+end
+igroup 
+        interaction  (all) (all) weights * 1 vdw $k_vdw elec 0 end 
+end
+
+evaluate ($tempstep = 50)
+evaluate ($nstep = int($SaProtocol.cool2_steps/$ncycle))
+
+
+
+   !for the vean statement:
+evaluate( $k_cen_1 = &Data.ini_cen_cool2_1)
+evaluate( $cen_fac_1 = ( &Data.fin_cen_cool2_1 / &Data.ini_cen_cool2_1)^( 1 / $ncycle))
+evaluate( $k_bor_1 = &Data.ini_bor_cool2_1)
+evaluate( $bor_fac_1 = ( &Data.fin_bor_cool2_1 / &Data.ini_bor_cool2_1)^( 1 / $ncycle))
+
+evaluate( $k_cen_2 = &Data.ini_cen_cool2_2)
+evaluate( $cen_fac_2 = ( &Data.fin_cen_cool2_2 / &Data.ini_cen_cool2_2)^( 1 / $ncycle))
+evaluate( $k_bor_2 = &Data.ini_bor_cool2_2)
+evaluate( $bor_fac_2 = ( &Data.fin_bor_cool2_2 / &Data.ini_bor_cool2_2)^( 1 / $ncycle))
+
+evaluate( $k_cen_3 = &Data.ini_cen_cool2_3)
+evaluate( $cen_fac_3 = ( &Data.fin_cen_cool2_3 / &Data.ini_cen_cool2_3)^( 1 / $ncycle))
+evaluate( $k_bor_3 = &Data.ini_bor_cool2_3)
+evaluate( $bor_fac_3 = ( &Data.fin_bor_cool2_3 / &Data.ini_bor_cool2_3)^( 1 / $ncycle))
+
+evaluate( $k_cen_4 = &Data.ini_cen_cool2_4)
+evaluate( $cen_fac_4 = ( &Data.fin_cen_cool2_4 / &Data.ini_cen_cool2_4)^( 1 / $ncycle))
+evaluate( $k_bor_4 = &Data.ini_bor_cool2_4)
+evaluate( $bor_fac_4 = ( &Data.fin_bor_cool2_4 / &Data.ini_bor_cool2_4)^( 1 / $ncycle))
+
+evaluate( $k_cen_5 = &Data.ini_cen_cool2_5)
+evaluate( $cen_fac_5 = ( &Data.fin_cen_cool2_5 / &Data.ini_cen_cool2_5)^( 1 / $ncycle))
+evaluate( $k_bor_5 = &Data.ini_bor_cool2_5)
+evaluate( $bor_fac_5 = ( &Data.fin_bor_cool2_5 / &Data.ini_bor_cool2_5)^( 1 / $ncycle))
+
+evaluate ($bath  = &Saprotocol.final1_t)
+do (vx=maxwell(&SaProtocol.final1_t)) ( all )
+do (vy=maxwell(&SaProtocol.final1_t)) ( all )
+do (vz=maxwell(&SaProtocol.final1_t)) ( all )
+  
+
+evaluate ($i_cool = 0)
+while ($i_cool < $ncycle) loop cool
+     evaluate ($i_cool=$i_cool+1)
+     evaluate ($bath = $bath - $tempstep)
+
+     if ( $Data.logharmonic.on eq TRUE ) then
+       evaluate ($logn_fin = FALSE)
+       inline @RUN:protocols/logn_auto_weight.cns	
+     end if
+
+     !for the vean statement:
+     evaluate ($k_bor_1 = $k_bor_1 * $bor_fac_1)
+     evaluate ($k_bor_2 = $k_bor_2 * $bor_fac_2)
+     evaluate ($k_bor_3 = $k_bor_3 * $bor_fac_3)
+     evaluate ($k_bor_4 = $k_bor_4 * $bor_fac_4)
+     evaluate ($k_bor_5 = $k_bor_5 * $bor_fac_5)
+
+     evaluate ($k_cen_1 = $k_cen_1 * $cen_fac_1)
+     evaluate ($k_cen_2 = $k_cen_2 * $cen_fac_2)
+     evaluate ($k_cen_3 = $k_cen_3 * $cen_fac_3)
+     evaluate ($k_cen_4 = $k_cen_4 * $cen_fac_4)
+     evaluate ($k_cen_5 = $k_cen_5 * $cen_fac_5)
+
+     vean class vea1 force $k_bor_1 $k_cen_1 end
+     vean class vea2 force $k_bor_2 $k_cen_2 end
+     vean class vea3 force $k_bor_3 $k_cen_3 end
+     vean class vea4 force $k_bor_4 $k_cen_4 end
+     vean class vea5 force $k_bor_5 $k_cen_5 end
+
+     evaluate ($swap = 0.05)
+     inline @RUN:protocols/swap.cns
+
+     igroup 
+        interaction  (all) (all) weights * 1 vdw 1.0000 end 
+     end
+     restraints dihe scale &Data.dihedrals_cool2 end
+
+     dynamics  cartesian
+         nstep=$nstep time=&SaProtocol.timestep  
+         tcoup=true temperature=$bath nprint=$nstep  
+         ntrfrq=9999  cmremove=true  cmperiodic=0
+     end
+
+{====>}                                                     {* abort condition *}
+
+      evaluate ($critical=$temp/$bath)
+      if ($critical > 1.2) then
+         evaluate ($nreassign = $nreassign + 1)
+         mini powell nstep 100 end
+         do (vx=maxwell($bath)) ( all )
+         do (vy=maxwell($bath)) ( all )
+         do (vz=maxwell($bath)) ( all )
+      end if
+
+end loop cool
+
+if ( $Data.logharmonic.on eq TRUE ) then
+  evaluate ($logn_fin = TRUE)
+  inline @RUN:protocols/logn_auto_weight.cns	
+end if

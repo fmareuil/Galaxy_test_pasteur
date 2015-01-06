@@ -1,0 +1,38 @@
+
+
+for $id in id (name ca and (segid $segid1 or segid $segid2)) loop res1
+!for $id in id ((name ca or name cb) and (segid $segid1 or segid $segid2)) loop res1
+
+    !show element (name) (id $id) 
+    !evaluate ($name1 = $result) 
+
+    show element (resid) (id $id) 
+    evaluate ($resid1 = $result) 
+    do (store1 = decode(resid)) (name ca and segid $segid1)
+    show minimum(store1) (name ca and segid $segid1)
+    evaluate ($first_res = $result)
+    show maximun(store1) (name ca and segid $segid1)
+    evaluate ($last_res = $result)
+
+    evaluate ($resid2 = $last_res - decode($resid1) + $first_res)
+    evaluate ($resid1 = decode($resid1))
+
+    !evaluate ($atom2id = int(random()*($NAtoms-1))+1)
+    !show element (name) (id $atom2id) 
+    !evaluate ($name2 = $result) 
+    !show element (resid) (id $atom2id) 
+    !evaluate ($resid2 = decode($result)) 
+
+    if ($resid2 gt $resid1) then
+
+    noe
+         ! distance pair $resid1 to $resid2 
+         assign (resid $resid1 and name ca and (segid $segid1 or segid $segid2)) 
+                (resid $resid2 and name ca and (segid $segid1 or segid $segid2)) 0 0 0 
+         assign (resid $resid1 and name ca and (segid $segid3 or segid $segid4)) 
+                (resid $resid2 and name ca and (segid $segid3 or segid $segid4)) 0 0 0 
+    end
+    end if
+
+
+end loop res1

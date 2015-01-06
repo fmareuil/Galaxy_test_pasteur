@@ -1,0 +1,80 @@
+<tool id="changeName" name="changeName">
+	<description>Change the chromosome name or gene name of a singla fasta, gff or sam file. For this tool, it can not treat mutiple-chromosome, gene files.</description>
+	<command interpreter="python">
+		changeName.py 
+		#if $optionFasta.fastaFile == 'Yes':
+			--input1 $optionFasta.fasta --output1 $outputFasta
+		#end if
+		#if $optionGff.gffFile == 'Yes':
+			--input2 $optionGff.gff --output2 $outputGff 
+		#end if
+		#if $optionSam.samFile == 'Yes':
+			--input3 $optionSam.sam --output3 $outputSam 
+		#end if
+		#if $optionName.name == 'Yes':
+			--name $optionName.nameValue 
+		#end if
+	</command>
+
+	<inputs>
+		<conditional name="optionFasta">
+			<param name="fastaFile" type="select" label="You can choose a fasta input file to change the name." >
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="fasta" format="fasta" type="data" label="Identify you fasta input file."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionGff">
+			<param name="gffFile" type="select" label="You can choose a supplementary gff input file to change the name." >
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="gff" format="gff" type="data" label="Identify you gff input file."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionSam">
+			<param name="samFile" type="select" label="You can choose a supplementary sam input file to change the name." >
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="sam" format="sam" type="data" label="Identify you sam input file."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		
+		<conditional name="optionName">
+			<param name="name" type="select" label="Identify a new name to change." >
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="nameValue" type="text" value="None" label="Identify the new name."/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+	</inputs>
+
+	<outputs>
+		<data name="outputFasta" format="fasta">
+			<filter>optionFasta['fastaFile'] == 'Yes'</filter>
+		</data>
+		<data format="gff" name="outputGff" >
+	        <filter>optionGff['gffFile'] == 'Yes'</filter>
+	    </data>
+		<data format="sam" name="outputSam" >
+	        <filter>optionSam['samFile'] == 'Yes'</filter>
+	    </data>	    
+	</outputs> 
+</tool>

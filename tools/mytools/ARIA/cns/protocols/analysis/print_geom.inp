@@ -1,0 +1,184 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: print_geom.inp,v $
+
+! print geometry of structures and calculate statistic
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+set abort normal end  !just for testing
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+!!! @SPECTRUM:spectrum.cns(spectrum=$spectrum;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+parameter 
+   nbonds
+      repel=$Toppar.repel_radius                     
+      rexp=$Toppar.repel_rexpo irexp=$Toppar.repel_irexp rcon=$Toppar.repel_rcons
+      nbxmod=5                
+      wmin=0.01 
+      cutnb=6.0 ctonnb=2.99 ctofnb=3. 
+      tolerance=1.0
+      ?
+   end
+end
+
+set display ANALYSIS:geom.disp end
+display # geometry analysis
+display # filename	rms_bond	rms_angle	rms_impr
+
+flags exclude * include bond angle impr vdw end
+
+evaluate ($sum_rms_bond = 0)
+evaluate ($sumsq_rms_bond = 0)
+evaluate ($sum_rms_angle = 0)
+evaluate ($sumsq_rms_angle = 0)
+evaluate ($sum_rms_impr = 0)
+evaluate ($sumsq_rms_impr = 0)
+evaluate ($sum_rms_dihe = 0)
+evaluate ($sumsq_rms_dihe = 0)
+evaluate ($sum_vdw = 0)
+evaluate ($sumsq_vdw = 0)
+
+evaluate ($cdih = 0)
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+!evaluate ($count = 0)
+!evaluate ($TotalNstruct = 0)
+!while ($count lt iterations.structures) loop main
+!   evaluate ($count=$count+1)
+!   evaluate ($file = $filenames.bestfile_$count)
+!   evaluate ($TotalNstruct = $TotalNstruct + 1)
+!end loop main
+
+!if ($Iterations.Assignstruct > $TotalNstruct) then
+!  evaluate ($Iterations.Assignstruct = $ToTalNstruct)
+!end if
+
+
+evaluate ($count = 1)
+evaluate ($nstruc1 = 0)
+while ($count le $Iterations.Assignstruct) loop main
+
+   evaluate ($file = $filenames.bestfile_$count)
+   display $file
+   coor init end
+   if ($file ne "") then
+      coor @@$file
+      delete selection=(resname ANI) end
+      evaluate ($nstruc1 = $nstruc1 + 1)
+
+     print thresh=0.025 bonds  evaluate ($rms_bond = $result)
+     evaluate ($sum_rms_bond = $sum_rms_bond + $rms_bond)
+     evaluate ($sumsq_rms_bond = $sumsq_rms_bond + $rms_bond**2)
+
+     print thresh=2.5 angle   evaluate ($rms_angle = $result)
+     evaluate ($sum_rms_angle = $sum_rms_angle + $rms_angle)
+     evaluate ($sumsq_rms_angle = $sumsq_rms_angle + $rms_angle**2)
+
+     print thresh=2.5 impr      evaluate ($rms_impr = $result)
+     evaluate ($sum_rms_impr = $sum_rms_impr + $rms_impr)
+     evaluate ($sumsq_rms_impr = $sumsq_rms_impr + $rms_impr**2)
+
+     print thresh=30.0 dihe      evaluate ($rms_dihe = $result)
+     evaluate ($sum_rms_dihe = $sum_rms_dihe + $rms_dihe)
+     evaluate ($sumsq_rms_dihe = $sumsq_rms_dihe + $rms_dihe**2)
+
+     energy end
+     evaluate ($sum_vdw = $sum_vdw + $vdw)
+     evaluate ($sumsq_vdw = $sumsq_vdw + $vdw**2)
+     display # $file	$rms_bond	$rms_angle	$rms_impr $rms_dihe
+   end if
+   evaluate ($count = $count + 1)
+!!   if ($count ge $Iterations.AssignStruct) then exit loop main end if
+end loop main
+
+evaluate ($mean_rms_bond = $sum_rms_bond / $nstruc1)
+evaluate ($stdev_rms_bond =
+          sqrt(($sumsq_rms_bond - $nstruc1*$mean_rms_bond**2)/ $nstruc1))
+evaluate ($mean_rms_angle = $sum_rms_angle / $nstruc1)
+evaluate ($stdev_rms_angle =
+          sqrt(($sumsq_rms_angle - $nstruc1*$mean_rms_angle**2)/ $nstruc1))
+evaluate ($mean_rms_impr = $sum_rms_impr / $nstruc1)
+evaluate ($stdev_rms_impr =
+          sqrt(($sumsq_rms_impr - $nstruc1*$mean_rms_impr**2)/ $nstruc1))
+evaluate ($mean_rms_dihe = $sum_rms_dihe / $nstruc1)
+evaluate ($stdev_rms_dihe =
+          sqrt(($sumsq_rms_dihe - $nstruc1*$mean_rms_dihe**2)/ $nstruc1))
+evaluate ($mean_vdw = $sum_vdw / $nstruc1)
+evaluate ($stdev_vdw =
+          sqrt(($sumsq_vdw - $nstruc1*$mean_vdw**2)/ $nstruc1))
+display # mean values
+display # bond $mean_rms_bond (+/- $stdev_rms_bond )
+display # angle $mean_rms_angle (+/- $stdev_rms_angle )
+display # impr $mean_rms_impr (+/- $stdev_rms_impr )
+display # dihe $mean_rms_dihe (+/- $stdev_rms_dihe )
+display # vdw $mean_vdw (+/- $stdev_vdw )
+display mean_rms_bond	stdev_rms_bond	mean_rms_angle	stdev_rms_angle	mean_rms_impr	stdev_rms_impr	mean_vdw	stdev_vdw
+display $mean_rms_bond	$stdev_rms_bond	$mean_rms_angle	$stdev_rms_angle	$mean_rms_impr	$stdev_rms_impr	$mean_rms_dihe $stdev_rms_dihe $mean_vdw	$stdev_vdw
+
+stop

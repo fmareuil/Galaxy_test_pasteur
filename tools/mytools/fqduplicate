@@ -1,0 +1,55 @@
+#! /local/gensoft/adm/bin/perl
+
+use strict;
+use warnings;
+
+use sigtrap qw(handler handler normal-signals);
+
+use File::Basename;
+use Getopt::Std;
+
+# Inits
+my $prg = File::Basename::basename($0);
+my %opt = ();
+my $dir = '/local/gensoft/libexec/fqtools';
+my ($ouf, $ofd) = (undef, \*STDOUT);
+
+# Command line
+if (not Getopt::Std::getopts('hto:', \%opt)) { usage($prg); exit 1; }
+if (exists $opt{'h'}) { usage($prg); exit 0; }
+if (exists $opt{'o'}) { $ouf = $opt{'o'}; }
+if (scalar @ARGV < 1 or scalar @ARGV > 2) { usage($prg); exit 1; }
+if (exists $opt{'t'}) { $dir = File::Basename::dirname($0); }
+
+# Open output file if needed
+if (defined $ouf) {
+  END { close $ofd; }
+  open $ofd, ">$ouf" or die "$prg: $ouf: $!\n"; }
+
+# Check duplicate entries
+my $prv = "";
+END { unlink "$prg$$.sum", "$prg$$.lst"; }
+system "$dir/fqduplicate2 -o $prg$$.sum @ARGV" and
+  die "$prg: sequence checksums failed\n";
+system "sort -k 1,1 -k 2,2nr -o $prg$$.lst $prg$$.sum" and
+  die "$prg: checksums sort failed\n";
+unlink "$prg$$.sum";
+open IN, "<$prg$$.lst" or
+  die "$prg: checksums list: $!\n";
+unlink "$prg$$.lst";
+while (<IN>) {
+  my ($key, $val, $nam) = split;
+  if ($prv eq $key) { printf $ofd "%s\n", $nam; }
+  $prv = $key; }
+close IN;
+
+exit 0;
+
+
+## Usage display
+sub usage {
+  my ($nam) = @_;
+  printf STDERR "usage: %s [-h] [-o <file>] <file> [<file>]\n", $nam; }
+
+## Signal handler
+sub handler { exit 1; }

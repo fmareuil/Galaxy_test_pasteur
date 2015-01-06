@@ -1,0 +1,10 @@
+psycopg2 egg successfully loaded for postgres dialect
+##########################################
+
+# 2013-10-30 14:16:11 - Handling stuff older than 60 days
+Datasets will be removed from disk.
+
+Purged 0 datasets
+Freed disk space:  0
+Elapsed time:  0.00913310050964
+##########################################

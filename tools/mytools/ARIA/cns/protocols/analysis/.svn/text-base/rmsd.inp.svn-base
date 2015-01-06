@@ -1,0 +1,142 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: rmsd.inp,v $
+
+remarks  rmsd.inp
+remarks  ARIA
+remarks  Alexandre Bonvin, Utrecht University, Feb-2001
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+ident (store8) (not all) 
+ident (store1) (not all)
+
+!if secondary structure defined use it otherwise use the
+!the result of wellordered.inp
+
+@@RUN:data/sequence/secondarystructure.cns
+show sum (store1) (all)
+
+if ($result < 3) then
+
+!read .pdb file (average structure from wellordered.inp):
+  evaluate ($filename = "ANALYSIS:" + $Filenames.fileroot + "_ave.pdb")
+  coor @@$filename
+
+  coor select (store8) end
+  if ($select eq 0) then
+    for $id in id (tag) loop order
+      show sum (q) (byresid (id $id))
+      do (q=$result) (byresid(id $id))
+    end loop order
+    identity (store8) (attribute q > 1)
+  end if
+  
+else
+
+  ident (store8) (name CA and (attr store1 > 0))
+  
+end if
+
+@RUN_CNS:file.cns(
+iterations=$iterations;
+filenames=$filenames;
+)	
+
+evaluate ($nstruc_total = $iterations.structures)
+
+!evaluate ($nstruc_total = 0)
+!for $filename in ( @@NEWIT:file.list ) loop fitt
+!   evaluate ($nstruc_total = $nstruc_total + 1)
+!end loop fitt
+
+{* filenames *}
+evaluate ($outroot  = "ANALYSIS:" + $Filenames.fileroot)
+evaluate ($trajfile=$outroot+".crd")
+evaluate ($dispfile=$outroot+"_rmsd.disp")
+
+set display $dispfile end
+
+evaluate ($nstruc_i = 0)
+while ($nstruc_i < $nstruc_total) loop fiti
+
+  evaluate ($nstruc_i = $nstruc_i + 1)
+
+  read trajectory
+     ascii true
+     input= $trajfile
+     begin $nstruc_i skip 1 stop $nstruc_i
+  end
+  coor copy end
+
+  evaluate ($nstruc_j = $nstruc_i)
+  while ($nstruc_j <  $nstruc_total) loop fitj
+    evaluate ($nstruc_j = $nstruc_j + 1)
+    read trajectory
+      ascii true
+      input= $trajfile
+      begin $nstruc_j skip 1 stop $nstruc_j
+    end
+    coor sele= (store8) fit end
+    coor rms sele=(store8) end
+    display $nstruc_i $nstruc_j $result
+  end loop fitj
+  
+end loop fiti
+
+stop

@@ -1,0 +1,237 @@
+<tool id="getDistribution" name="get distribution">
+	<description>Get Distribution: Get the distribution of the genomic coordinates on a genome.</description>
+	<command interpreter="python">
+		../Java/Python/GetDistribution.py -i $formatType.inputFileName
+		#if $formatType.FormatInputFileName == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName == 'gff':
+			-f gff
+		#elif $formatType.FormatInputFileName == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName == 'csv':
+			-f csv
+		#elif $formatType.FormatInputFileName == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName == 'gtf':
+			-f gtf
+		#end if
+		
+		-r $refFile
+		
+		#if $optionNbBin.Nb == 'Yes':
+			-b $optionNbBin.nbBins
+		#end if
+		
+		#if $optionStart.start == 'Yes':
+			-s $optionStart.startValue
+		#end if	
+		
+		#if $optionEnd.end == 'Yes':
+			-e $optionEnd.endValue
+		#end if	
+		
+		#if $optionHeight.height == 'Yes':
+			-H $optionHeight.heightValue
+		#end if	
+		
+		#if $optionWidth.width == 'Yes':
+			-W $optionWidth.widthValue
+		#end if	
+		
+		#if $optionYMin.YMin == 'Yes':
+			-y $optionYMin.YMinValue
+		#end if
+		
+		#if $optionYMax.YMax == 'Yes':
+			-Y $optionYMax.YMaxValue
+		#end if
+		
+		#if $optionChrom.chrom == 'Yes':
+			-c $optionChrom.chromValue
+		#end if
+	
+		#if $optionColor.color == 'Yes':
+			-l $optionColor.colorValue
+		#end if
+
+		$bothStrands
+		$average
+		-n $names
+		$normalize
+		$csv $outputCSV
+		$gff $outputGFF
+		-m
+		-o $outputFile
+
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName" type="select" label="Input File Format">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="csv">csv</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName" format="bed" type="data" label="Input File"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName" format="gff" type="data" label="Input File"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName" format="gff2" type="data" label="Input File"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName" format="gff3" type="data" label="Input File"/>
+			</when>
+			<when value="csv">
+				<param name="inputFileName" format="csv" type="data" label="Input File"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName" format="sam" type="data" label="Input File"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName" format="gtf" type="data" label="Input File"/>
+			</when>
+		</conditional>
+		
+		<param name="refFile" format="fasta" type="data" label="reference genome file"/>
+		
+		<conditional name="optionNbBin">
+			<param name="Nb" type="select" label="number of bins">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="nbBins" type="integer" value="1000" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionStart">
+			<param name="start" type="select" label="start from a given region">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="startValue" type="integer" value="0" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionEnd">
+			<param name="end" type="select" label="end from a given region">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="endValue" type="integer" value="0" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionHeight">
+			<param name="height" type="select" label="height of the graphics">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="heightValue" type="integer" value="300" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionWidth">
+			<param name="width" type="select" label="width of the graphics">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="widthValue" type="integer" value="1000" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionYMin">
+			<param name="YMin" type="select" label="minimum value on the y-axis to plot">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="YMinValue" type="integer" value="1000" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionYMax">
+			<param name="YMax" type="select" label="maximum value on the y-axis to plot">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="YMaxValue" type="integer" value="1000" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionChrom">
+			<param name="chrom" type="select" label="plot only one given chromosome">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="chromValue" type="text" value="chromName" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionColor">
+			<param name="color" type="select" label="color of the lines (separated by commas and no space)">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="colorValue" type="text" value="red,blue" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+
+		<param name="bothStrands" type="boolean" truevalue="-2" falsevalue="" checked="false" label="plot one curve per strand"/>
+		<param name="average" type="boolean" truevalue="-a" falsevalue="" checked="false" label="plot plot average (instead of sum)"/>
+		<param name="names" type="text" value="nbElements" label="name for the tags (separated by commas and no space)"/>
+		<param name="normalize" type="boolean" truevalue="-z" falsevalue="" checked="false" label="normalize data (when panels are different)"/>
+		<param name="csv" type="boolean" truevalue="-x" falsevalue="" checked="false" label="write a .csv file."/>
+		<param name="gff" type="boolean" truevalue="-g" falsevalue="" checked="false" label="write a .gff file."/>
+	</inputs>
+
+	<outputs>
+		<data name="outputFile" format="png" label="[getDistribution] out png file"/>
+		<data name="outputCSV" format="csv" label="[getDistribution] output csv file">
+			<filter>csv</filter>
+		</data>
+
+		<data name="outputGFF" format="gff" label="[getDistribution] output gff file">
+			<filter>gff</filter>
+		</data>
+	</outputs> 
+
+    <help>
+        This script gives a .tar out file, if you want to take look at the results, you have to download it.
+    </help>	
+</tool>

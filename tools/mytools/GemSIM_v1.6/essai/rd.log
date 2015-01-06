@@ -1,0 +1,25 @@
+INFO 2013-05-29 17:06:00,430 main 699 Generating single reads.
+DEBUG 2013-05-29 17:06:00,430 main 700 Parsing model file.
+DEBUG 2013-05-29 17:06:00,430 parseModel 379 Parsing error model file
+DEBUG 2013-05-29 17:06:00,912 main 702 Model file parsed.
+DEBUG 2013-05-29 17:06:00,980 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,980 gParse 572 Cannot find file ./Faecalibacterium.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,980 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,980 gParse 572 Cannot find file ./Blautia.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,980 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,980 gParse 572 Cannot find file ./Staphylococcus.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,980 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,980 gParse 572 Cannot find file ./Johnsonella.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,981 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,981 gParse 572 Cannot find file ./Roseburia.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,981 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,981 gParse 572 Cannot find file ./Lachnospira.txt. Please check pathname
+DEBUG 2013-05-29 17:06:00,981 getRef 93 Reference file successfully parsed.
+ERROR 2013-05-29 17:06:00,981 gParse 572 Cannot find file ./Catonella.txt. Please check pathname
+INFO 2013-05-29 17:06:02,286 main 845 Simulated 145 reads from reference Blautia
+INFO 2013-05-29 17:06:02,286 main 845 Simulated 21 reads from reference Catonella
+INFO 2013-05-29 17:06:02,286 main 845 Simulated 54 reads from reference Faecalibacterium
+INFO 2013-05-29 17:06:02,286 main 845 Simulated 105 reads from reference Johnsonella
+INFO 2013-05-29 17:06:02,287 main 845 Simulated 504 reads from reference Lachnospira
+INFO 2013-05-29 17:06:02,287 main 845 Simulated 164 reads from reference Roseburia
+INFO 2013-05-29 17:06:02,287 main 845 Simulated 7 reads from reference Staphylococcus

@@ -1,0 +1,55 @@
+<tool id="fqconvert" name="fqconvert" version="1.0.0">
+    <description>Convert quality scoring to Sanger in FASTQ files</description>
+    <stdio>
+        <exit_code range="0" level="warning" description="Description message" />
+	<exit_code range="1:" level="fatal" />
+    </stdio>
+    <command>
+    fqconvert
+    #if $numflag.flag == "yes":
+        -n $numflag.num 
+    #end if
+    #if $convert.flag == "yes": 
+        -o $output
+    #else:
+        -d
+    #end if
+    $input 
+    #if $convert.flag == "no": 
+        > $output_log
+    #end if 
+    </command>
+    <inputs>
+      <conditional name="numflag">
+            <param name="flag" type="select" label="Restrict detection to maximum num sequence objects. By default, value = 0, all sequences in a file are checked">
+                <option value="yes"> yes </option>
+                <option value="no" selected="True"> no </option>
+            </param>
+            <when value="yes">
+                <param name="num" type="integer" size="5" value="0" label="sequences"/>
+            </when>
+            <when value="no"/>
+        </conditional> 
+	<conditional name="convert">
+            <param name="flag" type="select" label="Convert, if no : only detect scoring scheme">               
+	        <option value="yes" selected="True" > yes </option>
+		<option value="no" > no </option>
+            </param>
+            <when value="yes"/>
+            <when value="no" />
+        </conditional>
+        <param name="input" type="data" format="fastqsolexa, fastqillumina, fastq" label="Original Illumina/Solexa fastq dataset from your history. Following formats, Sanger, Solexa, Illumina1.3+, Illumina1.5+,Illumina1.7+ or Illumina1.8+ are supported"/>
+
+    </inputs>
+    <outputs>
+        <data name="output" format="fastqsanger">
+            <filter>convert["flag"] == "yes"</filter>
+        </data> 
+	<data name="output_log" format="fastqsanger">
+            <filter>convert["flag"] == "no"</filter>
+        </data>
+    </outputs>
+    <help>
+
+    </help>
+</tool>

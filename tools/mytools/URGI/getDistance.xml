@@ -1,0 +1,275 @@
+<tool id="GetDistance" name="get distance">
+	<description>Give the distances between every data from the first input set and the data from the second input set</description>
+	<command interpreter="python">
+		../Java/Python/getDistance.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+			
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+			-g gtf
+		#end if
+
+
+		$absolute $proportion
+
+		#if $OptionColinearOrAntiSens.OptionCA == "Colinear":
+			-c 
+		#elif $OptionColinearOrAntiSens.OptionCA == 'AntiSens':
+			-a
+		#end if
+
+		#if $OptionFirstNucl5.FirstNu5 == "Yes":
+			-s $OptionFirstNucl5.first5File1
+			-S $OptionFirstNucl5.first5File2
+		#end if		
+
+		#if $OptionFirstNucl3.FirstNu3 == "Yes":
+			-e $OptionFirstNucl3.first3File1
+			-E $OptionFirstNucl3.first3File2
+		#end if
+
+		#if $OptionMinDistance.MinD == "Yes":
+			-m $OptionMinDistance.minDistance
+		#end if
+
+		#if $OptionMaxDistance.MaxD == "Yes":
+			-M $OptionMaxDistance.maxDistance
+		#end if
+
+		$fivePrime $threePrime $spearMan
+
+		#if $OptionBuckets.OBuckets == "Yes":
+			-u $OptionBuckets.buckets
+		#end if
+
+		#if $OptionMinXaxis.MinX == "Yes":
+			-x $OptionMinXaxis.minXaxis
+		#end if
+
+		#if $OptionMaxXaxis.MaxX == "Yes":
+			-X $OptionMaxXaxis.maxXaxis
+		#end if
+
+		#if $OptionTitle.OTitle == "Yes":
+			-t $OptionTitle.title
+		#end if
+		
+		-o $outputFilePng
+		$outputDistance $outputFileDistance
+
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File Format 1">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File 1"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File 1"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File 1"/>
+			</when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input File Format 2">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="gtf">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="Input File 2"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="Input File 2"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="Input File 2"/>
+			</when>
+		</conditional>
+
+		<param name="outputDistance" type="boolean" truevalue="-O" falsevalue="" checked="false" label="distance option" help="This option create a GFF3 output file containing the distance for each element of the query."/>
+
+		<param name="absolute" type="boolean" truevalue="-b" falsevalue="" checked="false" label="absolute value option" help="This option gives the absolute value of the distance."/>
+		<param name="proportion" type="boolean" truevalue="-p" falsevalue="" checked="false" label="proportion option" help="This option gives the proportion on the y-axis instead of the number of distances."/>
+
+		<conditional name="OptionColinearOrAntiSens">
+			<param name="OptionCA" type="select" label="Colinear or anti-sens">
+				<option value="Colinear">Colinear</option>
+				<option value="AntiSens">AntiSens</option>
+				<option value="NONE" selected="true">NONE</option>
+			</param>
+			<when value="Colinear">
+			</when>
+			<when value="AntiSens">
+			</when>
+			<when value="NONE">
+			</when>
+		</conditional>
+
+		<conditional name="OptionFirstNucl5">
+			<param name="FirstNu5" type="select" label="only consider the n first 5' nucleotides for input files">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="first5File1" type="integer" value="1" label="in file 1" help="Be Careful! The value must be upper than 0"/>
+				<param name="first5File2" type="integer" value="1" label="in file 2" help="Be Careful! The value must be upper than 0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionFirstNucl3">
+			<param name="FirstNu3" type="select" label="only consider the n first 3' nucleotides for input files">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="first3File1" type="integer" value="1" label="in file 1" help="Be Careful! The value must be upper than 0"/>
+				<param name="first3File2" type="integer" value="1" label="in file 2" help="Be Careful! The value must be upper than 0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionMinDistance">
+			<param name="MinD" type="select" label="minimum distance considered between two transcripts">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="minDistance" type="integer" value="1"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionMaxDistance">
+			<param name="MaxD" type="select" label="maximum distance considered between two transcripts">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="maxDistance" type="integer" value="1000"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<param name="fivePrime" type="boolean" truevalue="-5" falsevalue="" checked="false" label="five prime option" help="Consider the elements from input file 1 which are upstream of elements of input file 2"/>
+		<param name="threePrime" type="boolean" truevalue="-3" falsevalue="" checked="false" label="three prime option" help="Consider the elements from input file1 which are downstream of elements of input file 2"/>
+		<param name="spearMan" type="boolean" truevalue="-r" falsevalue="" checked="false" label="spearman option" help="Compute Spearman rho."/>
+
+
+		<conditional name="OptionBuckets">
+			<param name="OBuckets" type="select" label="Plots histogram instead of line plot with given interval size.">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="buckets" type="integer" value="1" label="Interval size"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionMinXaxis">
+			<param name="MinX" type="select" label="Minimum value on the x-axis to plot.">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="minXaxis" type="integer" value="1"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionMaxXaxis">
+			<param name="MaxX" type="select" label="Maximum value on the x-axis to plot.">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="maxXaxis" type="integer" value="1"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionTitle">
+			<param name="OTitle" type="select" label="Title for the graph.">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="title" type="text" value=""/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+	</inputs>
+
+
+	<outputs>
+		<data name="outputFilePng" format="png"/>
+		<data name="outputFileDistance" format="gff3">
+			<filter>outputDistance</filter>
+		</data>
+	</outputs> 
+
+</tool>

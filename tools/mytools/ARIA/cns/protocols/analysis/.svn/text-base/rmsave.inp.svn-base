@@ -1,0 +1,177 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: rmsave.inp,v $
+
+set display ANALYSIS:rmsave.disp end 
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+!!! @SPECTRUM:spectrum.cns(spectrum=$spectrum;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+delete selection=(not known) end
+
+{
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+}
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+
+!read .pdb file (average structure from wellordered.inp):
+evaluate ($filename = "ANALYSIS:" + $Filenames.fileroot + "_ave.pdb")
+coor @@$filename
+
+ident (store1) (not all) 
+@@RUN:data/sequence/secondarystructure.cns
+
+coor select (store1) end
+if ($select eq 0) then
+  for $id in id (tag) loop order
+    show sum (q) (byresid (id $id))
+    do (q=$result) (byresid(id $id))
+  end loop order
+  identity (store1) (attribute q > 1)
+end if
+
+ident (store2) (not all) 
+coor select (store2) end
+if ($select eq 0) then
+  identity (store2) (all)
+end if
+
+coor copy end
+
+evaluate ($sum_rms_wb = 0)
+evaluate ($sumsq_rms_wb = 0)
+evaluate ($sum_rms_wa = 0)
+evaluate ($sumsq_rms_wa = 0)
+evaluate ($sum_rms_ab = 0)
+evaluate ($sumsq_rms_ab = 0)
+evaluate ($sum_rms_aa = 0)
+evaluate ($sumsq_rms_aa = 0)
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 0)
+evaluate ($TotalNstruct = 0)
+while ($count lt $Iterations.Structures ) loop main
+   evaluate ($count=$count+1)
+   evaluate ($file = $filenames.bestfile_$count)
+   if ($file ne "") then
+      evaluate ($TotalNstruct = $TotalNstruct + 1)
+   end if
+end loop main
+
+if ($Iterations.Assignstruct > $TotalNstruct) then
+  evaluate ($Iterations.Assignstruct = $ToTalNstruct)
+end if
+
+evaluate ($count = 0)
+while ($count < $Iterations.AssignStruct)  loop main
+   evaluate ($count = $count + 1)
+   evaluate ($nreassign = 0)
+   evaluate ($filename = "ANALYSIS:" 
+             + $Filenames.fileroot + "fit_" + encode($count) + ".pdb")
+   coor @@$filename
+
+   coor sele= (store1 and (name ca or name c or name n)) rms end
+   evaluate ($rms_wb = $result)
+   evaluate ($sum_rms_wb = $sum_rms_wb + $result)
+   evaluate ($sumsq_rms_wb = $sumsq_rms_wb + $result*$result)
+
+   coor sele= (store1 and not name h*) rms end
+   evaluate ($rms_wa = $result)
+   evaluate ($sum_rms_wa = $sum_rms_wa + $result)
+   evaluate ($sumsq_rms_wa = $sumsq_rms_wa + $result*$result)
+
+   coor sele= (store2 and (name ca or name c or name n)) rms end
+   evaluate ($rms_ab = $result)
+   evaluate ($sum_rms_ab = $sum_rms_ab + $result)
+   evaluate ($sumsq_rms_ab = $sumsq_rms_ab + $result*$result)
+
+   coor sele= (store2 and not name h*) rms end
+   evaluate ($rms_aa = $result)
+   evaluate ($sum_rms_aa = $sum_rms_aa + $result)
+   evaluate ($sumsq_rms_aa = $sumsq_rms_aa + $result*$result)
+
+   display # $filename $rms_wb $rms_wa $rms_ab $rms_aa 
+
+   if ($count ge $Iterations.AssignStruct) then exit loop main end if
+end loop main
+
+evaluate ($mean_rms_wb = $sum_rms_wb / $count)
+evaluate ($stdev_rms_wb =
+          sqrt(($sumsq_rms_wb - $count*$mean_rms_wb**2)/ $count))
+evaluate ($mean_rms_wa = $sum_rms_wa / $count)
+evaluate ($stdev_rms_wa =
+          sqrt(($sumsq_rms_wa - $count*$mean_rms_wa**2)/ $count))
+evaluate ($mean_rms_ab = $sum_rms_ab / $count)
+evaluate ($stdev_rms_ab =
+          sqrt(($sumsq_rms_ab - $count*$mean_rms_ab**2)/ $count))
+evaluate ($mean_rms_aa = $sum_rms_aa / $count)
+evaluate ($stdev_rms_aa =
+          sqrt(($sumsq_rms_aa - $count*$mean_rms_aa**2)/ $count))
+
+
+display # mean values
+display # backbone, 2nd struct     : $mean_rms_wb (+/- $stdev_rms_wb )
+display # heavy atoms, 2nd struct  : $mean_rms_wa (+/- $stdev_rms_wa )
+display # backbone, all residues   : $mean_rms_ab (+/- $stdev_rms_ab )
+display # heavy atoms, all residues: $mean_rms_aa (+/- $stdev_rms_aa )
+
+display mean_rms_wb	stdev_rms_wb	mean_rms_wa	stdev_rms_wa	mean_rms_ab	stdev_rms_ab	mean_rms_aa	stdev_rms_aa
+display $mean_rms_wb	$stdev_rms_wb	$mean_rms_wa	$stdev_rms_wa	$mean_rms_ab	$stdev_rms_ab	$mean_rms_aa	$stdev_rms_aa
+
+stop

@@ -1,0 +1,21 @@
+<tool id="getSequence" name="get sequence">
+  <description>Get a single sequence in a FASTA file.</description>
+  <command interpreter="python"> ../Java/Python/getSequence.py -i $inputFile 
+	-n $name
+  	-o $outputFile  
+  
+  </command>
+  
+  
+  <inputs>
+    <param name="inputFile" type="data" label="Input fasta File" format="fasta"/>
+  	<param name="name" type="text" value="None" label="name of the sequence [compulsory option]"/>
+  </inputs>
+
+  <outputs>
+    <data format="fasta" name="outputFile" label="[getSequence] Output File"/>
+  </outputs>
+
+  <help>
+  </help>
+</tool>

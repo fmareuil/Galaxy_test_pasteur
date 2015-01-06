@@ -1,0 +1,31 @@
+remarks  file toppar/dna-rna-pho.link
+remarks  macro to define nucleic acid links and terminii
+remarks  this file uses a 5' phosphate group
+remarks
+
+set echo=false end
+
+! checkversion 0.9
+
+link  nuc  head - ade  tail + * end
+link  nuc  head - cmp  tail + * end
+link  nuc  head - cyt  tail + * end
+link  nuc  head - gua  tail + * end
+link  nuc  head - thy  tail + * end
+link  nuc  head - uri  tail + * end
+
+first 5pho tail + ade end
+first 5pho tail + cmp end
+first 5pho tail + cyt end
+first 5pho tail + gua end
+first 5pho tail + thy end
+first 5pho tail + uri end
+
+last  3ter head - ade end
+last  3ter head - cmp end
+last  3ter head - cyt end
+last  3ter head - gua end
+last  3ter head - thy end
+last  3ter head - uri end
+
+set echo=true end

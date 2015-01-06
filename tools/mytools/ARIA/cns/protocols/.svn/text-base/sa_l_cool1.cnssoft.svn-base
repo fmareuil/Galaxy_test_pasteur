@@ -1,0 +1,212 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_l_cool1.cns,v $
+
+module(SaProtocol; Data; Toppar;)
+
+! module sa_l_cool1.cns
+! cartesian dynamics cooling
+
+evaluate ($ncycle = (&Saprotocol.carinit_t-&Saprotocol.final1_t)/&Saprotocol.tempstep)
+evaluate ($nstep = int(&SaProtocol.cool1_steps/$ncycle))
+
+evaluate ($ini_con = 0.01)        evaluate ($fin_con=  1)
+evaluate ($ini_flt = 5)           evaluate ($fin_flt = 50)
+      
+evaluate ($k_vdw = $ini_con)
+evaluate ($k_vdwfact = ($fin_con/$ini_con)^(1/$ncycle))
+evaluate ($k_flt = $ini_flt)
+evaluate ($flt_fac = ($fin_flt/$ini_flt)^(1/$ncycle))
+
+evaluate ($k_unamb= &Data.unamb_cool1_ini)
+evaluate ($unamb_fac = (&Data.unamb_cool1_fin/&Data.unamb_cool1_ini)^(1/$ncycle))
+evaluate ($k_amb= &Data.amb_cool1_ini)
+evaluate ($amb_fac = (&Data.amb_cool1_fin/&Data.amb_cool1_ini)^(1/$ncycle))
+evaluate ($k_hbond= &Data.hbond_cool1_ini)
+evaluate ($hbond_fac = (&Data.hbond_cool1_fin/&Data.hbond_cool1_ini)^(1/$ncycle))
+
+noe
+    rswitch ambi &Data.Rswi_cool1 
+    rswitch dist &Data.Rswi_cool1
+    rswitch hbon &Data.Rswi_cool1
+
+    mrswitch ambi &Data.mRswi_cool1 
+    mrswitch dist &Data.mRswi_cool1
+    mrswitch hbon &Data.mRswi_cool1
+
+    asym ambi &Data.asy_cool1 
+    asym dist &Data.asy_cool1
+    asym hbon &Data.asy_cool1
+
+    masym ambi &Data.masy_cool1 
+    masym dist &Data.masy_cool1
+    masym hbon &Data.masy_cool1
+end
+
+restraints dihedral   scale=&Data.dihedrals_cool1   end  
+
+couplings class c1 force &data.c1_cool1 end
+couplings class c2 force &data.c2_cool1 end
+couplings class c3 force &data.c3_cool1 end
+couplings class c4 force &data.c4_cool1 end
+couplings class c5 force &data.c5_cool1 end
+
+evaluate( $k_sani_1  = &Data.rdc1_cool1)
+evaluate( $sani_fac_1 = ( &Data.rdc1_cool2 / max(1,&Data.rdc1_cool1))^( 1 / $ncycle))
+evaluate( $k_sani_2  = &Data.rdc2_cool1)
+evaluate( $sani_fac_2 = ( &Data.rdc2_cool2 / max(1,&Data.rdc2_cool1))^( 1 / $ncycle))
+evaluate( $k_sani_3  = &Data.rdc3_cool1)
+evaluate( $sani_fac_3 = ( &Data.rdc3_cool2 / max(1,&Data.rdc3_cool1))^( 1 / $ncycle))
+evaluate( $k_sani_4  = &Data.rdc4_cool1)
+evaluate( $sani_fac_4 = ( &Data.rdc4_cool2 / max(1,&Data.rdc4_cool1))^( 1 / $ncycle))
+evaluate( $k_sani_5  = &Data.rdc5_cool1)
+evaluate( $sani_fac_5 = ( &Data.rdc5_cool2 / max(1,&Data.rdc5_cool1))^( 1 / $ncycle))
+
+sani class rdc1 force $k_sani_1 end
+sani class rdc2 force $k_sani_2 end
+sani class rdc3 force $k_sani_3 end
+sani class rdc4 force $k_sani_4 end
+sani class rdc5 force $k_sani_5 end
+
+
+
+evaluate ($fin_noe = 50.0)   
+evaluate ($k_noe = $fin_noe)
+
+
+
+
+parameter  
+     nbonds
+        nbxmod=5                
+        wmin=0.01 
+        cutnb=6.0 ctonnb=2.99 ctofnb=3.0 tolerance=0.5 
+        repel=&Toppar.repel_radius
+        rexp=&Toppar.repel_rexpo irexp=&Toppar.repel_irexp rcon=&Toppar.repel_rcons
+     end
+end
+   
+
+
+!for the vean statement:
+evaluate( $k_cen_1 = &Data.ini_cen_cool1_1)
+evaluate( $cen_fac_1 = ( &Data.fin_cen_cool1_1 / &Data.ini_cen_cool1_1)^( 1 / $ncycle))
+evaluate( $k_bor_1 = &Data.ini_bor_cool1_1)
+evaluate( $bor_fac_1 = ( &Data.fin_bor_cool1_1 / &Data.ini_bor_cool1_1)^( 1 / $ncycle))
+
+evaluate( $k_cen_2 = &Data.ini_cen_cool1_2)
+evaluate( $cen_fac_2 = ( &Data.fin_cen_cool1_2 / &Data.ini_cen_cool1_2)^( 1 / $ncycle))
+evaluate( $k_bor_2 = &Data.ini_bor_cool1_2)
+evaluate( $bor_fac_2 = ( &Data.fin_bor_cool1_2 / &Data.ini_bor_cool1_2)^( 1 / $ncycle))
+
+evaluate( $k_cen_3 = &Data.ini_cen_cool1_3)
+evaluate( $cen_fac_3 = ( &Data.fin_cen_cool1_3 / &Data.ini_cen_cool1_3)^( 1 / $ncycle))
+evaluate( $k_bor_3 = &Data.ini_bor_cool1_3)
+evaluate( $bor_fac_3 = ( &Data.fin_bor_cool1_3 / &Data.ini_bor_cool1_3)^( 1 / $ncycle))
+
+evaluate( $k_cen_4 = &Data.ini_cen_cool1_4)
+evaluate( $cen_fac_4 = ( &Data.fin_cen_cool1_4 / &Data.ini_cen_cool1_4)^( 1 / $ncycle))
+evaluate( $k_bor_4 = &Data.ini_bor_cool1_4)
+evaluate( $bor_fac_4 = ( &Data.fin_bor_cool1_4 / &Data.ini_bor_cool1_4)^( 1 / $ncycle))
+
+evaluate( $k_cen_5 = &Data.ini_cen_cool1_5)
+evaluate( $cen_fac_5 = ( &Data.fin_cen_cool1_5 / &Data.ini_cen_cool1_5)^( 1 / $ncycle))
+evaluate( $k_bor_5 = &Data.ini_bor_cool1_5)
+evaluate( $bor_fac_5 = ( &Data.fin_bor_cool1_5 / &Data.ini_bor_cool1_5)^( 1 / $ncycle))
+
+evaluate ($bath  = &SaProtocol.carinit_t)
+do (vx=maxwell($bath)) ( all )
+do (vy=maxwell($bath)) ( all )
+do (vz=maxwell($bath)) ( all )
+
+
+
+evaluate ($i_cool = 0)
+while ($i_cool < $ncycle) loop cool
+      evaluate ($i_cool=$i_cool+1)
+
+      evaluate ($bath  = $bath  - &Saprotocol.tempstep)       
+
+      evaluate ($k_vdw=min($fin_con,$k_vdw*$k_vdwfact))
+      evaluate ($k_flt = $k_flt*$flt_fac)
+      evaluate ($k_unamb = $k_unamb*$unamb_fac)
+      evaluate ($k_amb = $k_amb*$amb_fac)
+      evaluate ($k_hbond = $k_hbond*$hbond_fac)
+
+
+      !for the vean statement:
+      evaluate ($k_bor_1 = $k_bor_1 * $bor_fac_1)
+      evaluate ($k_bor_2 = $k_bor_2 * $bor_fac_2)
+      evaluate ($k_bor_3 = $k_bor_3 * $bor_fac_3)
+      evaluate ($k_bor_4 = $k_bor_4 * $bor_fac_4)
+      evaluate ($k_bor_5 = $k_bor_5 * $bor_fac_5)
+
+      evaluate ($k_cen_1 = $k_cen_1 * $cen_fac_1)
+      evaluate ($k_cen_2 = $k_cen_2 * $cen_fac_2)
+      evaluate ($k_cen_3 = $k_cen_3 * $cen_fac_3)
+      evaluate ($k_cen_4 = $k_cen_4 * $cen_fac_4)
+      evaluate ($k_cen_5 = $k_cen_5 * $cen_fac_5)
+
+      vean class vea1 force $k_bor_1 $k_cen_1 end
+      vean class vea2 force $k_bor_2 $k_cen_2 end
+      vean class vea3 force $k_bor_3 $k_cen_3 end
+      vean class vea4 force $k_bor_4 $k_cen_4 end
+      vean class vea5 force $k_bor_5 $k_cen_5 end
+
+      evaluate ($k_sani_1 = $k_sani_1 * $sani_fac_1)
+      evaluate ($k_sani_2 = $k_sani_2 * $sani_fac_2)
+      evaluate ($k_sani_3 = $k_sani_3 * $sani_fac_3)
+      evaluate ($k_sani_4 = $k_sani_4 * $sani_fac_4)
+      evaluate ($k_sani_5 = $k_sani_5 * $sani_fac_5)
+
+      sani class rdc1 force $k_sani_1 end
+      sani class rdc2 force $k_sani_2 end
+      sani class rdc3 force $k_sani_3 end
+      sani class rdc4 force $k_sani_4 end
+      sani class rdc5 force $k_sani_5 end
+      
+      evaluate ($swap = 0.05)
+      inline @RUN:protocols/swap.cns
+
+      parameter
+        bond  (name sg) (name sg) $k_flt TOKEN
+        angle (all) (name sg) (name sg)  $k_flt TOKEN
+        bond  (name C1') (name C2') $k_flt TOKEN
+
+        ! BARDIAUX ZN patches
+        bond (store8) (name ZN) $k_flt TOKEN
+        angle (all) (store8) (name ZN) $k_flt TOKEN
+        angle (store8) (name zn) (store8) $k_flt TOKEN
+        bond (name NE2) (name ZN) $k_flt TOKEN
+        bond (name ND1) (name ZN) $k_flt TOKEN
+        angle (all) (name NE2) (name ZN) $k_flt TOKEN
+        angle (all) (name ND1) (name ZN) $k_flt TOKEN
+        angle (all) (name ZN) (name NE2) $k_flt TOKEN
+        angle (all) (name ZN) (name ND1) $k_flt TOKEN
+      end
+
+      igroup 
+        interaction  (not name h*) (not name h*) weights * 1 vdw $k_vdw elec 0 end 
+        interaction  (name h*) (all) weights * 1 vdw 0 elec 0 end 
+      end
+      noe scale dist $k_noe scale ambi $k_amb scale hbon $k_hbond end
+
+      dynamics  cartesian
+         nstep=$nstep time=&SaProtocol.timestep
+         tcoup=true  temperature=$bath  nprint=$nstep    
+         ntrfrq=99999  cmremove=true  cmperiodic=0
+      end
+
+      evaluate ($critical=$temp/$bath)
+      if ($critical > 1.2) then
+         evaluate ($nreassign = $nreassign + 10)
+         mini powell nstep 100 end
+         do (vx=maxwell($bath)) ( all )
+         do (vy=maxwell($bath)) ( all )
+         do (vz=maxwell($bath)) ( all )
+      end if
+
+end loop cool
+
+
+

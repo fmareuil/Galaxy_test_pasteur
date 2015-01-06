@@ -1,0 +1,547 @@
+
+===============================================================================
+
+          ARIA -- Ambiguous Restraints for Iterative Assignment
+
+                 A software for automated NOE assignment
+
+                               Version 2.3
+
+===============================================================================
+
+Copyright (C) Benjamin Bardiaux, Michael Habeck, Therese Malliavin,
+              Wolfgang Rieping, and Michael Nilges
+
+All rights reserved.
+
+NO WARRANTY. This software package is provided 'as is' without warranty of
+any kind, expressed or implied, including, but not limited to the implied
+warranties of merchantability and fitness for a particular purpose or
+a warranty of non-infringement.
+
+Distribution of substantively modified versions of this module is
+prohibited without the explicit permission of the copyright holders.
+
+===============================================================================
+
+You may also want to have a look at the ARIA mailing list
+which can be found here:
+
+http://groups.yahoo.com/group/aria-discuss
+
+Or the ARIA website http://aria.pasteur.fr
+
+===============================================================================
+
+If you use this software, please quote the following reference(s):
+
+Rieping W., Habeck M., Bardiaux B., Bernard A., Malliavin T.E.,
+Nilges M.(2007) ARIA2: automated NOE assignment and data integration in NMR
+structure calculation. Bioinformatics 23:381-382
+
+===============================================================================
+
+Contents:
+
+1. What's new in version 2.3 ?
+
+   1.1 Support of CCPNMR version 2
+   1.2 Symmetric oligomers (C3, C5 and D2)
+   1.3 Log-harmonic potential for distance restraints (Nilges et al. Structure, 2008)
+   1.4 Import of CCPN Models/Structure Ensembles
+   1.5 Zinc ions coordination
+   1.6 Automated Molprobilty clashlist analysis
+   1.7 Old aria1.x features added
+
+2. Installation
+
+   2.1 Python
+   2.2 Python Numpy extension
+   2.3 Tix graphics library
+   2.4 Tcl/Tk libraries
+   2.5 Python matplotlib extension 
+
+3. Running ARIA
+
+   3.1 Data conversion and XML format
+   3.2 The project file
+   3.3 Project setup
+   3.4 Running ARIA
+   3.5 Example
+
+4. Miscellaneous topics 
+
+   4.1 Non-standard atom and residue definitions
+   4.2 Atom naming convention
+   4.3 The project directory tree
+
+===============================================================================
+
+
+1. What's new in version 2.3?
+----------------------------------
+
+- bug fixes
+
+- support of CCPN version 2 (instead of CCPN v1)
+
+- extension of symmetric oligomers support (C3, C5 and D2)
+  (in the GUI, go to "Data > Symmetry")
+
+- introduction of the log-harmonic potential for distance restraints (Nilges et al. Structure, 2008)
+  (go to "Structure Generation > CNS > Annealing Parameters > Log-Hamonic potential")
+
+- import of CCPN Models/Structure ensembles as initial structure for the minimization protocol or
+  as template structures for the initial assignment/calibration step. 
+
+- addition of Zinc ions coordination (through covalent bonds)
+  (go to "Add > Zinc Coordination")
+
+- Automated Molprobilty (clashlist) analysis
+  (go to "Analyses > Molprobity Classhlist")
+
+- addition of old aria1.x features (keep_structures, only fully assigned peaks)
+
+
+2. Installation:
+----------------
+
+Un-Tar the ARIA distribution using the following command:
+
+    gunzip aria2.3.tar.gz
+    tar xvf aria2.3.tar
+
+This creates a new directory ./aria2.3
+
+The directory structure of the distribution is as follows:
+
+      ./cns
+      ./cns/protocols
+      ./cns/protocols/analysis
+      ./cns/src
+      ./cns/toppar
+      ./src
+      ./src/py
+      ./src/py/data
+      ./src/py/aria
+      ./src/py/aria/gui
+      ./src/py/aria/legacy
+      ./src/xml
+      ./examples
+      ./examples/ccpn
+
+- You find the source code of ARIA in the directory ./src of the distribution,
+  Python modules are located in ./src/py/aria and /src/py/aria/gui,
+  XML DTDs can be found in ./src/xml.
+
+- The CNS protocols implementing, e.g., the simulated annealing protocol used
+  to calculate a structure, are stored in ./cns/protocols. CNS analysis 
+  protocols can be found in the sub-directory, ./cns/protocols/analysis. 
+
+- The only piece of Fortran code that needs to be compiled together with your
+  CNS sources can be found in ./cns/src; only the code for floating
+  chirality assignment is being used. The installation procedure has not 
+  changed since ARIA version 1.2: 
+
+  a) Academic users can obtain a free version of CNS from the CNS web site:
+
+       http://cns.csb.yale.edu
+
+     Commercial users need to purchase a CNX license from Accelrys (MSI). 
+
+  b) The ARIA fortran sources are located in the subdirectory ./cns/src of
+     the distribution. Please copy all the files to the directory 
+     cns_solve_1.1/source of the unpacked cns_solve distribution (this will 
+     overwrite some files which is okay).
+
+  c) Edit the file "cns_solve_env" in the directory cns_solve_1.1 to define the
+     location of the CNSsolve directory. 
+
+  d) Go to directory cns_solve_1.1 and type "make install". This should start
+     the compilation process.
+
+ARIA 2 is written in Python and requires the following packages which are
+not bundled to the main distribution:
+
+   1) Python 2.4 or later
+
+   2) Numpy version 1.0 or later
+	
+   3) Tcl/Tk 8.3 or later for Tkinter support (part of Python standard package)
+
+   4) Tix8.1.4 or later
+
+In order to use the CCPN data model for import/export or data conversion, you
+also need to install the 
+
+   5) CCPN data model, and the 
+
+   6) CCPNMR Analysis software in case you want to export into CCPN the
+      restraint lists and analyses of your structures that ARIA performs
+      after a calculation, e.g. the result of the violation analysis.
+
+   7) Matplotlib plotting library
+
+In many popular LINUX distributions, Python is part of the default 
+installation. If Python is already installed on your system, you can check
+whether your installation meets all of the requirements above by executing
+the script "check.py" which is located in the root directory of the
+ARIA distribution:
+
+    python <aria-installation-path>/check.py
+
+The script checks the Python version, whether the Numeric package and
+Tkinter/Tix is installed. Please note, that the script cannot check whether
+Tcl/Tk/Tix is working properly.
+
+2.1 Python
+----------
+
+The latest version of Python can be downloaded from the Python homepage at
+
+    http://www.python.org.
+
+Go to the "download" section and download the source tar-ball.
+The installation is straight forward for most UNIX systems (LINUX in
+particular). Follow the installation notes of the Python distribution and 
+make sure that Tkinter support is enabled. 
+
+Note: In order to install Python with Tcl/Tk (i.e. Tkinter) support,
+      please make sure that both libraries are installed on your system. 
+      If any of the libraries is missing, please check and install the
+      missing components prior to the installtion of Python.
+
+After Python has been installed sucessfully, you can run "check.py" to check
+whether the Tkinter module has been installed correctly.
+
+2.2 Python Numpy extension
+-----------------------------
+
+ARIA 2.3 now supports only the new Numpy package.
+If you already have Numpy installed, there is no need to install Numpy.
+
+Numpy:
+
+The Python Numpy extension is obtainable from SourceForge at:
+
+	http://numpy.scipy.org/
+
+Download the package "Numpy" version 1.0 or later.
+For installation, please follow installation instructions provided by the 
+
+2.3 Tix graphics library
+------------------------
+
+The Tix (Tk Interface eXtension) graphics library provides high-level 
+widgets, extending the standard capabilities of Tk widgets. The latest Tix
+library can be obtained from SourceForge at
+
+    http://tix.sourceforge.net
+
+Installing Tix also requires the sources of Tcl/Tk. Make sure that the
+Tcl/Tk version used during Tix installation matches the version installed on
+your system (if Python with Tkinter support is already installed, you can
+check the Tk version linked with Python by using the script "check.py"). Please
+consult the installation notes for further instructions.
+
+
+2.4 Tcl/Tk libraries
+--------------------
+
+Both libraries are obtainable from http://www.tcl.tk
+
+2.5 CCPN distribution
+---------------------
+
+In order to use the CCPN data model for import/export or data conversion, you
+also need to install the CCPN data model, and the CCPNMR Analysis software in
+case you want to export restraint lists, NOE assignments, and analyses of the
+generated structures, e.g. the result of the violation analysis. The complete
+CCPN distribution including the API, the FormatConverter, and CCPNMR Analysis
+can be obtained at
+
+    http://www.ccpn.ac.uk/ccpn/software/downloads-v2/
+
+The CCPN distribution provides scripts which guide you through the
+installation process.
+
+2.6 Python Matplotlib extensions
+-----------------------------
+
+The plotting library Matplotlib can be downloaded from
+	http://matplotlib.sourceforge.net/	
+
+
+3. Running ARIA
+---------------
+
+For convenience we suggest to add the following lines to your login script:
+
+- csh; edit ".cshrc"
+
+    setenv ARIA2 <aria-installation-path>
+    alias aria2 <Python-executable> -O $ARIA2/aria2.py
+
+- bash; edit ".bashrc"
+
+    export ARIA2=<aria-installation-path>
+    alias=aria2 "<Python-executable> -O $ARIA2/aria2.py"
+    
+
+- zsh; edit ".zshrc"
+
+    export ARIA2=<aria-installation-path>
+    alias aria2="<Python-executable> -O $ARIA2/aria2.py"
+
+
+For running ARIA, please enter "aria2" or "aria2 --help" for help.
+
+Creating, setting-up and running an ARIA project,
+requires the following steps:
+
+3.1 Converting your data into ARIA XML format
+---------------------------------------------
+
+ARIA provides routines for converting your data in the following way: 
+all data sources need to be specified in a simple XML file, "conversion.xml",
+say. To create an empty conversion template XML file use the following command:
+
+   aria2 --convert -t conversion.xml               
+
+Here, "-t" means "template". This command creates a new text file,
+"conversion.xml", formatted in XML. It contains several input fields that
+need to be filled-in in order to start the conversion process. For example,
+format or your peak lists (ANSIG, NMRVIEW, XEASY etc.), proton / hetero 
+dimensions etc. 
+
+Once your completed "conversion.xml" file has been stored, run ARIA again
+to perform the conversion:
+
+   aria2 --convert conversion.xml
+
+This command first loads and parses the conversion file. It then reads in
+your data files (i.e peak lists, shift lists, sequence file), converts them
+into XML and stores them at the specified locations. The newly created XML
+files can then be edited using a XML or text editor. 
+
+3.2 The project file
+------------------------
+   
+The complete definition of an ARIA project, i.e. type and location of the data 
+sources (the XML files containing your peak and shift lists etc.), parameters
+for the minimization protocol, or parameters for other ARIA sub-modules such as
+the violation analysis etc., is encapsulated in the project's XML file
+("project-xml").
+   
+In your conversion XML file, you can specify the filename of a project file,
+"new_project.xml", say, if you want ARIA to create a new project file. This 
+project file will already reference the converted data.
+
+Alternatively, you can create an (empty) project template XML file by
+invoking the command
+
+   aria --project_template new_project.xml
+
+To complete the project template file, you need to fill in the fields
+referencing your data by hand. For further instructions, please have a
+look at a conversion file.
+
+In order to setup an ARIA project, it is necessary to provide some additional
+information:
+
+   - working directory               The root directory of your project.
+
+   - file_root                       The 'nickname' of your project.
+                                     For instance, the file_root serves as
+                                     basename for all PDB-files: e.g. if
+                                     file_root is set to "bpti", PDB-files
+                                     will be called bpti_1.pdb ... .
+
+   - temporary path
+
+   - list of available machines      In particular if want to run the
+                                     structure calculation on several
+                                     machines simultaniously, you need
+                                     to specify a list of those machines.
+
+                                     If the list is empty, ARIA uses the
+                                     local host.
+
+   - Path of the CNS executable.
+
+Generally, you may use ARIAs graphical user interface (GUI), an XML editor or
+a text editor to display and edit your project. However, ARIA's GUI is
+intended to streamline the project setup and further provides brief
+descriptions / help for most of the parameter settings. For launching the GUI
+with the project "new_project.xml" use the command
+
+   aria2 --gui new_project.xml    or
+
+   aria2 -g new_project.xml
+
+If the project file is omitted, the GUI starts without loading a project.
+
+3.3 Project setup
+-----------------
+
+Once the project XML file "new_project.xml" has been completed,
+run ARIA to setup the project:
+
+   aria2 -s new_project.xml
+
+This command reads-in the project file and performs some validity checks.
+If the project could be loaded successfully, the following actions
+are performed:
+ 
+   a) Creating of the directory tree: it creates the full directory tree
+      needed by ARIA and CNS
+             
+   b) Data setup: copies all (XML) data files from its source locations to
+      the local directory "data".
+
+   c) Copy CNS specific files (such as protocols): all CNS specific files
+      are copied from their source location (ARIAs installation path) to the
+      local directory "cns/...".
+     
+Details on the directory tree can be found in section 4.3.
+     
+If the project has already been set-up, a re-setup skips all existing files.
+To enforce overwriting of existing files, use the option -f:
+
+   aria2 -sf new_project.xml
+
+Forced setup overwrites/updates the following files:
+
+   a) Data files in the local directory "data",
+   b) CNS specific files.
+
+3.4 Running ARIA
+----------------
+
+After your project has been setup, start ARIA by invoking the command:
+
+   aria2 new_project.xml
+
+Use the GUI to modify protocol- and/or parameters of the minimisation 
+protocol. It is only necessary to re-setup you project, if your data files
+or the CNS protocols have been modified. 
+         
+3.5 Example
+-----------
+
+Predefined XML files for peak and shift lists of the HRDC domain can be found
+in the directory "examples/werner/". For further instructions of how to
+use the example, please have a look in the file "examples/werner/README".
+
+The same directory also provides a CCPN project which contains the same data.
+Instructions for how launch a calculation from a CCPN project are given in
+examples/werner/README.
+
+4. Miscellaneous topics
+-----------------------
+
+4.1 Non-standard atom or residue definitions
+--------------------------------------------
+
+In order to work with non-standard atoms and residues like ions or
+ligands the one needs to modify several CNS protocols and parameter
+files.  By default, the CNS script "generate.inp" is executed in order
+to generate a PSF file. The PSF file needs to be patched manually and
+copied to the cns/protocols directory  of the run's local directory
+tree if one wants to setup the PSF file in the ARIA run.
+
+If you want to use your own tempalte PDB file and PSF file, you can
+either modify the CNS script "generate.inp", or you just copy your PSF
+and  "xxxx_template" PDB file to the directory "cns/begin". Please
+disable the automatic generation of these files (in the GUI see node
+"CNS" in branch "Structure Generation"). 
+
+Additionally, you need to modify the CNS topology, parameter and linkage
+files. Please make sure that you introduce the right bonds if you want to use
+torsion angle dynamics in the structure generation. User-specific files can be
+set via the GUI in the panel "Sequence".
+
+The HIC-Up server may assist you in creating the necessary patches and 
+modifications in the definition files (http://xray.bmc.uu.se/hicup/).
+
+
+4.2 Atom names
+--------------
+
+ARIA 2 follows the IUPAC standard for naming atoms, standard amino
+acids and nucleotides. In case of non-standard atoms and residues the
+user can choose his own naming convention in the sequence XML
+file. Because CNS relies on its own naming convention, please note
+that the calculated structures will have CNS atom and residue names.
+
+The IUPAC atom names used by ARIA can be found in the XML file
+"atomnames.xml" located in the directory "src/py/data" of the
+distribution. During data conversion, atom names in your data are
+translated according to the specifications made in the converion XML file.
+
+4.3 The project directory tree
+------------------------------
+
+The directory tree for an ARIA run is setup by using "aria2 -s
+<project-xml>". It copies the data XML files from its source locations
+(as specified in the project file) to the local directory "data".
+When running ARIA, all data files are read from the *local*
+directory. In other words, only modifications of the data stored in
+the *local* directory are considered when re-running a project. 
+
+All CNS specific files (protocols, topology/parameters files etc) are
+copied from their source location (ARIA's installation path) into the local
+directory "cns/xxx".
+
+The directory tree for a typical ARIA run (run's nickname is "1" in example
+below) of nine iterations has the following structure:
+
+  run1/data/........................ local copies of the data files,
+  run1/data/begin/.................. for storing the starting structure,
+  run1/data/sequence/............... copy of the sequence XML file,
+  run1/data/spectra/................ copies of the chemical shift and peak
+                                     lists as XML files, reports on the
+                                     seed assignment and filtering,
+  run1/data/templates/.............. for storing an initial structure ensemble,
+  run1/data/hbonds/................. H-bond ".tbl" files
+                   .
+                   .           
+  run1/structures/.................. structure calculation results, 
+                                     iteration reports, analysis results,
+                                     CNS output, etc.
+  run1/structures/it0/.............. PDB-, ".float"-, and restraint files for
+	                             the first iteration 
+  run1/structures/it1/
+                   .
+                   .
+  run1/structures/it8/.............. last iteration in this example,
+  run1/structures/it8/analysis/..... results of CNS analyses,
+  run1/structures/it8/analysis/cns/. output of the CNS analysis scripts
+  run1/structures/refine/........... directory containing water/DMSO refined 
+                                     structures,
+  run1/cns/......................... for storing CNS specific files,
+  run1/cns/data/.................... data file in CNS format, created in
+                                     each run,
+  run1/cns/data/sequence/........... sequence in PDB format using CNS atom
+                                     names created from the sequence 
+                                     XML file,
+  run1/cns/data/hbonds/............. copies of the H-bond .tbl files to 
+                                     files with fixed names, i.e., 
+                                     "hbonds.tbl", "hbonds_talos.tbl", ...
+  run1/cns/data/jcouplings/......... copies of the J-coupling ".tbl" files, 
+                    .                files belonging the same class are 
+                    .                concatenated and stored in "c1.tbl", 
+                    .                "c2.tbl", etc.,
+  run1/cns/protocols/............... refinement protocols, etc.,
+  run1/cns/protocols/analysis/...... analysis protocols,
+  run1/cns/toppar/.................. topology, linkage and parameter files,
+  run1/cns/begin.................... PSF file, "_template" PDB file, etc.,
+  run1/cache........................ cache file to speed-up re-runs.
+
+The data specified in the project XML file are always copied to their
+respective subdirectories in the directory run1/data. If you want to
+modify  the data (after the project has been setup) please edit the
+files located in run1/data/... . The directory run1/cns/data is only
+used internally for structure calculation and should not be altered.
+
+

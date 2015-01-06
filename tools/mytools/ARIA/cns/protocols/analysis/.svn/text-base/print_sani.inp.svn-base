@@ -1,0 +1,253 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: print_sani.inp,v $
+
+! print_sani.inp
+! print statistics on RDC restraints
+!     ************************************
+!     * Authors and copyright:           *
+!     * Jens Linge, EMBL                 *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+!@RUN:protocols/initialize.cns
+!(spectrum=$spectrum;iteration=$iteration;)
+
+!@NEWIT:iteration.cns(iteration=$iteration;)
+
+@RUN_CNS:run.cns(
+spectrum  =$spectrum;
+!iteration =$iteration;
+filenames =$filenames;
+spectra   =$spectra;
+data      =$data;
+iterations=$iterations;
+saprotocol=$saprotocol;
+refine    =$refine;
+relax     =$relax;
+toppar    =$toppar;
+analysis  =$analysis;
+)
+
+!set the energy flags:
+@@RUN:protocols/flags_new.cns(Iteration=$Iteration; Data=$Data; )
+
+evaluate ($psfcount = 1)
+while ($psfcount le 5) loop pars
+   if ($filenames.structure_$psfcount ne "") then
+      evaluate ($structurefile = "RUN:begin/" + $Filenames.structure_$psfcount)
+      structure @@$structurefile end     
+   end if
+   evaluate ($psfcount = $psfcount + 1)
+end loop pars
+
+
+evaluate ($templatefile = "RUN:" + "begin/" + $Filenames.template)
+coor @@$templatefile
+
+if ($Data.flags.sani = true) then
+  structure @@RUN:toppar/tensor.psf end
+end if
+
+!read the parameter files:
+evaluate ($par_nonbonded = $toppar.par_nonbonded)
+evaluate ($parcount = 1)
+while ($parcount le 5) loop pars
+   if ($Toppar.prot_par_$parcount ne "") then
+      evaluate($prot_par_file= "RUN:toppar/" + $Toppar.prot_par_$parcount)
+      parameter @@$prot_par_file end
+   end if
+   evaluate ($parcount = $parcount + 1)
+end loop pars
+
+
+parameter 
+   bonds (all) (all) 1000.0 TOKEN
+   angles (all) (all) (all) 500.0 TOKEN
+   impropers (all) (all) (all) (all) 500 TOKEN TOKEN
+end
+
+set display ANALYSIS:sani.disp end
+
+flags exclude * include sani end
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!residual dipolar couplings:
+sani nres=2000 end
+set echo on message on end
+if ($data.rdc1_choice eq "SANI") then
+  sani
+    class rdc1
+    force 1.0
+    potential harmonic
+    @@RUN:data/rdcs/rdc1.tbl
+  end
+end if
+if ($data.rdc2_choice eq "SANI") then
+  sani
+    class rdc2
+    force 1.0
+    potential harmonic
+    @@RUN:data/rdcs/rdc2.tbl
+  end
+end if
+if ($data.rdc3_choice eq "SANI") then
+  sani
+    class rdc3
+    force 1.0
+    potential harmonic
+    @@RUN:data/rdcs/rdc3.tbl
+  end
+end if
+if ($data.rdc4_choice eq "SANI") then
+  sani
+    class rdc4
+    force 1.0
+    potential harmonic
+    @@RUN:data/rdcs/rdc4.tbl
+  end
+end if
+if ($data.rdc5_choice eq "SANI") then
+  sani
+    class rdc5
+    force 1.0
+    potential harmonic
+    @@RUN:data/rdcs/rdc5.tbl
+  end
+end if
+
+! BARDIAUX 2008/06/17
+! set the rdc coefficients
+if ($Data.rdc1_choice eq "SANI") then
+  sani class rdc1 coeff 0.0 $Data.rdc1_d $Data.rdc1_r end
+end if
+if ($Data.rdc2_choice eq "SANI") then
+  sani class rdc2 coeff 0.0 $Data.rdc2_d $Data.rdc2_r end
+end if
+if ($Data.rdc3_choice eq "SANI") then
+  sani class rdc3 coeff 0.0 $Data.rdc3_d $Data.rdc3_r end
+end if
+if ($Data.rdc4_choice eq "SANI") then
+  sani class rdc4 coeff 0.0 $Data.rdc4_d $Data.rdc4_r end
+end if
+if ($Data.rdc5_choice eq "SANI") then
+  sani class rdc5 coeff 0.0 $Data.rdc5_d $Data.rdc5_r end
+end if
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+evaluate ($sum_rms_rdc1 = 0)
+evaluate ($sumsq_rms_rdc1 = 0)
+evaluate ($sum_rms_rdc2 = 0)
+evaluate ($sumsq_rms_rdc2 = 0)
+evaluate ($sum_rms_rdc3 = 0)
+evaluate ($sumsq_rms_rdc3 = 0)
+evaluate ($sum_rms_rdc4 = 0)
+evaluate ($sumsq_rms_rdc4 = 0)
+evaluate ($sum_rms_rdc5 = 0)
+evaluate ($sumsq_rms_rdc5 = 0)
+
+@RUN_CNS:file.cns(
+filenames=$filenames;
+iterations=$iterations;
+)
+
+evaluate ($count = 0)
+evaluate ($TotalNstruct = 0)
+while ($count lt $Iterations.Structures) loop main
+   evaluate ($count=$count+1)
+   evaluate ($file = $filenames.bestfile_$count)
+!   if ($file ne "") then
+      evaluate ($TotalNstruct = $TotalNstruct + 1)
+!   end if
+end loop main
+
+if ($Iterations.Assignstruct > $TotalNstruct) then
+  evaluate ($Iterations.Assignstruct = $ToTalNstruct)
+end if
+
+
+evaluate ($count = 1)
+evaluate ($nstruc1 = 0)
+while ($count le $Iterations.Assignstruct) loop main
+   evaluate ($file = $filenames.bestfile_$count)
+   display $file
+   coor init end
+   if ($file ne "") then
+     coor @@$file
+     evaluate ($nstruc1 = $nstruc1 + 1)
+
+     if ($Data.rdc1_choice eq "SANI") then
+       sani print thresh=0.2 class rdc1 end
+       evaluate ($rms_rdc1 = $result)
+       evaluate ($sum_rms_rdc1 = $sum_rms_rdc1 + $rms_rdc1)
+       evaluate ($sumsq_rms_rdc1 = $sumsq_rms_rdc1 + $rms_rdc1**2)
+       display # rdc1: $file $rms_rdc1 $violations
+     end if
+     if ($Data.rdc2_choice eq "SANI") then
+       sani print thresh=0.2 class rdc2 end
+       evaluate ($rms_rdc2 = $result)
+       evaluate ($sum_rms_rdc2 = $sum_rms_rdc2 + $rms_rdc2)
+       evaluate ($sumsq_rms_rdc2 = $sumsq_rms_rdc2 + $rms_rdc2**2)
+       display # rdc2: $file $rms_rdc2 $violations
+     end if    
+     if ($Data.rdc3_choice eq "SANI") then
+       sani print thresh=0.2 class rdc3 end
+       evaluate ($rms_rdc3 = $result)
+       evaluate ($sum_rms_rdc3 = $sum_rms_rdc3 + $rms_rdc3)
+       evaluate ($sumsq_rms_rdc3 = $sumsq_rms_rdc3 + $rms_rdc3**2)
+       display # rdc3: $file $rms_rdc3 $violations
+     end if    
+     if ($Data.rdc4_choice eq "SANI") then
+       sani print thresh=0.2 class rdc4 end
+       evaluate ($rms_rdc4 = $result)
+       evaluate ($sum_rms_rdc4 = $sum_rms_rdc4 + $rms_rdc4)
+       evaluate ($sumsq_rms_rdc4 = $sumsq_rms_rdc4 + $rms_rdc4**2)
+       display # rdc4: $file $rms_rdc4 $violations
+     end if    
+     if ($Data.rdc5_choice eq "SANI") then
+       sani print thresh=0.2 class rdc5 end
+       evaluate ($rms_rdc5 = $result)
+       evaluate ($sum_rms_rdc5 = $sum_rms_rdc5 + $rms_rdc5)
+       evaluate ($sumsq_rms_rdc5 = $sumsq_rms_rdc5 + $rms_rdc5**2)
+       display # rdc5: $file $rms_rdc5 $violations
+     end if
+
+   end if
+   evaluate ($count = $count + 1)
+end loop main
+
+
+if ($Data.rdc1_choice eq "SANI") then
+  evaluate ($mean_rms_rdc1 = $sum_rms_rdc1 / $nstruc1)
+  evaluate ($stdev_rms_rdc1 = sqrt(($sumsq_rms_rdc1 - $nstruc1*$mean_rms_rdc1**2)/ $nstruc1))
+  display # mean values RDC(sani) class rdc1
+  display # sani $mean_rms_rdc1 (+/- $stdev_rms_rdc1 )
+end if
+if ($Data.rdc2_choice eq "SANI") then
+  evaluate ($mean_rms_rdc2 = $sum_rms_rdc2 / $nstruc1)
+  evaluate ($stdev_rms_rdc2 = sqrt(($sumsq_rms_rdc2 - $nstruc1*$mean_rms_rdc2**2)/ $nstruc1))
+  display # mean values RDC(sani) class rdc2
+  display # sani $mean_rms_rdc2 (+/- $stdev_rms_rdc2 )
+end if    
+if ($Data.rdc3_choice eq "SANI") then
+  evaluate ($mean_rms_rdc3 = $sum_rms_rdc3 / $nstruc1)
+  evaluate ($stdev_rms_rdc3 = sqrt(($sumsq_rms_rdc3 - $nstruc1*$mean_rms_rdc3**2)/ $nstruc1))
+  display # mean values RDC(sani) class rdc3
+  display # sani $mean_rms_rdc3 (+/- $stdev_rms_rdc3 )
+end if    
+if ($Data.rdc4_choice eq "SANI") then
+  evaluate ($mean_rms_rdc4 = $sum_rms_rdc4 / $nstruc1)
+  evaluate ($stdev_rms_rdc4 = sqrt(($sumsq_rms_rdc4 - $nstruc1*$mean_rms_rdc4**2)/ $nstruc1))
+  display # mean values RDC(sani) class rdc4
+  display # sani $mean_rms_rdc4 (+/- $stdev_rms_rdc4 )
+end if    
+if ($Data.rdc5_choice eq "SANI") then
+  evaluate ($mean_rms_rdc5 = $sum_rms_rdc5 / $nstruc1)
+  evaluate ($stdev_rms_rdc5 = sqrt(($sumsq_rms_rdc5 - $nstruc1*$mean_rms_rdc5**2)/ $nstruc1))
+  display # mean values RDC(sani) class rdc5
+  display # sani $mean_rms_rdc5 (+/- $stdev_rms_rdc5 )
+end if
+
+stop

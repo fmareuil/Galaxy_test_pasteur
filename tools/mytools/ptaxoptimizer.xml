@@ -1,0 +1,42 @@
+<tool id="ptaxoptimizer" name="ptaxoptimizer">
+  <description> Retrieves taxonomy using tabulate blast results </description>
+  <command> 
+     ptaxoptimizer 
+    #if $adv_opts.adv_opts_selector=="advanced":
+    -c $adv_opts.colNum -s $adv_opts.separator $adv_opts.dbName $adv_opts.e 
+    #else:
+    $f $outputNoTaxo -i $input -o $output 
+    #end if
+  </command>
+  
+  <inputs>
+    <param name="input" type="data" format="tabular" label="Tabulated file"/>
+    <param name="f" type="boolean" truevalue="-f" falsevalue="" checked="false" label="Outputs data without taxonomy info"/>
+    <conditional name="adv_opts">
+            <param name="adv_opts_selector" type="select" label="Advanced Options">
+              <option value="basic" selected="True">Hide Advanced Options</option>
+              <option value="advanced">Show Advanced Options</option>
+            </param>
+            <when value="basic"/>
+            <when value="advanced">
+		 <param name="colNum" type="integer" size="4" value="2"  min="1" label="Column number to parse (default second column: 2)" />
+		 <param name="separator" value="|" type="text" label="Separator character (default '|')" />  
+  		 <param name="dbName" type="boolean" truevalue="-d" falsevalue="" checked="false" label="Database Name"/>
+    		 <param name="e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="Extract description from database Entry" />
+            </when>
+    </conditional>
+ </inputs>
+  <outputs>
+    <data name="output" format="tabular" label="Output containing contig/read with taxonomy info"/>
+    <data name="outputNoTaxo" format="tabular" label="Output containing contig/read with NO taxonomy info">
+    <filter>f == "-f"</filter>  
+    </data>
+  
+  </outputs>
+ 
+  <tests>
+  </tests>
+
+  <help>
+  </help>
+</tool>

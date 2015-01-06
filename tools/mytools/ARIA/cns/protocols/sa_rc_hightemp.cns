@@ -1,0 +1,119 @@
+! module sa_rc_hightemp.cns
+! Cartesian dynamics high temperature phase
+
+module(nstep;SaProtocol;Data;)
+
+! the next 3 lines are for a week harmonic potential to the origin
+! (probably not really necessary)
+do (refx = 0) (all)
+do (refy = 0) (all)
+do (refz = 0) (all)
+
+do (fbeta=10) (all)    
+do (mass=100) (all) 
+
+noe 
+    rswitch ambi &Data.Rswi_hot 
+    rswitch dist &Data.Rswi_hot
+    rswitch hbon &Data.Rswi_hot
+
+    mrswitch ambi &Data.mRswi_hot 
+    mrswitch dist &Data.mRswi_hot
+    mrswitch hbon &Data.mRswi_hot
+
+    asym ambi &Data.asy_hot 
+    asym dist &Data.asy_hot
+    asym hbon &Data.asy_hot
+
+    masym ambi &Data.masy_hot 
+    masym dist &Data.masy_hot
+    masym hbon &Data.masy_hot
+end
+   
+      
+   evaluate ($knoe = 0.5)   
+   noe scale dist $knoe scale ambi $knoe end
+         
+   evaluate ($kbon = 0.005  )   ! bonds
+   evaluate ($kang = 0.00005  )   ! angles
+   evaluate ($kvdw = 0.05)   ! vdw
+
+   evaluate ($kharm = 0.0001)
+!   evaluate ($kharm = 10^(-ran()*10))
+   do (harm = $kharm) (all)
+
+   {* 1 ====================================== minimization *}
+
+parameter bonds (name C) (name N) $kbon TOKEN end
+
+parameter nbonds 
+   atom cutnb 12 tolerance 4 repel=1.25 wmin 0.5
+   rexp=4 irexp=1 rcon=1. nbxmod 4 ctonnb 0.9 ctofnb 1.0
+end end
+
+igroup 
+      interaction (not store1) (all) 
+      weights bond 1 angl $kang impr 0 vdw 0 elec 0 end 
+      interaction (store1) (store1) 
+      weights bond 1 angl $kang impr 0 vdw $kvdw elec 0 end 
+end
+   
+flags exclude * include vdw harm ncs bonds end
+   
+minimize powell nstep 500 end
+   
+flags exclude * include bonds angle {impr} vdw noe harm ncs end
+   
+   
+   {* 2 ====================================== high temperature dynamics *}
+   
+evaluate ($k_vdw = 0.005)
+evaluate ($bath = &SaPRotocol.Carinit_t)
+evaluate ($timestep = &SaProtocol.timestep*&SaProtocol.tadfactor)
+do (vx = maxwell($bath)) (all)
+do (vy = maxwell($bath)) (all)
+do (vz = maxwell($bath)) (all)
+   
+evaluate ($timestep = 0.05)
+evaluate ($nstep = 500)
+write trajectory
+   ascii=false
+   output=traj.dcd
+end   
+
+while ($kbon < 10) loop stage1
+   
+      evaluate ($kbon = min(10, $kbon * sqrt(1.25)))
+      evaluate ($kang = $kbon/100)
+      parameter bonds (name C) (name N) $kbon TOKEN end
+      igroup 
+         interaction (not store1) (all) 
+         weights bond 1 angl $kang impr 0 vdw 0 elec 0 end 
+         interaction (store1) (store1) 
+         weights bond 1 angl $kang impr 0 vdw $kvdw elec 0 end 
+      end
+      dynamics  cartesian
+         nstep=$nstep time=&SaProtocol.timestep  
+         tcoup=true temperature=$bath nprint=$nstep  
+         ntrfrq=9999  cmremove=true  cmperiodic=0
+      end
+         
+      evaluate ($critical=$temp/$bath)
+      if ($critical > 1.2) then
+         evaluate ($nreassign = $nreassign + 1)
+         mini powell nstep 100 end
+         do (vx=maxwell($bath)) ( all )
+         do (vy=maxwell($bath)) ( all )
+         do (vz=maxwell($bath)) ( all )
+      end if
+
+      write traj next end
+end loop stage1
+   
+   {* 4 ====================================== now with all atoms *}
+
+
+mini powell nstep 500 end
+     
+
+

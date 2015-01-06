@@ -1,0 +1,284 @@
+<tool id="interElementGff" name="interElementGff">
+	<description>Creates a new Gff output, which corresponds to the region of two successive Elements. </description>
+	<command interpreter="perl">
+		../bacteriaRegulatoryRegion_Detection/interElementGff.pl -i $inputFile 
+
+		#if $Optionf5ff.option == "Yes":
+			-f5ff $Optionf5ff.f5ffValue
+		#end if	
+
+		#if $Optionff3f.option == "Yes":
+			-ff3f $Optionff3f.ff3fValue
+		#end if	
+
+		#if $Optionf5fr.option == "Yes":
+			-f5fr $Optionf5fr.f5frValue
+		#end if	
+
+		#if $Optionff3r.option == "Yes":
+			-ff3r $Optionff3r.ff3rValue
+		#end if	
+
+		#if $Optionf3rf.option == "Yes":
+			-f3rf $Optionf3rf.f3rfValue
+		#end if
+
+		#if $Optionfr5f.option == "Yes":
+			-fr5f $Optionfr5f.fr5fValue
+		#end if
+
+		#if $Optionf3rr.option == "Yes":
+			-f3rr $Optionf3rr.f3rrValue
+		#end if
+
+		#if $Optionfr5r.option == "Yes":
+			-fr5r $Optionfr5r.fr5rValue
+		#end if
+
+		#if $Optionr5ff.option == "Yes":
+			-r5ff $Optionr5ff.r5ffValue
+		#end if
+		
+		#if $Optionrf3f.option == "Yes":
+			-rf3f $Optionrf3f.rf3fValue
+		#end if
+		
+		#if $Optionr5fr.option == "Yes":
+			-r5fr $Optionr5fr.r5frValue
+		#end if
+		
+		#if $Optionrf3r.option == "Yes":
+			-rf3r $Optionrf3r.rf3rValue
+		#end if
+
+		#if $Optionr3rf.option == "Yes":
+			-r3rf $Optionr3rf.r3rfValue
+		#end if
+
+		#if $Optionrr5f.option == "Yes":
+			-rr5f $Optionrr5f.rr5fValue
+		#end if
+
+		#if $Optionr3rr.option == "Yes":
+			-r3rr $Optionr3rr.r3rrValue
+		#end if
+
+		#if $Optionrr5r.option == "Yes":
+			-rr5r $Optionrr5r.rr5rValue
+		#end if
+
+		-o $outputFile	
+	</command>
+
+	<inputs>
+		<param name="inputFile" type="data" label="Input File" format="gff"/>
+		
+		<conditional name="Optionf5ff">
+			<param name="option" type="select" label="Option[f5ff]" help="number of nt to exclude from 5' seed when gene before is Forward, seed is Forward and next gene is Forward [default 0]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="f5ffValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="Optionff3f">
+			<param name="option" type="select" label="Option[ff3f]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="ff3fValue" type="integer" value="30"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="Optionf5fr">
+			<param name="option" type="select" label="Option[f5fr]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="f5frValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="Optionff3r">
+			<param name="option" type="select" label="Option[ff3r]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="ff3rValue" type="integer" value="-10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionf3rf">
+			<param name="option" type="select" label="Option[f3rf]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="f3rfValue" type="integer" value="-10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionfr5f">
+			<param name="option" type="select" label="Option[fr5f]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="fr5fValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionf3rr">
+			<param name="option" type="select" label="Option[f3rr]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="f3rrValue" type="integer" value="-10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionfr5r">
+			<param name="option" type="select" label="Option[fr5r]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="fr5rValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionr5ff">
+			<param name="option" type="select" label="Option[r5ff]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="r5ffValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionrf3f">
+			<param name="option" type="select" label="Option[rf3f]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="rf3fValue" type="integer" value="30"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionr5fr">
+			<param name="option" type="select" label="Option[r5fr]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="r5frValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionrf3r">
+			<param name="option" type="select" label="Option[rf3r]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="rf3rValue" type="integer" value="-10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionr3rf">
+			<param name="option" type="select" label="Option[r3rf]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="r3rfValue" type="integer" value="30"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>	
+
+		<conditional name="Optionrr5f">
+			<param name="option" type="select" label="Option[rr5f]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="rr5fValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="Optionr3rr">
+			<param name="option" type="select" label="Option[r3rr]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="r3rrValue" type="integer" value="30"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="Optionrr5r">
+			<param name="option" type="select" label="Option[rr5r]">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="rr5rValue" type="integer" value="10"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+			
+	</inputs>
+
+	<outputs>
+		<data name="outputFile" format="gff" label="[interElementGff] Output File"/>
+	</outputs> 
+	
+	<help>
+		command example: interElementGff.pl -i ${i}_annot.gff -o ${i}_trans_IG.gff -f5ff 10 -ff3f 30 -f5fr 10 -ff3r -10 -f3rf -10 -fr5f 10 -f3rr -10 -fr5r 10 -r5ff 10 -rf3f 30 -r5fr 10 -rf3r -10 -r3rf 30 -rr5f 10 -r3rr 30 -rr5r 10
+	</help>
+
+</tool>
+
+
+
+
+
+	

@@ -1,0 +1,8 @@
+command : cp log de mon fichier /Bis/home/fmareuil/Travail/Galaxy/galaxy/../projets/export/mon.fichierdesortie
+
+log de mon fichier 
+have been copied in 
+/Bis/home/fmareuil/Travail/Galaxy/galaxy/../projets/export 
+and named 
+mon.fichierdesortie 
+WARNING: this tool duplicates the data, remember to delete redundant data.

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Authors: Wolfgang Rieping and Michael Habeck
+         Institut Pasteur, Paris
+        
+         Copyright (C) Michael Habeck and Wolfgang Rieping
+         No warranty implied or expressed.
+         All rights reserved.
+
+$Author: bardiaux $
+$Revision: 1.1.1.1 $
+$Date: 2010/03/23 15:27:26 $
+
+-->
+
+<!ELEMENT topology (residue*)>
+
+  <!ATTLIST topology name CDATA "">
+  <!ATTLIST topology description CDATA "">
+
+  <!ELEMENT residue (atom+, backbone, sidechain, terminus+, equivalent_group*)>
+  <!ATTLIST residue name CDATA #REQUIRED>
+  <!ATTLIST residue residue_type (AMINO_ACID|DNA_BASE|RNA_BASE) #REQUIRED>
+
+    <!ELEMENT atom EMPTY>
+    <!ATTLIST atom name CDATA #REQUIRED>
+    <!ATTLIST atom atom_type CDATA #REQUIRED>
+    <!ATTLIST atom hetero CDATA "None">
+
+  <!ELEMENT equivalent_group (atom_name+)>
+  <!ATTLIST equivalent_group group_type (METHYL|METHYLENE|ISOPROPYL|AROMATIC|NTERMINUS) #REQUIRED>
+
+  <!ELEMENT terminus (atom_name+)>
+  <!ATTLIST terminus terminus_type (N_STANDARD|C_STANDARD|N_AMINYL|C_AMIDO|C_CARBOXYL|C5_PRIME_PHOSPHATE|C5_PRIME_HYDROXYL|C3_PRIME_HYDROXYL) #REQUIRED>
+
+  <!ELEMENT backbone (atom_name+)>
+
+  <!ELEMENT sidechain (atom_name+)>
+
+    <!ELEMENT atom_name EMPTY>
+    <!ATTLIST atom_name name CDATA #REQUIRED>
+

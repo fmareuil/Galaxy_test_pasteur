@@ -1,0 +1,52 @@
+<tool id="export" name="export data" version="2.2">
+  <description>To export history datas, WARNING this tool duplicate the data, remember to delete redundant data</description>
+  <command interpreter="python">export.py -i "
+  #for $inp in $inputs:
+    $inp.input
+  #end for
+  "
+  -f "
+  #for $inp in $inputs:
+    $inp.input.name
+  #end for
+  "
+  -n "
+  #for $inp in $inputs:
+    $inp.name
+  #end for
+  "
+  -u $__user_email__ -e $__root_dir__ -o $output</command>
+  <inputs>
+    <repeat name="inputs" title="Input for export" min="1">
+        <param name="input" type="data" label="Source file"/>
+        <param name="name" label="Name of the data" type="text" size="50" help="No space or accent in the name">
+    	    <validator type="regex" message="Use only alphanumeric characters or tidashret or underscore and only one dot">[A-Za-z0-9_\-.]+$</validator>
+        </param>
+    </repeat>
+  </inputs>
+  <outputs>
+    <data format="text" name="output" label="log of export of datas in /outputs/yourlogin"/>
+  </outputs>
+  <help>
+  
+.. class:: warningmark 
+
+WARNING: this tool duplicates the data, remember to delete redundant data. Wait 5 minutes to obtain your data with good permission.
+
+.. class:: warningmark
+
+WARNING: this tool duplicates the data, remember to delete redundant data. Wait 5 minutes to obtain your data with good permission.
+
+.. class:: warningmark
+
+WARNING: this tool duplicates the data, remember to delete redundant data. Wait 5 minutes to obtain your data with good permission.
+
+.. class:: warningmark
+
+WARNING: this tool duplicates the data, remember to delete redundant data. Wait 5 minutes to obtain your data with good permission.
+
+.. class:: warningmark
+
+WARNING: this tool duplicates the data, remember to delete redundant data. Wait 5 minutes to obtain your data with good permission.
+  </help>
+</tool>

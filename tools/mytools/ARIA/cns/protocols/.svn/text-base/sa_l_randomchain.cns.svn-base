@@ -1,0 +1,80 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: sa_l_randomchain.cns,v $
+
+set message off echo off end
+
+REMARK randomchain.inp
+REMARK randomize a structure by random rotations around the N-Ca and Ca-C bonds.
+REMARK 
+REMARK input:  a coordinate set obtained with generate_template.inp or any
+REMARK         other pdb file with good geometry
+REMARK output: the coordinates randomized around phi and psi. chi_i are not
+REMARK         affected.
+REMARK 
+REMARK the input file can be used also to generate the randomized coordinates
+REMARK "on the fly" as part of the sa.inp protocol. the lines setting the seed,
+REMARK reading the structure and the template coordinates at the beginning, 
+REMARK and writing out the randomized coordinates and the stop command at the end, 
+REMARK should then be deleted.
+REMARK this file should be read after the "coor swap" and "coor copy" statements
+REMARK at the beginning of the main loop in sa.inp.
+REMARK
+REMARK Author: M. Nilges, EMBL, Oct. 1993
+REMARK last modification: setup_swap for each structure, 28-01-97
+
+
+    
+! The store1 is set to 1 for all atoms that have already been 
+! rotated.
+do (store1=0) (all) 
+do (store2=0) (all)
+
+! loop through all ca atoms.
+for $id in id (name ca) loop pept
+
+    show element (resid) (id $id)
+    evaluate ($res = $result)
+    show element (segid) (id $id)
+    evaluate ($seg = $result)
+    do (store2=1) (byres (id $id))
+
+    evaluate ($phi = random()*360-180)              
+    evaluate ($psi = random()*360-180)            
+
+! all atoms up to the present ca are held fixed for phi rotation
+    do (store1=1) 
+    ((store2 and (name n or name hn or name ht* or name ca)))
+
+! rotate phi
+    coor rotate sele= (attribute store1=0) 
+	center (head (store2 and name ca))
+	axis   (head (store2 and name ca)
+		tail (store2 and name n)) $phi
+    end
+
+! fix the sidechain of the current residue for psi rotation
+    do (store1=1) 
+    ((store2 and not (name c or name o or name ot#)))
+
+! rotate psi
+    coor rotate sele= (attribute store1=0 and segid $seg) 
+	center (head (store2 and name c) )
+	axis   (head (store2 and name c)
+		tail (store2 and name ca)) $psi
+    end
+
+! fix all of current residue
+    do (store1=1) (store2) 
+    do (store2=0) (byres (id $id))
+
+end loop pept
+
+!!coor translate selection (segid B) (head (segid A) tail (segid B)) end 
+
+evaluate ($randomfilename="random"+encode($count)+".pdb")
+
+!!!write coordinates output =$randomfilename end
+
+set message on echo on end
+

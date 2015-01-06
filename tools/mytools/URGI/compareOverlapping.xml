@@ -1,0 +1,288 @@
+<tool id="CompareOverlapping" name="Compare Overlapping">
+	<description>Print all the transcripts from a first file which overlap with the transcripts from a second file.</description>
+	<command interpreter="python">
+		../Java/Python/CompareOverlapping.py -i $formatType.inputFileName1
+		#if $formatType.FormatInputFileName1 == 'bed':
+			-f bed
+		#elif $formatType.FormatInputFileName1 == 'gff':
+			-f gff	
+		#elif $formatType.FormatInputFileName1 == 'gff2':
+			-f gff2
+		#elif $formatType.FormatInputFileName1 == 'gff3':
+			-f gff3
+		#elif $formatType.FormatInputFileName1 == 'sam':
+			-f sam
+		#elif $formatType.FormatInputFileName1 == 'gtf':
+			-f gtf
+		#end if
+			
+		-j $formatType2.inputFileName2
+		#if $formatType2.FormatInputFileName2 == 'bed':
+			-g bed
+		#elif $formatType2.FormatInputFileName2 == 'gff':
+			-g gff	
+		#elif $formatType2.FormatInputFileName2 == 'gff2':
+			-g gff2
+		#elif $formatType2.FormatInputFileName2 == 'gff3':
+			-g gff3
+		#elif $formatType2.FormatInputFileName2 == 'sam':
+			-g sam
+		#elif $formatType2.FormatInputFileName2 == 'gtf':
+		        -f gtf
+		#end if
+
+		-o $outputFileGff 
+
+		#if $optionNFirstFile1.NFirstForFile1 == 'Yes':
+			-S $optionNFirstFile1.firstNtFile1
+		#end if
+		#if $optionNFirstFile2.NFirstForFile2 == 'Yes':
+			-s $optionNFirstFile2.firstNtFile2
+		#end if
+		#if $optionNLastFile1.NLastForFile1 == 'Yes':
+			-U $optionNLastFile1.lastNtFile1
+		#end if
+		#if $optionNLastFile2.NLastForFile2 == 'Yes':
+			-u $optionNLastFile2.lastNtFile2
+		#end if
+	
+		#if $optionExtentionCinqFile1.extentionFile1 == 'Yes':
+			-E $optionExtentionCinqFile1.extention51
+		#end if
+		#if $optionExtentionCinqFile2.extentionFile2 == 'Yes':
+			-e $optionExtentionCinqFile2.extention52
+		#end if
+
+		#if $optionExtentionTroisFile1.extentionFile1 == 'Yes':
+			-N $optionExtentionTroisFile1.extention31
+		#end if
+		#if $optionExtentionTroisFile2.extentionFile2 == 'Yes':
+			-n $optionExtentionTroisFile2.extention32
+		#end if	
+
+		#if $OptionColinearOrAntiSens.OptionCA == 'Colinear':
+			-c 
+		#elif $OptionColinearOrAntiSens.OptionCA == 'AntiSens':
+			-a
+		#end if	
+
+		#if $OptionDistance.Dist == 'Yes':
+			-d $OptionDistance.distance
+		#end if
+
+		#if $OptionMinOverlap.MO == 'Yes':
+			-m $OptionMinOverlap.minOverlap
+		#end if
+
+		$InvertMatch
+		$ReportIntron
+		$NotOverlapping
+		
+	</command>
+
+	<inputs>
+		<conditional name="formatType">
+			<param name="FormatInputFileName1" type="select" label="Input File Format 1">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="sam">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName1" format="bed" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName1" format="gff" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName1" format="gff2" type="data" label="Input File 1"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName1" format="gff3" type="data" label="Input File 1"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName1" format="sam" type="data" label="Input File 1"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName1" format="gtf" type="data" label="Input File 1"/>
+								                        </when>
+		</conditional>
+
+		<conditional name="formatType2">
+			<param name="FormatInputFileName2" type="select" label="Input File Format 2">
+				<option value="bed">bed</option>
+				<option value="gff">gff</option>
+				<option value="gff2">gff2</option>
+				<option value="gff3">gff3</option>
+				<option value="sam">sam</option>
+				<option value="sam">gtf</option>
+			</param>
+			<when value="bed">
+				<param name="inputFileName2" format="bed" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff">
+				<param name="inputFileName2" format="gff" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff2">
+				<param name="inputFileName2" format="gff2" type="data" label="Input File 2"/>
+			</when>
+			<when value="gff3">
+				<param name="inputFileName2" format="gff3" type="data" label="Input File 2"/>
+			</when>
+			<when value="sam">
+				<param name="inputFileName2" format="sam" type="data" label="Input File 2"/>
+			</when>
+			<when value="gtf">
+				<param name="inputFileName2" format="gtf" type="data" label="Input File 2"/>
+			</when>
+		</conditional>
+
+
+
+		<conditional name="optionNFirstFile1">
+			<param name="NFirstForFile1" type="select" label="NFirst for file 1" help="only consider the n first nucleotides of the transcripts in file 1">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="firstNtFile1" type="integer" value="1" label="n first nucleotides for input file 1" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		<conditional name="optionNFirstFile2">
+			<param name="NFirstForFile2" type="select" label="NFirst for file 2" help="only consider the n first nucleotides of the transcripts in file 2">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="firstNtFile2" type="integer" value="1" label="n first nucleotides for input file 1" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionNLastFile1">
+			<param name="NLastForFile1" type="select" label="NLast for file 1">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="lastNtFile1" type="integer" value="1" label="n last nucleotides for input file 1" help="only consider the n last nucleotides of the transcripts in file 1"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		<conditional name="optionNLastFile2">
+			<param name="NLastForFile2" type="select" label="NLast for file 2">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="lastNtFile2" type="integer" value="1" label="n last nucleotides for input file 2" help="only consider the n last nucleotides of the transcripts in file 2"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+
+
+		<conditional name="optionExtentionCinqFile1">
+			<param name="extentionFile1" type="select" label="Extension towards 5 for file 1">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="extention51" type="integer" value="1" label="in file 1" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+
+		<conditional name="optionExtentionCinqFile2">
+			<param name="extentionFile2" type="select" label="Extension towards 5 for file 2">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="extention52" type="integer" value="1" label="in file 2"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionExtentionTroisFile1">
+			<param name="extentionFile1" type="select" label="Extension towards 3 for file 1">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="extention31" type="integer" value="1" label="in file 1" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="optionExtentionTroisFile2">
+			<param name="extentionFile2" type="select" label="Extension towards 3 for file 2">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="extention32" type="integer" value="1" label="in file 2" />
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionColinearOrAntiSens">
+			<param name="OptionCA" type="select" label="Colinear or anti-sens">
+				<option value="Colinear">Colinear</option>
+				<option value="AntiSens">AntiSens</option>
+				<option value="NONE" selected="true">NONE</option>
+			</param>
+			<when value="Colinear">
+			</when>
+			<when value="AntiSens">
+			</when>
+			<when value="NONE">
+			</when>
+		</conditional>
+
+		<conditional name="OptionDistance">
+			<param name="Dist" type="select" label="Maximum Distance between two reads">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="distance" type="integer" value="0"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+
+		<conditional name="OptionMinOverlap">
+			<param name="MO" type="select" label="Minimum number of overlapping between two reads">
+				<option value="Yes">Yes</option>
+				<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="minOverlap" type="integer" value="1"/>
+			</when>
+			<when value="No">
+			</when>
+		</conditional>
+		<param name="InvertMatch" type="boolean" truevalue="-x" falsevalue="" checked="false" label="Invert match"/>
+		<param name="ReportIntron" type="boolean" truevalue="-t" falsevalue="" checked="false" label="Report intron"/>
+		<param name="NotOverlapping" type="boolean" truevalue="-O" falsevalue="" checked="false" label="When there is no overlapping, the number of Overlapping will be set to 0 by defalt."/>
+		
+	</inputs>
+
+	<outputs>
+		<data name="outputFileGff" format="gff3"/>
+	</outputs> 
+	
+</tool>

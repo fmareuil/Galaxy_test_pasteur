@@ -1,0 +1,36 @@
+<tool id="writeResToHTML" name="writeResToHTML">
+  <description>Write all ncRNAs analysis results into an HTML file (Only for ncRNAs analysis pipeline).</description>
+   <command interpreter="python">writeResToHTML.py 
+   --input1Gff1 $input1GffFile1 --input1Gff2 $input1GffFile2 --input1PNG1 $input1PNGFile1 --input1PNG2 $input1PNGFile2 
+   --input2Gff1 $input2GffFile1 --input2Gff2 $input2GffFile2 --input2PNG1 $input2PNGFile1 --input2PNG2 $input2PNGFile2
+   --input3Gff1 $input3GffFile1 --input3Gff2 $input3GffFile2 --input3PNG1 $input3PNGFile1 --input3PNG2 $input3PNGFile2
+   --outHTML $outHTML 
+   --outImgDir $outHTML.files_path 
+   2> $log </command>
+
+  <inputs>
+      <param name="input1GffFile1" type="data" label="First gff3 result in intergenic sRNAs analysis. (TRANS detection) " format="gff3"/>
+      <param name="input1GffFile2" type="data" label="Second gff3 result in intergenic sRNAs analyse. (TRANS detection) " format="gff3"/>
+      <param name="input1PNGFile1" type="data" label="PNG (getSize) result intergenic sRNAs analyse.(TRANS detection)" format="png"/>
+      <param name="input1PNGFile2" type="data" label="PNG (plot) result in intergenic sRNAs analyse. (TRANS detection) " format="png"/>
+      
+      <param name="input2GffFile1" type="data" label="First gff3 result in asRNAs analysis. (ANTISENSE detection) " format="gff3"/>
+      <param name="input2GffFile2" type="data" label="Second gff3 result in asRNAs analyse. (ANTISENSE detection) " format="gff3"/>
+      <param name="input2PNGFile1" type="data" label="PNG (getSize) result asRNAs analyse.(ANTISENSE detection)" format="png"/>
+      <param name="input2PNGFile2" type="data" label="PNG (plot) result in  asRNAs analyse. (ANTISENSE detection) " format="png"/>
+      
+      <param name="input3GffFile1" type="data" label="First gff3 result in long 5'UTRs analysis. (CIS detection) " format="gff3"/>
+      <param name="input3GffFile2" type="data" label="Second gff3 result in long 5'UTRs analysis. (CIS detection) " format="gff3"/>
+      <param name="input3PNGFile1" type="data" label="PNG (getSize) result in long 5'UTRs analysis. (CIS detection) " format="png"/>
+      <param name="input3PNGFile2" type="data" label="PNG (plot) result in long 5'UTRs analysis. (CIS detection) " format="png"/>
+
+  </inputs>
+
+  <outputs>
+      <data format="HTML" name="outHTML" label="[writeRes2HTML] Output HTML File" help="This output file shows all results by ncRNAs detection analysis."/> 
+      <data format="txt" name="log" label="[writeRes2HTML] Output log File"/> 
+  </outputs>
+
+  <help>
+  </help>
+</tool>

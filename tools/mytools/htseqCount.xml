@@ -1,0 +1,78 @@
+<tool id="htseqCount" name="htseqCount" version="0.0.1">
+  <description> This script takes an alignment file in SAM format and a feature file in GFF format and calculates for each feature the number of reads mapping to it  </description>
+   <stdio>
+    <exit_code range="0" level="warning" description="Description message" />
+    <exit_code range="1:" level="fatal" />
+  </stdio>
+  <command> htseq-count -m $mode -s $stranded  -a $minaqual -t $feature_type -i $id_attribute 
+  #if $samout.flag == "yes":
+      -o $samoutput
+  #end if
+  #if $quiet.flag == "yes":
+      -q
+  #end if
+  $sam_file $gff_file > $output
+    
+  </command>
+  
+  <inputs>
+     <param name="sam_file" type="data" format="sam" label="SAM file"/>
+      <param name="gff_file" type="data" format="gff" label="GFF file"/>
+      <param name="mode" type="select" label="Mode to handle reads overlapping more than one feature.">
+         <option value="union" selected="True">union</option>
+         <option value="intersection-strict">intersection-strict</option>
+	 <option value="intersection-nonempty">intersection-nonempty</option>
+     </param>
+     <param name="stranded" type="select" label="whether the data is from a strand-specific assay" help="For stranded=no, a read is considered overlapping with a feature regardless of whether it is mapped to the same or the opposite strand as the feature. For stranded=yes and single-end reads, the read has to be mapped to the same strand as the feature. For paired-end reads, the first read has to be on the same strand and the second read on the opposite strand. For stranded=reverse, these rules are reversed.">
+         <option value="yes" selected="True">yes</option>
+         <option value="no">no</option>
+	 <option value="reverse">reverse</option>
+     </param>
+     <param name="minaqual" type="integer" value="0" label="skip all reads with alignment quality lower than the given minimum value"/>
+     <param name="feature_type" type="text" value="exon" label="feature type (3rd column in GFF file) to be used, all features of other type are ignored"/>
+     <param name="id_attribute" type="text" value="gene_id" label="GFF attribute to be used as feature ID." help="Several GFF lines with the same feature ID will be considered as parts of the same feature."/>
+     <conditional name="samout"> 
+         <param name="flag" type="select" label="write out all SAM alignment records into an output SAM file, annotating each line with its assignment to a feature or a special counter (as an optional field with tag \u2018XF\u2019)">
+	     <option value="yes"> yes </option>
+             <option value="no" selected="True"> no </option>
+         </param>       
+     </conditional>
+     <conditional name="samout"> 
+         <param name="flag" type="select" label="write out all SAM alignment records into an output SAM file, annotating each line with its assignment to a feature or a special counter (as an optional field with tag 'XF')">
+	     <option value="yes"> yes </option>
+             <option value="no" selected="True"> no </option>
+         </param>       
+     </conditional>   
+     <conditional name="quiet"> 
+         <param name="flag" type="select" label="suppress progress report and warnings">
+	     <option value="yes"> yes </option>
+             <option value="no" selected="True"> no </option>
+         </param>       
+     </conditional>
+ </inputs>
+ <outputs>
+     <data name="output" format="txt"/>
+     <data name="samoutput" format="sam">
+         <filter>samout["flag"] == "yes"</filter>
+     </data>
+ </outputs>
+ <tests>
+ </tests>
+
+ <help>
+
+definition:
+ This script takes an alignment file in SAM format and a feature file in GFF
+ format and calculates for each feature the number of reads mapping to it. See
+ http://www-huber.embl.de/users/anders/HTSeq/doc/count.html for details.
+
+ 
+usage:
+ htseq-count [options] sam_file gff_file
+
+
+Options::
+
+
+ </help>
+</tool>

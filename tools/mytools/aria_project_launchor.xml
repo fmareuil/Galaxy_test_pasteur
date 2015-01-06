@@ -1,0 +1,794 @@
+<tool id="aria_launchor" name="ARIA" version="2.3">
+  <description>for a prepared project ARIA</description>
+  <command interpreter="python">
+  aria_project_launchor.py --name=$name
+  #if $advance1.flag == "yes":
+    --cache=$advance1.cache --cleanup=$advance1.cleanup --linkdef=$advance1.linkdef --paramdef=$advance1.paramdef --topodef=$advance1.topodef
+  #else:
+    --cache=yes --cleanup=yes --linkdef=automatic --paramdef=parallhdg5.3softbig.pro --topodef=topallhdg5.3soft.pro
+  #end if
+  --seq_xml=$seq_xml
+  --spectrums="
+  #for $spec in $spectrums:
+    --shift_xml=$spec.shift_xml --defshifterr=$spec.defshifterr --peaks_xml=$spec.peaks_xml
+    #if $spec.advance2.flag == "yes":
+      --flagassign=$spec.advance2.flagassign --flagtrustassign=$spec.advance2.flagtrustassign --structrules=$spec.advance2.structrules --filterdiag=$spec.advance2.filterdiag --filterunasspeaks=$spec.advance2.filterunasspeaks
+      --peaksize=$spec.advance2.peaksize --fwinprot1=$spec.advance2.fwinprot1 --fwinhet1=$spec.advance2.fwinhet1 --fwinprot2=$spec.advance2.fwinprot2 --fwinhet2=$spec.advance2.fwinhet2
+      #if $spec.advance2.boundL.flagboundL == "yes":
+        --flagboundL=$spec.advance2.boundL.flagboundL --lowerbound=$spec.advance2.boundL.lowerbound
+      #else:
+        --flagboundL=$spec.advance2.boundL.flagboundL --lowerbound=0.0
+      #end if 
+      #if $spec.advance2.boundU.flagboundU == "yes":
+        --flagboundU=$spec.advance2.boundU.flagboundU --upperbound=$spec.advance2.boundU.upperbound
+      #else:
+        --flagboundU=$spec.advance2.boundU.flagboundU --upperbound=6.0
+      #end if
+      --molcorrtime=$spec.advance2.molcorrtime --specmixtime=$spec.advance2.specmixtime --spectfreq=$spec.advance2.spectfreq --ambigtype=$spec.advance2.ambigtype
+    #else:
+      --flagassign=yes --flagtrustassign=no --structrules=no --filterdiag=no --filterunasspeaks=no
+      --peaksize=volume --fwinprot1=0.04 --fwinhet1=0.5 --fwinprot2=0.02 --fwinhet2=0.5
+      --flagboundL=no --lowerbound=0.0
+      --flagboundU=no --upperbound=6.0
+      --molcorrtime=0.0 --specmixtime=0.0 --spectfreq=0.0 --ambigtype=intra
+    #end if
+    ,
+  #end for
+  "
+  #if $advance3.flag == "yes":
+    --Jrestraints="
+    #for $J in $advance3.Jrestraints:
+      --jcouplings_tbl=$J.jcouplings_tbl --flagjcouplings=$J.flagjcouplings --ajs=$J.ajs --bjs=$J.bjs --cjs=$J.cjs --djs=$J.djs --khotjs=$J.khotjs --kcool1js=$J.kcool1js --kcool2js=$J.kcool2js
+    ,
+    #end for
+    "
+    --RDCrestraints="
+    #for $RDC in $advance3.RDCrestraints:
+      --rdcs_tbl=$RDC.rdcs_tbl --flagrdcs=$RDC.flagrdcs --metrdcs=$RDC.metrdcs --firstitrdcs=$RDC.firstitrdcs --khotrdcs=$RDC.khotrdcs --kcool1rdcs=$RDC.kcool1rdcs --kcool2rdcs=$RDC.kcool2rdcs --rrdcs=$RDC.rrdcs --drdcs=$RDC.drdcs --bhotinirdcs=$RDC.bhotinirdcs --bhotfinrdcs=$RDC.bhotfinrdcs --bcool1inirdcs=$RDC.bcool1inirdcs --bcool1finrdcs=$RDC.bcool1finrdcs --bcool2inirdcs=$RDC.bcool2inirdcs --bcool2finrdcs=$RDC.bcool2finrdcs --chotinirdcs=$RDC.chotinirdcs --chotfinrdcs=$RDC.chotfinrdcs --ccool1inirdcs=$RDC.ccool1inirdcs --ccool1finrdcs=$RDC.ccool1finrdcs --ccool2inirdcs=$RDC.ccool2inirdcs --ccool2finrdcs=$RDC.ccool2finrdcs  
+    ,
+    #end for
+    "
+    --Urestraints="
+    #for $U in $advance3.Urestraints:
+      --unamb_tbl=$U.unamb_tbl --flagunamb=$U.flagunamb
+    ,
+    #end for
+    "
+    --Arestraints="
+    #for $A in $advance3.Arestraints:
+      --amb_tbl=$A.amb_tbl --flagamb=$A.flagamb
+    ,
+    #end for
+    "
+    --Hrestraints="
+    #for $H in $advance3.Hrestraints:
+      --hbond_tbl=$H.hbond_tbl --flaghbond=$H.flaghbond --typehbond=$H.typehbond
+    ,
+    #end for
+    " 
+    --Drestraints="
+    #for $D in $advance3.Drestraints:
+      --talos_tbl=$D.talos_tbl --flagdihed=$D.flagdihed --typedihed=$D.typedihed
+    ,
+    #end for
+    " 
+    #if $advance3.sym.flagsym == "yes":
+      --flagsym=$advance3.sym.flagsym --n_monom=$advance3.sym.n_monom --typesym=$advance3.sym.typesym --ncsflag=$advance3.sym.ncsflag --packingflag=$advance3.sym.packingflag  
+    #else:
+      --flagsym=$advance3.sym.flagsym --n_monom=1 --typesym=None --ncsflag=no --packingflag=no --flagsym=no --n_monom=1 --typesym=None --ncsflag=no --packingflag=no
+    #end if
+    --SS1restraints="
+    #for $SS1 in $advance3.SS1restraints:
+      --ssbonds_tbl=$SS1.ssbonds_tbl --flagssbond=$SS1.flagssbond
+    ,
+    #end for
+    " 
+    --SS2restraints="
+    #for $SS2 in $advance3.SS2restraints:
+      --ssbridgeresid1=$SS2.ssbridgeresid1 --ssbridgesegid1=$SS2.ssbridgesegid1 --ssbridgeresid2=$SS2.ssbridgeresid2 --ssbridgesegid2=$SS2.ssbridgesegid2
+    ,
+    #end for
+    "
+    --HISrestraints="
+    #for $HIS in $advance3.HISrestraints:
+      --hisresid=$HIS.hisresid --hissegid=$HIS.hissegid --typhis=$HIS.typhis
+    ,
+    #end for
+    "
+    --CISrestraints="
+    #for $CIS in $advance3.CISrestraints:
+      --cisproresid=$CIS.cisproresid --cisprosegid=$HIS.cisprosegid
+    ,
+    #end for
+    "
+    --ZNrestraints="
+    #for $ZN in $advance3.ZNrestraints:
+      --zntype=$ZN.zntype --znresdzn=$ZN.znresdzn --znsegzn=$ZN.znsegzn --znresd1=$ZN.znresd1 --znseg1=$ZN.znseg1 --znresd2=$ZN.znresd2 --znseg2=$ZN.znseg2 --znresd3=$ZN.znresd3 --znseg3=$ZN.znseg3 --znresd4=$ZN.znresd4 --znseg4=$ZN.znseg4
+    ,
+    #end for
+    "
+    --Orestraints="
+    #for $O in $advance3.Orestraints:
+      --otherfile=$O.otherfile --flagother=$O.flagother --typeother=$O.typeother
+    ,
+    #end for
+    "
+  #else:
+      --flagsym=no --n_monom=1 --typesym=None --ncsflag=no --packingflag=no --flagsym=no --n_monom=1 --typesym=None --ncsflag=no --packingflag=no
+  #end if
+  --Istructs="  
+  #for $I in $Istructs:
+    #if $I.initstr.flaginitstruct == "yes":
+      --initstructfile=$I.initstr.initstructfile --formatinitstruct=$I.initstr.formatinitstruct --flaginitstruct=$I.initstr.flaginitstruct
+    #else:
+      --flaginitstruct=no --formatinitstruct=cns
+    #end if  
+  ,
+  #end for
+  "  
+  #if $advance4.flag == "yes":
+    --cnsoutput=$advance4.cnsoutput --restraintfile=$advance4.restraintfile --crepsffile=$advance4.crepsffile --gentemplate=$advance4.gentemplate --nonbondedparam=$advance4.nonbondedparam
+  #else:
+    --cnsoutput=no --restraintfile=yes --crepsffile=yes --gentemplate=yes --nonbondedparam=PROLSQ
+  #end if
+  #if $advance5.flag == "yes":
+    --unambigrest1it=$advance5.unambigrest1it --ukhot=$advance5.ukhot --ukcool1init=$advance5.ukcool1init --ukcool1fin=$advance5.ukcool1fin --ukcool2=$advance5.ukcool2
+    --ambigrest1it=$advance5.ambigrest1it --akhot=$advance5.akhot --akcool1init=$advance5.akcool1init --akcool1fin=$advance5.akcool1fin --akcool2=$advance5.akcool2
+    --hbondrest1it=$advance5.hbondrest1it --hkhot=$advance5.hkhot --hkcool1init=$advance5.hkcool1init --hkcool1fin=$advance5.hkcool1fin --hkcool2=$advance5.hkcool2
+    --dkhot=$advance5.dkhot --dkcool1=$advance5.dkcool1 --dkcool2=$advance5.dkcool2
+    --hwallmrswitchhot=$advance5.hwallmrswitchhot --hwallmrswitchcool1=$advance5.hwallmrswitchcool1 --hwallmrswitchcool2=$advance5.hwallmrswitchcool2 --hwallrswitchhot=$advance5.hwallrswitchhot --hwallrswitchcool1=$advance5.hwallrswitchcool1 --hwallrswitchcool2=$advance5.hwallrswitchcool2 --hwallmasymphot=$advance5.hwallmasymphot --hwallmasympcool1=$advance5.hwallmasympcool1 --hwallmasympcool2=$advance5.hwallmasympcool2 --hwallasymphot=$advance5.hwallasymphot --hwallasympcool1=$advance5.hwallasympcool1 --hwallasympcool2=$advance5.hwallasympcool2
+    --symrestkpackhot=$advance5.symrestkpackhot --symrestkpackcool1=$advance5.symrestkpackcool1 --symrestkpackcool2=$advance5.symrestkpackcool2 --symrestlastitpack=$advance5.symrestlastitpack --symrestkncs=$advance5.symrestkncs
+    #if $advance5.logh.loghflag == "yes":
+      --loghflag=$advance5.logh.loghflag --loghautow=$advance5.logh.loghautow --loghwunamb=$advance5.logh.loghwunamb --loghwamb=$advance5.logh.loghwamb --loghwhbond=$advance5.logh.loghwhbond
+    #else:
+      --loghflag=$advance5.logh.loghflag
+    #end if
+  #else:
+    --unambigrest1it=0 --ukhot=10.0 --ukcool1init=10.0 --ukcool1fin=50.0 --ukcool2=50.0
+    --ambigrest1it=0 --akhot=10.0 --akcool1init=10.0 --akcool1fin=50.0 --akcool2=50.0
+    --hbondrest1it=0 --hkhot=10.0 --hkcool1init=10.0 --hkcool1fin=50.0 --hkcool2=50.0
+    --dkhot=5.0 --dkcool1=25.0 --dkcool2=200.0
+    --hwallmrswitchhot=0.5 --hwallmrswitchcool1=0.5 --hwallmrswitchcool2=0.5 --hwallrswitchhot=0.5 --hwallrswitchcool1=0.5 --hwallrswitchcool2=0.5 --hwallmasymphot=-1.0 --hwallmasympcool1=-1.0 --hwallmasympcool2=-0.1 --hwallasymphot=1.0 --hwallasympcool1=1.0 --hwallasympcool2=0.1
+    --symrestkpackhot=15.0 --symrestkpackcool1=10.0 --symrestkpackcool2=5.0 --symrestlastitpack=8 --symrestkncs=50.0
+    --loghflag=yes --loghautow=yes --loghwunamb=1.0 --loghwamb=1.0 --loghwhbond=1.0
+  #end if 
+  #if $advance6.flag == "yes":
+    --mddyna=$advance6.mddyna --seed=$seed --tadTh=$advance6.tadTh --tadtimefact=$tadtimefact --cartTh=$advance6.cartTh --cart1it=$advance6.cart1it --timestep=$advance6.timestep --Tcool1final=$advance6.Tcool1final --Tcool2final=$advance6.Tcool2final --stepsH=$advance6.stepsH --stepref=$advance6.stepref --stepcool1=$advance6.stepcool1 --stepcool2=$advance6.stepcool2
+  #else:
+    --mddyna=torsion --seed=2345642 --tadTh=10000.0 --tadtimefact=9.0 --cartTh=2000.0 --cart1it=0 --timestep=0.003 --Tcool1final=1000.0 --Tcool2final=50.0 --stepsH=20000 --stepref=8000 --stepcool1=20000 --stepcool2=16000
+  #end if
+  --flagprotfloatassign=$flagprotfloatassign
+  --iterations="
+  #for $ite in $iterations:
+    --nstr=$ite.nstr  --nbeststr=$ite.nbeststr --violsigmod=$ite.violsigmod --violtol=$ite.violtol
+    #if $ite.advance7.flag == "yes":
+      --sortcrit=$ite.advance7.sortcrit --nkstr=$ite.advance7.nkstr
+      --mergmet=$ite.advance7.mergmet
+      --calrelaxmat=$ite.advance7.calrelaxmat --caldistcutoff=$ite.advance7.caldistcutoff --calestim=$ite.advance7.calestim --calerrestim=$ite.advance7.calerrestim
+    #else: 
+      --sortcrit=total_energy --nkstr=0
+      --mergmet=standard
+      --calrelaxmat=no --caldistcutoff=6.0 --calestim=ratio_of_averages --calerrestim=distance 
+    #end if  
+    #if $ite.advance9.flag == "yes":
+      --violthres=$ite.advance9.violthres
+      --partassignWthres=$ite.advance9.partassignWthres --partassignmaxcontrib=$ite.advance99.partassignmaxcontrib
+      #if $ite.advance9_.netanch.flagnetanch == "yes":
+        --netanchHresthres=$ite.advance9.netanch.netanchHresthres --flagnetanch=$ite.advance.netanch.flagnetanch --netanchMresthres=$ite.advance9.netanch.netanchMresthres --netanchMatomthres=$ite.advance9.netanch.netanchMatomthres
+      #else:
+        --flagnetanch=$ite.avance9.netanch.flagnetanch --netanchHresthres=4.0 --netanchMresthres=1.0 --netanchMatomthres=0.25
+      #end if
+    #else:
+      --violthres=0.5
+      --partassignWthres=1.0 --partassignmaxcontrib=20
+      --flagnetanch=no --netanchHresthres=4.0 --netanchMresthres=1.0 --netanchMatomthres=0.25
+    #end if
+    ,
+  #end for
+  "
+  #if $watref.flagwatref == "yes":
+    --watrefsolv=$watref.watrefsolv --watrefnstruct=$watref.watrefnstruct --flagwatref=$watref.flagwatref --watrefsolvmol=$watref.watrefsolvmol
+  #else:
+    --flagwatref=$watref.flagwatref --watrefsolv=water --watrefnstruct=10 --watrefsolvmol=no
+  #end if
+  #if $advance8.flag == "yes":
+    --flagstructanalyse=$advance8.flagstructanalyse
+    --reportfmolmol=$advance8.reportfmolmol
+    --reportfNOEpickleout=$advance8.reportfNOEpickleout --reportfNOEtxtout=$advance8.reportfNOEtxtout --reportfNOExmlout=$advance8.reportfNOExmlout
+    --reportfspectwassign=$advance8.reportfspectwassign --reportfspectwassignf=$advance8.reportfspectwassignf --reportfspectit=$advance8.reportfspectit --reportfspectunamb=$advance8.reportfspectunamb 
+  #else: 
+    --flagstructanalyse=yes
+    --reportfmolmol=yes
+    --reportfNOEpickleout=no --reportfNOEtxtout=yes --reportfNOExmlout=no
+    --reportfspectwassign=no --reportfspectwassignf=no --reportfspectit=last --reportfspectunamb=yes
+  #end if
+  --result_output=$result_output --output_init=$output_init --temporary_path=$__new_file_path__
+
+  </command>
+  <inputs>
+      <param name="name" label="Name of the project" type="text" size="50"/>
+      <param format="xml" name="seq_xml" label="input sequence format XML" type="data"/>
+      <conditional name="advance1">
+        <param name="flag" label="Advanced options for force field parameters" type="select">
+          <option value="yes">YES</option>
+	  <option value="no" selected="True">NO</option>
+        </param>
+	<when value="yes">
+          <param name="cache" label="Cache files" type="select">
+            <option value="yes" selected="True">YES</option>
+            <option value="no">NO</option>
+          </param>
+          <param name="cleanup" label="Cleanup" type="select">
+            <option value="yes" selected="True">YES</option>
+	    <option value="no">NO</option>
+          </param> 
+          <param name="linkdef" label="Linkage Definition" type="select">
+            <option value="automatic" selected="True">Automatic</option>
+	    <option value="dna-rna.link">DNA-RNA</option>
+	    <option value="dna-rna-pho.link">DNA-RNA-PHO</option>
+	    <option value="topallhdg.pep">TOPALLHDG</option>
+	    <option value="topallhdg5.3.pep">TOPALLHDG5.3</option>
+          </param>
+          <param name="paramdef" label="Parameter Definition" type="select">
+            <option value="automatic">Automatic</option>
+  	    <option value="dna-rna-allatom.param">DNA-RNA</option>
+	    <option value="parallhdg5.0.pro">PARALLHDG5.0</option>
+  	    <option value="parallhdg5.1.pro">PARALLHDG5.1</option>
+	    <option value="parallhdg5.2.pro">PARALLHDG5.2</option>
+	    <option value="parallhdg5.3.pro">PARALLHDG5.3</option>
+	    <option value="parallhdg5.3softbig.pro" selected="True">PARALLHDG5.3soft</option>
+          </param>
+          <param name="topodef" label="Topology Definition" type="select">
+            <option value="automatic">Automatic</option>
+	    <option value="dna-rna-allatom.top">DNA-RNA</option>
+	    <option value="topallhdg5.0.pro">TOPALLHDG5.0</option>
+	    <option value="topallhdg5.1.pro">TOPALLHDG5.1</option>
+	    <option value="topallhdg5.2.pro">TOPALLHDG5.2</option>
+	    <option value="topallhdg5.3.pro">TOPALLHDG5.3</option>
+	    <option value="topallhdg5.3soft.pro" selected="True">TOPALLHDG5.3soft</option>
+          </param>
+	</when>
+	<when value="no">
+        </when>
+      </conditional>
+      -----------------------Spectrums---------------------------
+      <repeat name="spectrums" title="Additional spectrum" min="1" max="5">
+        <param format="xml" name="shift_xml" label="input chemical shift format XML" type="data"/>
+        <param name="defshifterr" label="Default chemical-shift error [ppm]" type="float" value="0.0"/>
+        <param format="xml" name="peaks_xml" label="input cross peaks format XML" type="data"/>     
+        <conditional name="advance2">
+          <param name="flag" label="Advanced options for the spectrum parameters" type="select">
+            <option value="yes">YES</option>
+	    <option value="no" selected="True">NO</option>
+          </param>
+	  <when value="yes">
+            <param name="flagassign" label="Use manual Assignments" type="select">
+              <option value="yes" selected="True">YES</option>
+	      <option value="no">NO</option>
+            </param> 
+	    <param name="flagtrustassign" label="Trust assigned peaks" type="select">
+              <option value="yes">YES</option>
+	      <option value="no" selected="True">NO</option>
+            </param>
+	    <param name="structrules" label="Enable structural rules" type="select">
+              <option value="yes">YES</option>
+	      <option value="no" selected="True">NO</option>
+            </param>
+	    <param name="filterdiag" label="Filter diagonal peaks" type="select">
+              <option value="yes">YES</option>
+	      <option value="no" selected="True">NO</option>
+            </param>
+	    <param name="filterunasspeaks" label="Only fully assigned peaks" type="select">
+              <option value="yes">YES</option>
+	      <option value="no" selected="True">NO</option>
+            </param>
+	    <param name="peaksize" label="Peak type" type="select">
+              <option value="intensity">Intensity</option>
+	      <option value="volume" selected="True">Volume</option>
+            </param>
+            <param name="fwinprot1" label="Proton1 freq. window [ppm]" type="float" value="0.04"/> 
+	    <param name="fwinhet1" label="Hetero1 freq. window [ppm]" type="float" value="0.5"/>
+	    <param name="fwinprot2" label="Proton2 freq. window [ppm]" type="float" value="0.02"/>
+	    <param name="fwinhet2" label="Hetero2 freq. window [ppm]" type="float" value="0.5"/>
+	    <conditional name="boundL">
+	      <param name="flagboundL" label="Enable Lower bound correction" type="select">
+                <option value="yes">YES</option>
+	        <option value="no" selected="True">NO</option>
+              </param>
+	      <when value="yes">
+	        <param name="lowerbound" label="Lower bound correction" type="float" value="0.0"/>
+	      </when>
+	      <when value="no">
+              </when>
+	    </conditional>
+	    <conditional name="boundU">
+              <param name="flagboundU" label="Enable Upper bound correction" type="select">
+               <option value="yes">YES</option>
+	       <option value="no" selected="True">NO</option>
+              </param>
+	      <when value="yes">
+	        <param name="upperbound" label="Upper bound correction" type="float" value="6.0"/>
+	      </when>
+	      <when value="no">
+              </when>
+	    </conditional>
+	    <param name="molcorrtime" label="Molecule correlation time [ns]" type="float" value="0.0"/>  
+	    <param name="specmixtime" label="Mixing time [ms]" type="float" value="0.0"/>  
+	    <param name="spectfreq" label="Spectrometer frequency [MHz]" type="float" value="0.0"/>
+	    <param name="ambigtype" label="Ambiguity level (for multimers)" type="select">
+              <option value="intra" selected="True">Intra-molecular only</option>
+	      <option value="inter">Inter-molecular only</option>
+	      <option value="all">Unknown</option> 
+            </param>
+	  </when> 
+          <when value="no">
+          </when>
+	</conditional>
+      </repeat>
+      -----------------------Parameters---------------------------
+      <conditional name="advance3">
+        <param name="flag" label="Add other restraints or symmetry" type="select">
+          <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+        </param>
+        <when value="yes">
+          <repeat name="Jrestraints" title="Scalar couplings" max="5">
+            <param name="flagjcouplings" label="Use this scalar couplings" type="select">
+              <option value="yes" selected="True">YES</option>
+              <option value="no">NO</option>
+            </param>
+            <param format="tbl" name="jcouplings_tbl" label="Scalar couplings data format tbl" type="data"/>
+            <param name="ajs" label="a constant" type="float" value="6.98"/>
+            <param name="bjs" label="b constant" type="float" value="-1.38"/>
+            <param name="cjs" label="c constant" type="float" value="1.72"/>
+            <param name="djs" label="d constant" type="float" value="-60.0"/>
+            <param name="khotjs" label="Force constant high temp." type="float" value="0.0"/>
+            <param name="kcool1js" label="Force constant cool1" type="float" value="0.2"/>
+            <param name="kcool2js" label="Force constant cool2" type="float" value="1.0"/>
+          </repeat>
+          <repeat name="RDCrestraints" title="Residual Dipolar Coupling" max="5">
+            <param name="flagrdcs" label="Use this RDCs" type="select">
+              <option value="yes" selected="True">YES</option>
+              <option value="no">NO</option>
+            </param>
+            <param format="tbl" name="rdcs_tbl" label="RDCs data format tbl" type="data"/>
+            <param name="metrdcs" label="Type" type="select">
+              <option value="SANI" selected="True">SANI</option>
+              <option value="VANGLE">VANGLE</option>
+            </param>
+            <param name="firstitrdcs" label="Use RDCs from iteration" type="integer" value="0"/>
+            <param name="rrdcs" label="Alignment tensor Rhombicity" type="float" value="0.4"/>
+            <param name="drdcs" label="Alignment tensor Magnitude" type="float" value="8.0"/>
+            <param name="khotrdcs" label="Force constants: SA protocol High temp." type="float" value="0.0"/>
+            <param name="kcool1rdcs" label="Force constants: SA protocol Cool1 temp." type="float" value="0.2"/>
+            <param name="kcool2rdcs" label="Force constants: SA protocol Cool2 temp." type="float" value="1.0"/>
+            <param name="bhotinirdcs" label="Potential shape (VEAN) : Border initial high temp." type="float" value="0.1"/>
+	    <param name="bhotfinrdcs" label="Potential shape (VEAN) : Border final high temp." type="float" value="40.0"/>
+	    <param name="bcool1inirdcs" label="Potential shape (VEAN) : Border initial cool1" type="float" value="40.0"/>
+	    <param name="bcool1finrdcs" label="Potential shape (VEAN) : Border final cool1" type="float" value="40.0"/>
+	    <param name="bcool2inirdcs" label="Potential shape (VEAN) : Border initial cool2" type="float" value="40.0"/>
+	    <param name="bcool2finrdcs" label="Potential shape (VEAN) : Border final cool2" type="float" value="40.0"/>
+	    <param name="chotinirdcs" label="Potential shape (VEAN) : Center initial high temp." type="float" value="0.1"/>
+	    <param name="chotfinrdcs" label="Potential shape (VEAN) : Center final high temp." type="float" value="0.1"/>
+	    <param name="ccool1inirdcs" label="Potential shape (VEAN) : Center initial cool1" type="float" value="10.0"/>
+	    <param name="ccool1finrdcs" label="Potential shape (VEAN) : Center final cool1" type="float" value="10.0"/>
+	    <param name="ccool2inirdcs" label="Potential shape (VEAN) : Center initial cool2" type="float" value="10.0"/>
+	    <param name="ccool2finrdcs" label="Potential shape (VEAN) : Center final cool2" type="float" value="10.0"/>
+          </repeat>
+          <repeat name="Urestraints" title="unambiguous restraints">
+            <param name="flagunamb" label="Use this unambiguous distance restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="unamb_tbl" label="unambiguous distance data format tbl" type="data"/>
+          </repeat>
+          <repeat name="Arestraints" title="ambiguous restraints">
+            <param name="flagamb" label="Use this ambiguous distance restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="amb_tbl" label="ambiguous distance data format tbl" type="data"/>
+          </repeat>
+          <repeat name="Hrestraints" title="hydrogen bonds restraints">
+            <param name="flaghbond" label="Use this hydrogen bonds restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="hbond_tbl" label="hydrogen bonds data format tbl" type="data"/>
+    	    <param name="typehbond" label="Data Type" type="select">
+              <option value="standard" selected="True">STANDARD</option>
+	      <option value="csi">CSI</option>
+            </param>
+          </repeat>     
+          <repeat name="Drestraints" title="dihedral angle restraints">
+            <param name="flagdihed" label="Use this dihedral angle restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="talos_tbl" label="talos data format tbl" type="data"/>
+  	    <param name="typedihed" label="Data Type" type="select">
+              <option value="talos" selected="True">TALOS</option>
+              <option value="standard">STANDARD</option>
+	      <option value="csi">CSI</option>
+            </param>
+          </repeat>
+          <conditional name="sym">
+            <param name="flagsym" label="Symmetry" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <when value="yes">
+              <param name="n_monom" label="Number of monomers" type="integer" value="1"/>
+	      <param name="typesym" label="Symmetry type" type="select">
+                <option value="None" selected="True">None</option>
+                <option value="C2">C2</option>
+	        <option value="C3">C3</option>
+	        <option value="C5">C5</option>
+	        <option value="D2">D2</option>
+              </param>
+	      <param name="ncsflag" label="NCS restraints enabled" type="select">
+                <option value="yes">YES</option>
+                <option value="no" selected="True">NO</option>
+              </param>
+	      <param name="packingflag" label="Packing restraints enabled" type="select">
+                <option value="yes">YES</option>
+                <option value="no" selected="True">NO</option>
+              </param>
+            </when>
+            <when value="no">
+            </when>
+          </conditional>          
+	  <repeat name="SS1restraints" title="disulfide bridges restraints">
+            <param name="flagssbond" label="Use this disulfide bridges restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="ssbond_tbl" label="SSbond data format tbl" type="data"/>
+          </repeat>
+	  <repeat name="SS2restraints" title="disulfide bridges covalent">
+	    <param name="ssbridgeresid1" label="Residue 1" type="integer" value="0"/>
+	    <param name="ssbridgesegid1" label="Segid 1" type="text" size="10"/>
+	    <param name="ssbridgeresid2" label="Residue 2" type="integer" value="0"/>
+	    <param name="ssbridgesegid2" label="Segid 2" type="text" size="10"/>
+          </repeat>
+	  <repeat name="HISrestraints" title="HIS patche">
+	    <param name="hisresid" label="Residue" type="integer" value="0"/>
+	    <param name="hissegid" label="Segid" type="text" size="10"/>
+	    <param name="typhis" label="Proton" type="select">        
+              <option value="HISD" selected="True">HISD</option>
+              <option value="HISE">HISE</option>
+            </param>  
+          </repeat>
+	  <repeat name="CISrestraints" title="Cis-Proline Patches">
+	    <param name="cisproresid" label="Residue" type="integer" value="0"/>
+	    <param name="cisprosegid" label="Segid" type="text" size="10"/>
+          </repeat>
+          <repeat name="ZNrestraints" title="Zinc coordination">
+	    <param name="zntype" label="Zinc tetrahedral coordination" type="select">        
+              <option value="SSSS" selected="True">Cys4: 4 Cysteine residues</option>
+              <option value="SSSE">Cys3Hisd : 3 Cysteine residues and 1 Histidine HISD</option>
+	      <option value="SSSD">Cys3Hise : 3 Cysteine residues and 1 Histidine HISE</option>
+            </param>
+	    <param name="znresdzn" label="Zinc Ion residue number" type="integer" value="0"/>
+	    <param name="znsegzn" label="Zinc Ion residue segid" type="text" size="10"/>
+	    <param name="znresd1" label="Cysteine 1 residue number" type="integer" value="0"/>
+	    <param name="znseg1" label="Cysteine 1 residue segid" type="text" size="10"/>
+	    <param name="znresd2" label="Cysteine 2 residue number" type="integer" value="0"/>
+	    <param name="znseg2" label="Cysteine 2 residue segid" type="text" size="10"/>
+	    <param name="znresd3" label="Cysteine 3 residue number" type="integer" value="0"/>
+	    <param name="znseg3" label="Cysteine 3 residue segid" type="text" size="10"/>
+	    <param name="znresd4" label="Cysteine/Histidine 4 residue number" type="integer" value="0"/>
+	    <param name="znseg4" label="Cysteine/Histidine 4 residue segid" type="text" size="10"/>
+          </repeat>          
+	  <repeat name="Orestraints" title="Other restraints">
+            <param name="flagother" label="Use this other restraints" type="select">
+              <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+            </param>
+            <param format="tbl" name="otherfile" label="Other data format tbl" type="data"/>
+	    <param name="typeother" label="Proton" type="select">        
+              <option value="planarity" selected="True">DNA/RNA planarity</option>
+            </param>
+          </repeat>
+	</when>
+        <when value="no">
+        </when>
+      </conditional>
+      <repeat name="Istructs" title="Initiale structure" min="1">
+        <conditional name="initstr">
+          <param name="flaginitstruct" label="Use this initiale structure" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+          </param>
+	  <when value="yes">
+            <param format="pdb" name="initstructfile" label="File structure" type="data"/>
+	    <param name="formatinitstruct" label="Format" type="select">
+              <option value="cns" selected="True">CNS</option>
+              <option value="iupac">IUPAC</option>
+	      <option value="dyana">DYANA</option>
+            </param>
+          </when>
+          <when value="no">
+          </when>
+	</conditional>
+      </repeat>
+      <conditional name="advance4">         
+       <param name="flag" label="Advanced options for cns" type="select">
+         <option value="yes">YES</option>
+         <option value="no" selected="True">NO</option>
+       </param>
+       <when value="yes">
+        <param name="cnsoutput" label="Keep CNS output files" type="select">
+          <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+	  <option value="gzip">GZIP</option>
+        </param>
+        <param name="restraintfile" label="Keep ambig.tbl/unambig.tbl" type="select">
+          <option value="yes" selected="True">YES</option>
+          <option value="no">NO</option>
+          <option value="gzip">GZIP</option>
+        </param>
+        <param name="crepsffile" label="Create PSF file" type="select">
+          <option value="yes" selected="True">YES</option>
+          <option value="no">NO</option>
+	  <option value="always">Always</option>
+        </param>
+        <param name="gentemplate" label="Generate template PDB file" type="select">
+          <option value="yes" selected="True">YES</option>
+          <option value="no">NO</option>
+	  <option value="always">Always</option>
+        </param>
+        <param name="nonbondedparam" label="Non-bonded parameters" type="select">
+          <option value="PROLSQ" selected="True">PROLSQ</option>
+	  <option value="PARMALLH6">PARMALLH6</option>
+	  <option value="PARALLHDG">PARALLHDG</option>
+	  <option value="OPLSX">OPLSX</option>
+        </param>
+	</when>
+        <when value="no">
+        </when>
+      </conditional>
+      <conditional name="advance5">
+        <param name="flag" label="Advanced annealing parameters" type="select">
+          <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+        </param>
+	<when value="yes">
+          <param name="unambigrest1it" label="Use unambiguous restraint starting at iteration" type="integer" value="0"/>  
+          <param name="ukhot" label="unambiguous : Force constant high temp." type="float" value="10.0"/>  
+          <param name="ukcool1init" label="unambiguous : Initial force constant cool1" type="float" value="10.0"/>
+          <param name="ukcool1fin" label="unambiguous : Final force constant cool1" type="float" value="50.0"/>
+          <param name="ukcool2" label="unambiguous : Force constant cool2" type="float" value="50.0"/>
+          <param name="ambigrest1it" label="Use ambiguous restraint starting at iteration" type="integer" value="0"/>  
+          <param name="akhot" label="ambiguous : Force constant high temp." type="float" value="10.0"/>  
+          <param name="akcool1init" label="ambiguous : Initial force constant cool1" type="float" value="10.0"/>
+          <param name="akcool1fin" label="ambiguous : Final force constant cool1" type="float" value="50.0"/>
+          <param name="akcool2" label="ambiguous : Force constant cool2" type="float" value="50.0"/>
+          <param name="hbondrest1it" label="Use H-Bonds starting at iteration" type="integer" value="0"/>  
+          <param name="hkhot" label="H-Bonds : Force constant high temp." type="float" value="10.0"/>  
+          <param name="hkcool1init" label="H-Bonds : Initial force constant cool1" type="float" value="10.0"/>
+          <param name="hkcool1fin" label="H-Bonds : Final force constant cool1" type="float" value="50.0"/>
+          <param name="hkcool2" label="H-Bonds : Force constant cool2" type="float" value="50.0"/>
+          <param name="dkhot" label="Dihedral angle restraints : Force contant high temp." type="float" value="5.0"/>
+          <param name="dkcool1" label="Dihedral angle restraints : Final force constant cool1" type="float" value="25.0"/>
+          <param name="dkcool2" label="Dihedral angle restraints : Force constant cool2" type="float" value="200.0"/>      
+          <param name="hwallmrswitchhot" label="Flat Bottom Harmonic Wall : Left switch-point high temp." type="float" value="0.5"/>  
+          <param name="hwallmrswitchcool1" label="Flat Bottom Harmonic Wall : Left switch-point cool1" type="float" value="0.5"/>
+          <param name="hwallmrswitchcool2" label="Flat Bottom Harmonic Wall : Left switch-point cool2" type="float" value="0.5"/>
+          <param name="hwallmasymphot" label="Flat Bottom Harmonic Wall : Left asymptote high temp." type="float" value="-1.0"/>
+          <param name="hwallmasympcool1" label="Flat Bottom Harmonic Wall : Left asymptote cool1" type="float" value="-1.0"/>  
+          <param name="hwallmasympcool2" label="Flat Bottom Harmonic Wall : Left asymptote cool2" type="float" value="-0.1"/>  
+          <param name="hwallrswitchhot" label="Flat Bottom Harmonic Wall : Right switch-point high temp." type="float" value="0.5"/>
+          <param name="hwallrswitchcool1" label="Flat Bottom Harmonic Wall : Right switch-point cool1" type="float" value="0.5"/>
+          <param name="hwallrswitchcool2" label="Flat Bottom Harmonic Wall : Right switch-point cool2" type="float" value="0.5"/>
+          <param name="hwallasymphot" label="Flat Bottom Harmonic Wall : Right asymptote high temp." type="float" value="1.0"/>
+          <param name="hwallasympcool1" label="Flat Bottom Harmonic Wall : Right asymptote cool1" type="float" value="1.0"/>
+          <param name="hwallasympcool2" label="Flat Bottom Harmonic Wall : Right asymptote cool2" type="float" value="0.1"/>
+          <param name="symrestkpackhot" label="Symmetry restraints : Force constant hot" type="float" value="15.0"/>
+          <param name="symrestkpackcool1" label="Symmetry restraints : Force constant cool1" type="float" value="10.0"/>
+          <param name="symrestkpackcool2" label="Symmetry restraints : Force constant cool2" type="float" value="5.0"/>
+          <param name="symrestlastitpack" label="Symmetry restraints : Use Packing until iteration 8" type="integer" value="8"/>
+          <param name="symrestkncs" label="Symmetry restraints : NCS restraints force constant" type="float" value="50.0"/>
+          <conditional name="logh">
+            <param name="loghflag" label="Use log-harmonic potential" type="select">
+              <option value="yes" selected="True">YES</option>
+              <option value="no">NO</option>
+            </param>
+            <when value="yes">
+              <param name="loghautow" label="Use automatic restraints weight" type="select">
+                <option value="yes" selected="True">YES</option>
+                <option value="no">NO</option>
+              </param>
+	      <param name="loghwunamb" label="Weight for unambig restraints" type="float" value="1.0"/>
+              <param name="loghwamb" label="Weight for ambig restraints" type="float" value="1.0"/>
+              <param name="loghwhbond" label="Weight for hbond restraints" type="float" value="1.0"/>
+            </when>
+            <when value="no">
+            </when>
+          </conditional>
+        </when>
+        <when value="no">
+        </when>
+      </conditional>
+      <conditional name="advance6">
+        <param name="flag" label="Advanced molecular dynamic parameters" type="select">
+          <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+        </param>
+	<when value="yes">
+          <param name="mddyna" label="Dynamics : Type" type="select">
+            <option value="torsion" selected="True">Torsion angle</option>
+            <option value="cartesian">Cartesian</option>
+          </param>
+          <param name="seed" label="Dynamics : Random seed" type="integer" value="432525"/>  
+          <param name="tadTh" label="Dynamics : TAD high temp." type="float" value="10000.0"/>
+          <param name="tadtimefact" label="Dynamics : TAD time-step factor" type="float" value="9.0"/>
+          <param name="cartTh" label="Dynamics : Cartesian high temp." type="float" value="2000.0"/>
+          <param name="cart1it" label="Dynamics : Cartesian 1st iteration" type="integer" value="0"/>
+          <param name="timestep" label="Dynamics : Time-step" type="float" value="0.003"/>
+          <param name="Tcool1final" label="Dynamics : Cool1 final temp." type="float" value="1000.0"/>
+          <param name="Tcool2final" label="Dynamics : Cool2 final temp." type="float" value="50.0"/>
+          <param name="stepsH" label="Dynamics : High-temp steps" type="integer" value="20000"/>
+          <param name="stepref" label="Dynamics : Refine steps" type="integer" value="8000"/>
+          <param name="stepcool1" label="Dynamics : Cool1 steps" type="integer" value="20000"/>
+          <param name="stepcool2" label="Dynamics : Cool2 steps" type="integer" value="16000"/>
+	</when>
+        <when value="no">
+        </when>
+      </conditional>  
+      <param name="flagprotfloatassign" label="Use floating chirality assignment" type="select">
+        <option value="yes" selected="True">YES</option>
+        <option value="no">NO</option>
+      </param>
+      -----------------------Iterations---------------------------
+      <repeat name="iterations" title="Additional iteration" min="1" max="10">
+        <param name="nstr" label="Number of structures" type="integer" value="20"/>
+	<param name="nbeststr" label="Use n best structures" type="integer" value="7"/>
+	<conditional name="advance7">
+          <param name="flag" label="Advanced iteration options" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+          </param>
+	  <when value="yes"> 
+	    <param name="sortcrit" label="Sort criterion" type="select">
+              <option value="total_energy" selected="True">Total Energy</option>
+              <option value="restraint_energy">Restraint Energy</option>
+	      <option value="noe_violations">Noe violations</option>
+	      <option value="restraint_violations">Restraint violations</option>
+            </param>
+            <param name="nkstr" label="Keep n previous structures" type="integer" value="0"/>
+            <param name="mergmet" label="Merging Method" type="select">
+              <option value="standard" selected="True">Standard</option>
+              <option value="no_merging">No merging</option>
+	      <option value="combination">Combination</option>
+            </param>
+	    <param name="calrelaxmat" label="Calibration : Spin Diffusion Correction" type="select">
+	      <option value="yes">YES</option>
+              <option value="no" selected="True">NO</option>
+	    </param> 
+	    <param name="caldistcutoff" label="Calibration : Distance Cutoff [A]" type="float" value="6.0"/>
+	    <param name="calestim" label="Calibration : Estimator" type="select">
+	      <option value="ratio_of_averages" selected="True">Ratio of average</option>
+              <option value="fixed_bound">Fixed Bound</option>
+	    </param> 
+	    <param name="calerrestim" label="Calibration : Error Estimator" type="select">
+	      <option value="distance" selected="True">Distance</option>
+              <option value="intensity">Volume</option>
+	    </param>
+	  </when>   
+	  <when value="no">
+	  </when>
+	</conditional>
+	<param name="violsigmod" label="Violation Analysis : Sigma Mode" type="select">
+	  <option value="auto" selected="True">Auto</option>
+          <option value="fix">Fix</option>
+	</param>
+        <param name="violtol" label="Violation Analysis : tolerance" type="float" help="It is recommandate to execute 8 iterations with the default violation tolerance for each iteration : 200.0 6.0 3.0 3.0 2.0 2.0 2.0 0.4 0.4" value="200.0"/>
+        <conditional name="advance9">
+	  <param name="flag" label="Advanced violation analysis options" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+          </param>
+	  <when value="yes"> 
+	    <param name="violthres" label="Violation Analysis : threshold" type="float" value="0.5"/>
+            <param name="partassignWthres" label="Partial Assignment : Ambiguity cutoff" type="float" value="1.0"/>
+            <param name="partassignmaxcontrib" label="Partial Assignment : Max. number of contribution" type="integer" value="20"/>
+            <conditional name="netanch">
+	      <param name="flagnetanch" label="Enabled Network Anchoring" type="select">
+	        <option value="yes">YES</option>
+                <option value="no" selected="True">NO</option>
+	      </param>
+	      <when value="yes">
+                <param name="netanchHresthres" label="Network Anchoring : High score per residue threshold" type="float" value="4.0"/>
+                <param name="netanchMresthres" label="Network Anchoring : Minimal score per residue threshold" type="float" value="1.0"/>
+                <param name="netanchMatomthres" label="Network Anchoring : Minimal score per atom threshold" type="float" value="0.25"/>  
+	      </when> 
+	      <when value="no">
+	      </when>     
+            </conditional>
+	  </when> 
+          <when value="no">
+          </when>
+	</conditional>	
+      </repeat>
+      -----------------------Analyses---------------------------
+      <conditional name="watref">
+        <param name="flagwatref" label="Enabled water refinement" type="select">
+	  <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+	</param>
+	<when value="yes">
+	  <param name="watrefsolv" label="Water refinement : Solvent" type="select">
+	    <option value="water" selected="True">Water</option>
+            <option value="DMSO">DMSO</option>
+	  </param>
+	  <param name="watrefnstruct" label="Water refinement : Number of structures" type="integer" value="7"/>
+	  <param name="watrefsolvmol" label="Water refinement : write solvent molecules into PDB-files" type="select">
+	    <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+	  </param>
+	</when> 
+	<when value="no">
+	</when>        
+      </conditional>
+      <conditional name="advance8">
+        <param name="flag" label="Advanced analyses and report" type="select">
+          <option value="yes">YES</option>
+          <option value="no" selected="True">NO</option>
+        </param>
+	<when value="yes">
+          <param name="flagstructanalyse" label="Enabled CNS analysis scripts" type="select">
+            <option value="yes" selected="True">YES</option>
+            <option value="no">NO</option>
+          </param>
+          <param name="reportfmolmol" label="Report : MOLMOL restraints" type="select">
+            <option value="yes" selected="True">YES</option>
+            <option value="no">NO</option>
+            <option value="gzip">GZIP</option>
+          </param>
+          <param name="reportfNOEpickleout" label="Report : NOE restraint lists Python pickle output" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+	    <option value="gzip">GZIP</option>
+          </param>
+          <param name="reportfNOEtxtout" label="Report : NOE restraint lists Text output" type="select">
+            <option value="yes" selected="True">YES</option>
+            <option value="no">NO</option>
+	    <option value="gzip">GZIP</option>
+          </param>
+          <param name="reportfNOExmlout" label="Report : NOE restraint lists XML output" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+	    <option value="gzip">GZIP</option>
+          </param>
+          <param name="reportfspectwassign" label="Report : Assigned spectra export to ARIA XML" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+          </param>
+          <param name="reportfspectwassignf" label="Report : Assigned spectra force export" type="select">
+            <option value="yes">YES</option>
+            <option value="no" selected="True">NO</option>
+          </param>
+          <param name="reportfspectit" label="Report : Assigned spectra iteration" type="select">
+            <option value="last" selected="True">Last</option>
+            <option value="all">All</option>
+          </param>
+          <param name="reportfspectunamb" label="Report : Assigned spectra unambiguous peaks only" type="select">
+            <option value="yes" selected="True">YES</option>
+            <option value="no">NO</option>
+          </param>
+	</when>   
+	<when value="no">
+	</when>        
+      </conditional>
+  </inputs>
+  <outputs>
+    <data format="xml" name="output_init" label="XML of ${name} Project"/>
+    <data format="tar" name="result_output" label="Archive of results ${name} Project"/>
+  </outputs>
+
+  <help>
+This tool run ARIA with input xml project. You must execute ARIA_prep before execute ARIA with input xml project
+  </help>
+
+</tool>

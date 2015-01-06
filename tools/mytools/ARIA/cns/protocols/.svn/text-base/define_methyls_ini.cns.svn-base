@@ -1,0 +1,30 @@
+!$Revision: 1.1.1.1 $
+!$Date: 2010/03/23 15:27:16 $
+!$RCSfile: define_methyls_ini.cns,v $
+
+! define_methyls_ini.cns
+! script to define methyle and other equivalent groups
+! called by generate.inp
+! by default, all methyle groups and all aromatics are 
+!   defined
+! generates methyl.tbl 
+!     ************************************
+!     * Authors and copyright:           *
+!     * Michael Nilges, Jens Linge, EMBL *
+!     * No warranty implied or expressed *
+!     * All rights reserved              *
+!     ************************************
+
+! first, define methyl groups
+
+display do (store1 = 0) (all)
+ident (store9) (bondedt (name h*))
+for $loopid in id (store9) loop meth
+   coor select (bondedt(id $loopid) and name h*) end
+   if ($select eq 3) then 
+      display do (store1 = 1) (id $loopid)
+   end if
+end loop meth
+
+
+! for methylene protons, we need chemical shifts to decide 

@@ -1,0 +1,35 @@
+<tool id="seedGff" name="seedGff">
+  <description>Creates the seed from -15 to -25 bp before ATG</description>
+  <command interpreter="perl"> ../bacteriaRegulatoryRegion_Detection/seedGff.pl -i $inputFile -p $startPosFromAtg -e $endPosSeed
+    #if $optionSeedSize.seedSize == "Yes":
+        -l $optionSeedSize.seedLength
+    #end if
+    -o $outputFile
+  </command>
+  <inputs>
+    <param name="inputFile" type="data" label="Input File" format="gff"/>
+    <param name="startPosFromAtg" type="integer" value="25" help="greather positive number for the start position of the seed from Atg "/>
+    <param name="endPosSeed" type="integer" value="15" help="end of the seed (smaller than the sart of the seed, positive number)"/>
+    <conditional name="optionSeedSize">
+			<param name="seedSize" type="select" label="The length of seed." help="If you have choosed the value of start/end position of seed, you don't need to fill this option.">
+					<option value="Yes">Yes</option>
+					<option value="No" selected="true">No</option>
+			</param>
+			<when value="Yes">
+				<param name="seedLength" type="integer" value="4" label="The length of seed, default: 4nt" />
+			</when>
+			<when value="No">
+			</when>
+    </conditional>
+    
+
+  </inputs>
+
+  <outputs>
+    <data format="gff" name="outputFile" label="[seedGff] Output File"/>
+  </outputs>
+
+  <help>
+	command example: perl seedGff.pl -i input_annot.gff -p 25 -e 15 -o output_cis_seed.gff
+  </help>
+</tool>

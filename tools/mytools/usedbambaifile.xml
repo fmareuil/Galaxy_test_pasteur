@@ -1,0 +1,13 @@
+<tool id="usedbambaifile" name="Bam and bai verif" version="0.1">
+<description>test sur les bam bai files </description>
+<command>ln -s $input $input.$input.ext; ln -s $input.metadata.bam_index ${input}.bai;
+usedbambaifile -i $input -o $output; rm $input.$input.ext ${input}.bai</command>
+<inputs>
+    <param name="input" type="data" format="bam" label="Source  bam file"/>
+</inputs>
+<outputs>
+    <data format="text" name="output"/>
+</outputs>
+<help>
+</help>
+</tool>

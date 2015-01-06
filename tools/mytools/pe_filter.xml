@@ -1,0 +1,59 @@
+<tool id="pe_filter" name="pe filter" version="0.01">
+    <description>split sorted fasta sequences Paired End into two seperate fasta files</description>
+    <stdio>
+        <exit_code range="0" level="warning" description="Description message" />
+	<exit_code range="1:" level="fatal" />
+    </stdio>  
+    <command interpreter="perl"> pe_filter.pl $inputfasta outfile</command> 
+    <inputs>
+        <param name="inputfasta" type="data" label="Input filter fasta file " format="fasta" multiple="true" />
+    </inputs>
+    <outputs>
+        <data name="outputfastape1" format="fasta"  from_work_dir="outfile.pe_reads1.fasta"/>
+	<data name="outputfastape2" format="fasta"  from_work_dir="outfile.pe_reads2.fasta"/>
+	<data name="outputfastase" format="fasta"  from_work_dir="outfile.se.fasta"/>
+    </outputs>
+    <help>
+**What it does**
+
+	split sorted fasta sequences Paired End into two seperate fasta files
+ 
+**Input format**
+
+A multiple-fasta file, for example::
+
+    >read81926 /1
+    GTCAATTGTACTGGTCAATACTAAAAGAATAGGATC
+    >read81926 /2
+    GCTCCTAGCATCTGGAGTCTCTATCACCTGAGCCCA
+    >read81927 /1
+    TACTGGTCAATACTAAAAGAATAGGATCGTCAATTG
+
+
+-----
+
+**Outputs**
+
+Left-hand Read1::
+
+    >read81926 /1
+    GTCAATTGTACTGGTCAATACTAAAAGAATAGGATC
+
+Right-hand Read2::
+
+	>read81926 /2
+    GCTCCTAGCATCTGGAGTCTCTATCACCTGAGCCCA
+	
+Other-hand Read_se::
+
+    >read81927 /1
+    TACTGGTCAATACTAAAAGAATAGGATCGTCAATTG
+
+------
+    </help>
+   <!-- <tests>
+        <test>
+	    <param name="input" value="1.fasta" ftype="fasta"/>
+	</test>
+    </tests> -->
+</tool>
