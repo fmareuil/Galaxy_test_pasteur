@@ -61,7 +61,7 @@ if [ $FETCH_EGGS -eq 1 ]; then
         fi
     fi
 fi
-
+#rajout d'un commentaire
 if [ -n "$GALAXY_RUN_ALL" ]; then
     servers=`sed -n 's/^\[server:\(.*\)\]/\1/  p' universe_wsgi.ini | xargs echo`
     daemon=`echo "$@" | grep -q daemon`
