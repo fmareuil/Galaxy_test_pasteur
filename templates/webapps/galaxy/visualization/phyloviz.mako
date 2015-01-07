@@ -180,6 +180,7 @@
 
 
 <%def name="center_panel()">
+
     <div class="unified-panel-header" unselectable="on">
         <div class="unified-panel-header-inner">
             <div style="float:left;" id="title"></div>
@@ -195,7 +196,7 @@
                 <p>Select a tree to view: &nbsp;&nbsp;
                 <select id="phylovizNexSelector">
                     % for tree, index in data["trees"]:
-                        <option value="${index | h}">${tree | h}</option>
+                        <option value="${index}">${tree}</option>
                     % endfor
                 </select>
                 </p>

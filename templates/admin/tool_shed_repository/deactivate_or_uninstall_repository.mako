@@ -10,30 +10,30 @@ ${render_galaxy_repository_actions( repository )}
 %endif
 
 <div class="toolForm">
-    <div class="toolFormTitle">${repository.name|h}</div>
+    <div class="toolFormTitle">${repository.name}</div>
     <div class="toolFormBody">
         <form name="deactivate_or_uninstall_repository" id="deactivate_or_uninstall_repository" action="${h.url_for( controller='admin_toolshed', action='deactivate_or_uninstall_repository', id=trans.security.encode_id( repository.id ) )}" method="post" >
             <div class="form-row">
                 <label>Description:</label>
-                ${repository.description|h}
+                ${repository.description}
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Revision:</label>
-                ${repository.changeset_revision|h}</a>
+                ${repository.changeset_revision}</a>
             </div>
             <div class="form-row">
                 <label>Tool shed:</label>
-                ${repository.tool_shed|h}
+                ${repository.tool_shed}
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Owner:</label>
-                ${repository.owner|h}
+                ${repository.owner}
             </div>
             <div class="form-row">
                 <label>Deleted:</label>
-                ${repository.deleted|h}
+                ${repository.deleted}
             </div>
             <div class="form-row">
                 <%
@@ -186,7 +186,7 @@ ${render_galaxy_repository_actions( repository )}
                     ##hack to mimic check box
                     <input type="hidden" name="remove_from_disk" value="true"/><input type="hidden" name="remove_from_disk" value="true"/>
                 %endif
-                <input type="submit" name="deactivate_or_uninstall_repository_button" value="${deactivate_uninstall_button_text|h}"/>
+                <input type="submit" name="deactivate_or_uninstall_repository_button" value="${deactivate_uninstall_button_text}"/>
             </div>
         </form>
     </div>

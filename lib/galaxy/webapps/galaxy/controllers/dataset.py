@@ -11,7 +11,8 @@ from galaxy.util import inflector, smart_str
 from galaxy.util.sanitize_html import sanitize_html
 from galaxy.util.json import loads
 from galaxy.web.base.controller import BaseUIController, ERROR, SUCCESS, url_for, UsesHistoryDatasetAssociationMixin, UsesHistoryMixin, UsesExtendedMetadataMixin
-from galaxy.web.framework.helpers import grids, iff, time_ago, to_unicode, escape
+from galaxy.web.framework.helpers import grids, iff, time_ago
+from galaxy.web.framework.helpers import to_unicode
 from galaxy.tools.errors import EmailErrorReporter
 
 eggs.require( "Paste" )
@@ -509,7 +510,7 @@ class DatasetInterface( BaseUIController, UsesAnnotations, UsesHistoryMixin, Use
         # Set referer message.
         referer = trans.request.referer
         if referer is not "":
-            referer_message = "<a href='%s'>return to the previous page</a>" % escape(referer)
+            referer_message = "<a href='%s'>return to the previous page</a>" % referer
         else:
             referer_message = "<a href='%s'>go to Galaxy's start page</a>" % url_for( '/' )
         # Error checking.
@@ -938,12 +939,9 @@ class DatasetInterface( BaseUIController, UsesAnnotations, UsesHistoryMixin, Use
         """
         Show the parameters used for an HDA
         """
-        try:
-            hda = trans.sa_session.query( trans.app.model.HistoryDatasetAssociation ).get( trans.security.decode_id( dataset_id ) )
-        except ValueError:
-            hda = None
+        hda = trans.sa_session.query( trans.app.model.HistoryDatasetAssociation ).get( trans.security.decode_id( dataset_id ) )
         if not hda:
-            raise paste.httpexceptions.HTTPRequestRangeNotSatisfiable( "Invalid reference dataset id: %s." % escape( str( dataset_id ) ) )
+            raise paste.httpexceptions.HTTPRequestRangeNotSatisfiable( "Invalid reference dataset id: %s." % str( dataset_id ) )
         if not self._can_access_dataset( trans, hda ):
             return trans.show_error_message( "You are not allowed to access this dataset" )
 
@@ -975,10 +973,7 @@ class DatasetInterface( BaseUIController, UsesAnnotations, UsesHistoryMixin, Use
                         params_objects = job.get_param_values( trans.app, ignore_errors=False )
                     except:
                         params_objects = job.get_param_values( trans.app, ignore_errors=True )
-                        # use different param_objects in the following line, since we want to display original values as much as possible
-                        upgrade_messages = tool.check_and_update_param_values( job.get_param_values( trans.app, ignore_errors=True ),
-                                                                               trans,
-                                                                               update_values=False )
+                        upgrade_messages = tool.check_and_update_param_values( job.get_param_values( trans.app, ignore_errors=True ), trans, update_values=False ) #use different param_objects here, since we want to display original values as much as possible
                         has_parameter_errors = True
                 except:
                     pass

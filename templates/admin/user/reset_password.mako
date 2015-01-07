@@ -13,7 +13,7 @@
             %for user in users:
                 <div class="form-row">
                     <label>Email:</label>
-                    ${user.email|h}
+                    ${user.email}
                     <div style="clear: both"></div>
                 </div>
             %endfor

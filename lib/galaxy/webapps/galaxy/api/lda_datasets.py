@@ -429,15 +429,8 @@ class LibraryDatasetsController( BaseAPIController, UsesVisualizationMixin ):
         folder = self.folder_manager.get( trans, folder_id )
 
         source = kwd.get( 'source', None )
-        if source not in [ 'userdir_file', 'userdir_folder', 'importdir_file', 'importdir_folder', 'admin_path' ]:
-            raise exceptions.RequestParameterMissingException( 'You have to specify "source" parameter. Possible values are "userdir_file", "userdir_folder", "admin_path", "importdir_file" and "importdir_folder". ')
-        if source in [ 'importdir_file', 'importdir_folder' ]:
-            if not trans.user_is_admin:
-                raise exceptions.AdminRequiredException( 'Only admins can import from importdir.' )
-            if not trans.app.config.library_import_dir:
-                raise exceptions.ConfigDoesNotAllowException( 'The configuration of this Galaxy instance does not allow admins to import into library from importdir.' )
-            user_base_dir = trans.app.config.library_import_dir
-
+        if source not in [ 'userdir_file', 'userdir_folder', 'admin_path' ]:
+            raise exceptions.RequestParameterMissingException( 'You have to specify "source" parameter. Possible values are "userdir_file", "userdir_folder" and "admin_path". ')
 
         if source in [ 'userdir_file', 'userdir_folder' ]:
             user_login = trans.user.email
@@ -512,7 +505,6 @@ class LibraryDatasetsController( BaseAPIController, UsesVisualizationMixin ):
         return job_dict
 
     @web.expose
-    #  TODO convert to expose_api
     def download( self, trans, format, **kwd ):
         """
         download( self, trans, format, **kwd )
@@ -526,30 +518,31 @@ class LibraryDatasetsController( BaseAPIController, UsesVisualizationMixin ):
 
         :param  format:      string representing requested archive format
         :type   format:      string
-        :param  ld_ids[]:      an array of encoded ids
-        :type   ld_ids[]:      an array
+        :param  lddas[]:      an array of encoded ids
+        :type   lddas[]:      an array
 
         :rtype:   file
         :returns: either archive with the requested datasets packed inside or a single uncompressed dataset
 
         :raises: MessageException, ItemDeletionException, ItemAccessibilityException, HTTPBadRequest, OSError, IOError, ObjectNotFound
         """
-        library_datasets = []
-        datasets_to_download = kwd.get( 'ld_ids%5B%5D', None )
+        lddas = []
+        datasets_to_download = kwd.get( 'ldda_ids%5B%5D', None )
         if datasets_to_download is None:
-            datasets_to_download = kwd.get( 'ld_ids', None )
+            datasets_to_download = kwd.get( 'ldda_ids', None )
+
         if ( datasets_to_download is not None ):
             datasets_to_download = util.listify( datasets_to_download )
             for dataset_id in datasets_to_download:
                 try:
-                    library_dataset = self.get_library_dataset( trans, id=dataset_id, check_ownership=False, check_accessible=True )
-                    library_datasets.append( library_dataset )
+                    ldda = self.get_hda_or_ldda( trans, hda_ldda='ldda', dataset_id=dataset_id )
+                    lddas.append( ldda )
                 except HTTPBadRequest, e:
-                    raise exceptions.RequestParameterInvalidException( 'Bad Request.' )
+                    raise exceptions.RequestParameterInvalidException( 'Bad Request. ' + str( e.err_msg ) )
                 except HTTPInternalServerError, e:
-                    raise exceptions.InternalServerError( 'Internal error.' )
+                    raise exceptions.InternalServerError( 'Internal error. ' + str( e.err_msg ) )
                 except Exception, e:
-                    raise exceptions.InternalServerError( 'Unknown error.' )
+                    raise exceptions.InternalServerError( 'Unknown error. ' + str( e ) )
         else:
             raise exceptions.RequestParameterMissingException( 'Request has to contain a list of dataset ids to download.' )
 
@@ -587,8 +580,7 @@ class LibraryDatasetsController( BaseAPIController, UsesVisualizationMixin ):
                     raise exceptions.InternalServerError( "Unable to create archive for download." )
                 composite_extensions = trans.app.datatypes_registry.get_composite_extensions()
                 seen = []
-                for ld in library_datasets:
-                    ldda = ld.library_dataset_dataset_association
+                for ldda in lddas:
                     ext = ldda.extension
                     is_composite = ext in composite_extensions
                     path = ""
@@ -677,21 +669,19 @@ class LibraryDatasetsController( BaseAPIController, UsesVisualizationMixin ):
                     archive.wsgi_headeritems = trans.response.wsgi_headeritems()
                     return archive.stream
         elif format == 'uncompressed':
-            if len(library_datasets) != 1:
+            if len(lddas) != 1:
                 raise exceptions.RequestParameterInvalidException( "You can download only one uncompressed file at once." )
             else:
-                single_ld = library_datasets[ 0 ]
-                ldda = single_ld.library_dataset_dataset_association
-                dataset = ldda.dataset
-                fStat = os.stat( dataset.file_name )
-                trans.response.set_content_type( ldda.get_mime() )
+                single_dataset = lddas[ 0 ]
+                trans.response.set_content_type( single_dataset.get_mime() )
+                fStat = os.stat( ldda.file_name )
                 trans.response.headers[ 'Content-Length' ] = int( fStat.st_size )
                 valid_chars = '.,^_-()[]0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
                 fname = ldda.name
                 fname = ''.join( c in valid_chars and c or '_' for c in fname )[ 0:150 ]
                 trans.response.headers[ "Content-Disposition" ] = 'attachment; filename="%s"' % fname
                 try:
-                    return open( dataset.file_name )
+                    return open( single_dataset.file_name )
                 except:
                     raise exceptions.InternalServerError( "This dataset contains no content." )
         else:

@@ -20,7 +20,7 @@
                                 <tr>
                                     <td>
                                         <input type="hidden" name="id" value="${trans.security.encode_id( history.id )}">
-                                        ${ util.unicodify( history.name ) | h }
+                                        ${ util.unicodify( history.name )}
                                     </td>
                                     <td>
                                         %if len( history.datasets ) < 1:

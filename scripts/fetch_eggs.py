@@ -9,22 +9,13 @@ import os, sys, logging
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option( '-c', '--config', dest='config', help='Path to Galaxy config file (config/galaxy.ini)', default=None )
+parser.add_option( '-c', '--config', dest='config', help='Path to Galaxy config file (config/galaxy.ini)', default='config/galaxy.ini' )
 parser.add_option( '-e', '--egg-name', dest='egg_name', help='Egg name (as defined in eggs.ini) to fetch, or "all" for all eggs, even those not needed by your configuration' )
 parser.add_option( '-p', '--platform', dest='platform', help='Fetch for a specific platform (by default, eggs are fetched for *this* platform' )
 ( options, args ) = parser.parse_args()
 
-config_set = True
-config = options.config
-if config is None:
-    config_set = False
-    for name in ['config/galaxy.ini', 'universe_wsgi.ini', 'config/galaxy.ini.sample']:
-        if os.path.exists(name):
-            config = name
-            break
-
-if not os.path.exists( config ):
-    print "Config file does not exist (see 'python %s --help'): %s" % ( sys.argv[0], config )
+if not os.path.exists( options.config ):
+    print "Config file does not exist (see 'python %s --help'): %s" % ( sys.argv[0], options.config )
     sys.exit( 1 )
 
 root = logging.getLogger()
@@ -38,9 +29,9 @@ from galaxy.eggs import Crate, EggNotFetchable
 import pkg_resources
 
 if options.platform:
-    c = Crate( config, platform = options.platform )
+    c = Crate( options.config, platform = options.platform )
 else:
-    c = Crate( config )
+    c = Crate( options.config )
 try:
     if not options.egg_name:
         c.resolve() # Only fetch eggs required by the config
@@ -58,8 +49,8 @@ try:
         print "%s %s is installed at %s" % ( dist.project_name, dist.version, dist.location )
 except EggNotFetchable, e:
     config_arg = ''
-    if config_set:
-        config_arg = '-c %s ' % config
+    if options.config != 'config/galaxy.ini':
+        config_arg = '-c %s ' % options.config
     try:
         assert options.egg_name != 'all'
         egg = e.eggs[0]

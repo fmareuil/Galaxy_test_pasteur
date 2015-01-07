@@ -6,7 +6,7 @@
 %if external_service:
     <p>
         <div class="toolForm">
-            <div class="toolFormTitle">Available External Service Actions for ${sample.name | h} at ${external_service.name | h}</div>
+            <div class="toolFormTitle">Available External Service Actions for ${sample.name} at ${external_service.name}</div>
             <div class="toolFormBody">
                     <div class="toolMenu">
                         %for item in external_service.actions:
@@ -25,7 +25,7 @@
             <div class="form-row">
                 <div class="toolSectionList">
                     <div class="toolSectionTitle">
-                        <span>${external_service_group.label | h}</span>
+                        <span>${external_service_group.label}</span>
                     </div>
                     <div class="toolSectionBody">
                         <div class="toolSectionBg">
@@ -54,7 +54,7 @@
             target = 'galaxy_main'
     %>
     <div class="toolTitle">
-        <a href="${external_service_action.get_action_access_link( trans )}" target="${target}">${external_service_action.label | h}</a>
+        <a href="${external_service_action.get_action_access_link( trans )}" target="${target}">${external_service_action.label}</a>
     </div>
 </%def>
 
@@ -75,38 +75,38 @@
 %endif
 
 <div class="toolForm">
-    <div class="toolFormTitle">Sample "${sample.name | h}"</div>
+    <div class="toolFormTitle">Sample "${sample.name}"</div>
     <div class="toolFormBody">
         <div class="form-row">
             <label>Name:</label>
-            ${sample.name | h}
+            ${sample.name}
             <div style="clear: both"></div>
         </div>
         <div class="form-row">
             <label>Description:</label>
-            ${sample.desc | h}
+            ${sample.desc}
             <div style="clear: both"></div>
         </div>
         <div class="form-row">
             <label>Barcode:</label>
-            ${sample.bar_code | h}
+            ${sample.bar_code}
             <div style="clear: both"></div>
         </div>
         %if sample.library:
             <div class="form-row">
                 <label>Library:</label>
-                ${sample.library.name | h}
+                ${sample.library.name}
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Folder:</label>
-                ${sample.folder.name | h}
+                ${sample.folder.name}
                 <div style="clear: both"></div>
             </div>
         %endif
         <div class="form-row">
             <label>Request:</label>
-            ${sample.request.name | h}
+            ${sample.request.name}
             <div style="clear: both"></div>
         </div>
     </div>

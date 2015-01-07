@@ -87,17 +87,8 @@ var CurrentHistoryPanel = _super.extend(
         _super.prototype._setUpListeners.call( this );
 
         var panel = this;
-        // cache the scroll position (only if visible)
         this.$scrollContainer().on( 'scroll', function( ev ){
-            if( panel.$el.is( ':visible' ) ){
-                panel.preferences.set( 'scrollPosition', $( this ).scrollTop() );
-            }
-        });
-
-        //TODO: doesn't work
-        // reset scroll position when there's a new history
-        this.on( 'new-model', function(){
-            panel.preferences.set( 'scrollPosition', 0 );
+            panel.preferences.set( 'scrollPosition', $( this ).scrollTop() );
         });
     },
 
@@ -276,6 +267,7 @@ var CurrentHistoryPanel = _super.extend(
     _swapNewRender : function( $newRender ){
         _super.prototype._swapNewRender.call( this, $newRender );
         var panel = this;
+
         _.delay( function(){
             var pos = panel.preferences.get( 'scrollPosition' );
             if( pos ){
@@ -297,7 +289,7 @@ var CurrentHistoryPanel = _super.extend(
         this.$list( $whereTo ).append( this.views.reverse().map( function( view ){
             // add current content
             if( panel.currentContentId && view.model.id === panel.currentContentId ){
-                panel.setCurrentContent( view );
+                view.$el.addClass( 'current-content' );
             }
             return view.$el;
         }));

@@ -66,7 +66,6 @@ from galaxy.util.odict import odict
 from galaxy.util.template import fill_template
 from galaxy.web import url_for
 from galaxy.web.form_builder import SelectField
-from galaxy.web.framework.helpers import escape
 from galaxy.model.item_attrs import Dictifiable
 from galaxy.model import Workflow
 from tool_shed.util import common_util
@@ -735,7 +734,7 @@ class ToolBox( object, Dictifiable ):
         success = True
         # Make sure the tool is actually loaded.
         if tool_id not in self.tools_by_id:
-            return None, False, "No tool with id %s" % escape( tool_id )
+            return None, False, "No tool with id %s" % tool_id
         else:
             tool = self.tools_by_id[ tool_id ]
             tarball_files = []
@@ -743,21 +742,20 @@ class ToolBox( object, Dictifiable ):
             tool_xml = file( os.path.abspath( tool.config_file ), 'r' ).read()
             # Retrieve tool help images and rewrite the tool's xml into a temporary file with the path
             # modified to be relative to the repository root.
+            tool_help = tool.help._source
             image_found = False
-            if tool.help is not None:
-                tool_help = tool.help._source
-                # Check each line of the rendered tool help for an image tag that points to a location under static/
-                for help_line in tool_help.split( '\n' ):
-                    image_regex = re.compile( 'img alt="[^"]+" src="\${static_path}/([^"]+)"' )
-                    matches = re.search( image_regex, help_line )
-                    if matches is not None:
-                        tool_help_image = matches.group(1)
-                        tarball_path = tool_help_image
-                        filesystem_path = os.path.abspath( os.path.join( trans.app.config.root, 'static', tool_help_image ) )
-                        if os.path.exists( filesystem_path ):
-                            tarball_files.append( ( filesystem_path, tarball_path ) )
-                            image_found = True
-                            tool_xml = tool_xml.replace( '${static_path}/%s' % tarball_path, tarball_path )
+            # Check each line of the rendered tool help for an image tag that points to a location under static/
+            for help_line in tool_help.split( '\n' ):
+                image_regex = re.compile( 'img alt="[^"]+" src="\${static_path}/([^"]+)"' )
+                matches = re.search( image_regex, help_line )
+                if matches is not None:
+                    tool_help_image = matches.group(1)
+                    tarball_path = tool_help_image
+                    filesystem_path = os.path.abspath( os.path.join( trans.app.config.root, 'static', tool_help_image ) )
+                    if os.path.exists( filesystem_path ):
+                        tarball_files.append( ( filesystem_path, tarball_path ) )
+                        image_found = True
+                        tool_xml = tool_xml.replace( '${static_path}/%s' % tarball_path, tarball_path )
             # If one or more tool help images were found, add the modified tool XML to the tarball instead of the original.
             if image_found:
                 fd, new_tool_config = tempfile.mkstemp( suffix='.xml' )
@@ -769,7 +767,7 @@ class ToolBox( object, Dictifiable ):
                 tool_tup = ( os.path.abspath( tool.config_file ), os.path.split( tool.config_file )[-1]  )
             tarball_files.append( tool_tup )
             # TODO: This feels hacky.
-            tool_command = tool.command.strip().split( ' ' )[0]
+            tool_command = tool.command.split( ' ' )[0]
             tool_path = os.path.dirname( os.path.abspath( tool.config_file ) )
             # Add the tool XML to the tuple that will be used to populate the tarball.
             if os.path.exists( os.path.join( tool_path, tool_command ) ):
@@ -844,7 +842,7 @@ class ToolBox( object, Dictifiable ):
         replace the old tool.
         """
         if tool_id not in self.tools_by_id:
-            message = "No tool with id %s" % escape( tool_id )
+            message = "No tool with id %s" % tool_id
             status = 'error'
         else:
             old_tool = self.tools_by_id[ tool_id ]
@@ -881,7 +879,7 @@ class ToolBox( object, Dictifiable ):
         Attempt to remove the tool identified by 'tool_id'.
         """
         if tool_id not in self.tools_by_id:
-            message = "No tool with id %s" % escape( tool_id )
+            message = "No tool with id %s" % tool_id
             status = 'error'
         else:
             tool = self.tools_by_id[ tool_id ]
@@ -2557,20 +2555,14 @@ class Tool( object, Dictifiable ):
                             history = None
                         value = input.test_param.get_initial_value( trans, context, history=history )
                         current_case = input.get_current_case( value, trans )
-                case_changed = current_case != old_current_case
-                if case_changed:
+                if current_case != old_current_case:
                     # Current case has changed, throw away old state
                     group_state = state[input.name] = {}
                     # TODO: we should try to preserve values if we can
                     self.fill_in_new_state( trans, input.cases[current_case].inputs, group_state, context )
                     group_errors = dict()
                     group_old_errors = dict()
-
-                # If we didn't just change the current case and are coming from HTML - the values
-                # in incoming represent the old values and should not be replaced. If being updated
-                # from the API (json) instead of HTML - form values below the current case
-                # may also be supplied and incoming should be preferred to case defaults.
-                if (not case_changed) or (source != "html"):
+                else:
                     # Current case has not changed, update children
                     group_errors = self.update_state( trans,
                                                       input.cases[current_case].inputs,

@@ -7,7 +7,6 @@ from galaxy.util import inflector
 from galaxy.web.form_builder import CheckboxField
 from string import punctuation as PUNCTUATION
 import galaxy.queue_worker
-from tool_shed.util.web_util import escape
 
 from tool_shed.util import shed_util_common as suc
 
@@ -29,7 +28,7 @@ class Admin( object ):
     @web.expose
     @web.require_admin
     def index( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', ''  ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         if trans.webapp.name == 'galaxy':
             installed_repositories = trans.install_model.context.query( trans.install_model.ToolShedRepository ).first()
@@ -47,7 +46,7 @@ class Admin( object ):
     @web.expose
     @web.require_admin
     def center( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', ''  ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         if trans.webapp.name == 'galaxy':
             return trans.fill_template( '/webapps/galaxy/admin/center.mako',
@@ -1108,7 +1107,7 @@ class Admin( object ):
                                                       kwargs={'job_lock': False } )
                 job_lock = False
         else:
-            job_lock = trans.app.job_manager.job_lock
+            job_lock = trans.app.job_manager.job_handler.job_queue.job_lock
         cutoff_time = datetime.utcnow() - timedelta( seconds=int( cutoff ) )
         jobs = trans.sa_session.query( trans.app.model.Job ) \
                                .filter( and_( trans.app.model.Job.table.c.update_time < cutoff_time,

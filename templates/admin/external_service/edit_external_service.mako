@@ -25,10 +25,10 @@
         <div class="toolFormTitle">Edit external service</div>
         %for i, field in enumerate( widgets ):
             <div class="form-row">
-                <label>${field['label']|h}:</label>
+                <label>${field['label']}:</label>
                 ${field['widget'].get_html()}
                 <div class="toolParamHelp" style="clear: both;">
-                    ${field['helptext']|h}
+                    ${field['helptext']}
                 </div>
                 <div style="clear: both"></div>
             </div>

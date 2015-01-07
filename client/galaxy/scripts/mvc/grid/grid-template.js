@@ -1,5 +1,5 @@
 // dependencies
-define(['utils/utils'], function(Utils) {
+define([], function() {
 
 // grid view templates
 return {
@@ -605,7 +605,6 @@ return {
     
     // template for filter items
     filter_element: function(filter_key, filter_value) {
-        filter_value = Utils.sanitize(filter_value);
         return  '<span class="text-filter-val">' + filter_value +
                     '<a href="javascript:void(0);" filter_key="' + filter_key + '" filter_val="' + filter_value + '">' +
                         '<i class="fa fa-times" style="padding-left: 5px; padding-bottom: 6px;"/>' +

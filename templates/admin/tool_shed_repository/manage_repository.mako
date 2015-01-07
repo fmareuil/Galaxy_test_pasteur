@@ -22,50 +22,50 @@ ${render_galaxy_repository_actions( repository )}
 %endif
 
 <div class="toolForm">
-    <div class="toolFormTitle">Installed tool shed repository '${repository.name|h}'</div>
+    <div class="toolFormTitle">Installed tool shed repository '${repository.name}'</div>
     <div class="toolFormBody">
         <form name="edit_repository" id="edit_repository" action="${h.url_for( controller='admin_toolshed', action='manage_repository', id=trans.security.encode_id( repository.id ) )}" method="post" >
             <div class="form-row">
                 <label>Tool shed:</label>
-                ${repository.tool_shed|h}
+                ${repository.tool_shed}
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Name:</label>
-                ${repository.name|h}
+                ${repository.name}
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Description:</label>
                 %if in_error_state:
-                    ${description|h}
+                    ${description}
                 %else:
-                    <input name="description" type="textfield" value="${description|h}" size="80"/>
+                    <input name="description" type="textfield" value="${description}" size="80"/>
                 %endif
                 <div style="clear: both"></div>
             </div>
             <div class="form-row">
                 <label>Revision:</label>
-                ${repository.changeset_revision|h}
+                ${repository.changeset_revision}
             </div>
             <div class="form-row">
                 <label>Owner:</label>
-                ${repository.owner|h}
+                ${repository.owner}
             </div>
             %if in_error_state:
                 <div class="form-row">
                     <label>Repository installation error:</label>
-                    ${repository.error_message|h}
+                    ${repository.error_message}
                 </div>
             %else:
                 <div class="form-row">
                     <label>Location:</label>
-                    ${repo_files_dir|h}
+                    ${repo_files_dir}
                 </div>
             %endif
             <div class="form-row">
                 <label>Deleted:</label>
-                ${repository.deleted|h}
+                ${repository.deleted}
             </div>
             %if not in_error_state:
                 <div class="form-row">

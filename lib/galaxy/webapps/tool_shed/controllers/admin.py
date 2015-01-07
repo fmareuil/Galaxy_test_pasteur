@@ -3,7 +3,6 @@ import logging
 from galaxy import util
 from galaxy.util import inflector
 from galaxy import web
-from tool_shed.util.web_util import escape
 
 from galaxy.web.base.controller import BaseUIController
 from galaxy.web.base.controllers.admin import Admin
@@ -122,7 +121,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def create_category( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         name = kwd.get( 'name', '' ).strip()
         description = kwd.get( 'description', '' ).strip()
@@ -155,7 +154,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def delete_repository( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:
@@ -198,7 +197,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def delete_repository_metadata( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:
@@ -222,7 +221,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def edit_category( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if not id:
@@ -307,7 +306,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def regenerate_statistics( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         if 'regenerate_statistics_button' in kwd:
             trans.app.shed_counter.generate_statistics()
@@ -353,7 +352,7 @@ class AdminController( BaseUIController, Admin ):
         if 'reset_metadata_on_selected_repositories_button' in kwd:
             message, status = rmm.reset_metadata_on_selected_repositories( **kwd )
         else:
-            message = escape( util.restore_text( kwd.get( 'message', ''  ) ) )
+            message = util.restore_text( kwd.get( 'message', ''  ) )
             status = kwd.get( 'status', 'done' )
         repositories_select_field = rmm.build_repository_ids_select_field( name='repository_ids',
                                                                            multiple=True,
@@ -367,7 +366,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def undelete_repository( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:
@@ -418,7 +417,7 @@ class AdminController( BaseUIController, Admin ):
         # TODO: We should probably eliminate the Category.deleted column since it really makes no
         # sense to mark a category as deleted (category names and descriptions can be changed instead).
         # If we do this, and the following 2 methods can be eliminated.
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:
@@ -446,7 +445,7 @@ class AdminController( BaseUIController, Admin ):
         # This method should only be called for a Category that has previously been deleted.
         # Purging a deleted Category deletes all of the following from the database:
         # - RepoitoryCategoryAssociations where category_id == Category.id
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:
@@ -474,7 +473,7 @@ class AdminController( BaseUIController, Admin ):
     @web.expose
     @web.require_admin
     def undelete_category( self, trans, **kwd ):
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', ''  )
         status = kwd.get( 'status', 'done' )
         id = kwd.get( 'id', None )
         if id:

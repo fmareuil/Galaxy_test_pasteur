@@ -3,6 +3,7 @@ Code to support database helper scripts (create_db.py, manage_db.py, etc...).
 """
 import logging
 import os.path
+from ConfigParser import SafeConfigParser
 
 from galaxy import eggs
 
@@ -11,7 +12,6 @@ eggs.require( "Tempita" )
 eggs.require( "SQLAlchemy" )
 eggs.require( "sqlalchemy_migrate" )
 
-from galaxy.util.properties import load_app_properties
 from galaxy.model.orm import dialect_to_egg
 
 import pkg_resources
@@ -78,7 +78,6 @@ def get_config( argv, cwd=None ):
     """
     Read sys.argv and parse out repository of migrations and database url.
 
-    >>> from ConfigParser import SafeConfigParser
     >>> from tempfile import mkdtemp
     >>> config_dir = mkdtemp()
     >>> os.makedirs(os.path.join(config_dir, 'config'))
@@ -106,25 +105,20 @@ def get_config( argv, cwd=None ):
         database = 'galaxy'
     database_defaults = DATABASE[ database ]
 
-    default = database_defaults.get( 'config_file', DEFAULT_CONFIG_FILE )
-    old_default = database_defaults.get( 'old_config_file' )
-    if cwd is not None:
-        default = os.path.join( cwd, default )
-        old_default = os.path.join( cwd, old_default )
-    config_file = read_config_file_arg( argv, default, old_default )
+    config_file = read_config_file_arg( argv, database_defaults.get( 'config_file', DEFAULT_CONFIG_FILE ), database_defaults.get( 'old_config_file' ) )
     repo = database_defaults[ 'repo' ]
     config_prefix = database_defaults.get( 'config_prefix', DEFAULT_CONFIG_PREFIX )
     default_sqlite_file = database_defaults[ 'default_sqlite_file' ]
     if cwd:
         config_file = os.path.join( cwd, config_file )
 
-    properties = load_app_properties( ini_file=config_file )
+    cp = SafeConfigParser()
+    cp.read( config_file )
 
-    if ("%sdatabase_connection" % config_prefix) in properties:
-        db_url = properties[ "%sdatabase_connection" % config_prefix ]
-    elif ("%sdatabase_file" % config_prefix) in properties:
-        database_file = properties[ "%sdatabase_file" % config_prefix ]
-        db_url = "sqlite:///%s?isolation_level=IMMEDIATE" % database_file
+    if cp.has_option( "app:main", "%sdatabase_connection" % config_prefix):
+        db_url = cp.get( "app:main", "%sdatabase_connection" % config_prefix )
+    elif cp.has_option( "app:main", "%sdatabase_file" % config_prefix ):
+        db_url = "sqlite:///%s?isolation_level=IMMEDIATE" % cp.get( "app:main", "database_file" )
     else:
         db_url = "sqlite:///%s?isolation_level=IMMEDIATE" % default_sqlite_file
 

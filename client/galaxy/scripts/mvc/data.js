@@ -20,11 +20,7 @@ var Dataset = Backbone.Model.extend({
     },
 
     initialize: function() {
-        // Metadata can be passed in as a model or a set of attributes; if it's
-        // already a model, there's no need to set metadata.
-        if (!this.get('metadata')) {
-            this._set_metadata();
-        }
+        this._set_metadata();
 
         // Update metadata on change.
         this.on('change', this._set_metadata, this);

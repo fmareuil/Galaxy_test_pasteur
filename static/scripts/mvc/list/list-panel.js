@@ -798,8 +798,6 @@ var ModelListPanel = ListPanel.extend({
         this.freeViews();
 
         if( model ){
-            var oldModelId = this.model? this.model.get( 'id' ): null;
-
             // set up the new model with user, logger, storage, events
             this.model = model;
             if( this.logger ){
@@ -816,9 +814,7 @@ var ModelListPanel = ListPanel.extend({
                 ( attributes.collection || ( new this.collectionClass([]) ) );
             this._setUpCollectionListeners();
 
-            if( oldModelId && model.get( 'id' ) !== oldModelId  ){
-                this.trigger( 'new-model', this );
-            }
+            this.trigger( 'new-model', this );
         }
         return this;
     },

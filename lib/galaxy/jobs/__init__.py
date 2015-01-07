@@ -1035,7 +1035,7 @@ class JobWrapper( object ):
         else:
             final_job_state = job.states.ERROR
 
-        if self.tool.version_string_cmd:
+        if self.write_version_cmd:
             version_filename = self.get_version_string_path()
             if os.path.exists(version_filename):
                 self.version_string = open(version_filename).read()

@@ -37,16 +37,16 @@
                 %else:
                     <tr class="tr">
                 %endif
-                    <td>${datatype.extension|h}</td>
-                    <td>${datatype.dtype|h}</td>
+                    <td>${datatype.extension}</td>
+                    <td>${datatype.dtype}</td>
                     <td>
                         %if datatype.mimetype:
-                            ${datatype.mimetype|h}
+                            ${datatype.mimetype}
                         %endif
                     </td>
                     <td>
                         %if datatype.display_in_upload:
-                            ${datatype.display_in_upload|h}
+                            ${datatype.display_in_upload}
                         %endif
                     </td>
                 </tr>

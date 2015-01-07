@@ -8,7 +8,6 @@ from galaxy.util.odict import odict
 from galaxy.web.framework import decorators
 from galaxy.web.framework import url_for
 from galaxy.web.framework.helpers import iff
-from markupsafe import escape
 
 from sqlalchemy.sql.expression import and_, func, or_
 
@@ -363,7 +362,7 @@ class GridColumn( object ):
             value = None
         if self.format:
             value = self.format( value )
-        return escape(value)
+        return value
     def get_link( self, trans, grid, item ):
         if self.link and self.link( item ):
             return self.link( item )

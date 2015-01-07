@@ -62,12 +62,12 @@
                     <label>Shed tool configuration file:</label>
                     ${shed_tool_conf_select_field.get_html()}
                     <div class="toolParamHelp" style="clear: both;">
-                        ${select_help|h}
+                        ${select_help}
                     </div>
                 </div>
                 <div style="clear: both"></div>
             %else:
-                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf|h}"/>
+                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf}"/>
             %endif
             %if includes_tools_for_display_in_tool_panel:
                 <div style="clear: both"></div>

@@ -5,7 +5,6 @@ import tempfile
 from galaxy import util
 from galaxy.util import inflector
 from galaxy.web.form_builder import SelectField
-from galaxy.model.orm import or_
 
 from tool_shed.metadata import metadata_generator
 from tool_shed.repository_types.metadata import TipOnly

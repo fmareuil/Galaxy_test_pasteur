@@ -47,7 +47,7 @@
             <a id="close-button" class="panel-header-button">Close</a>
         </div>
         <div class="unified-panel-header-inner">
-            Page Editor <span style="font-weight: normal">| Title : ${page.title | h}</span>
+            Page Editor <span style="font-weight: normal">| Title : ${page.title}</span>
         </div>
     </div>
 

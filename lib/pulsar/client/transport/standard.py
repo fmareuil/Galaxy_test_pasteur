@@ -24,13 +24,11 @@ class Urllib2Transport(object):
         input = None
         try:
             if input_path:
-                size = getsize(input_path)
-                if size:
+                if getsize(input_path):
                     input = open(input_path, 'rb')
                     data = mmap.mmap(input.fileno(), 0, access=mmap.ACCESS_READ)
                 else:
                     data = b""
-                request.add_header('Content-Length', str(size))
             response = self._url_open(request, data)
         finally:
             if input:

@@ -56,9 +56,7 @@ var TagsEditor = Backbone.View.extend( baseMVC.LoggableMixin ).extend( baseMVC.H
         if( !_.isArray( tagsArray ) || _.isEmpty( tagsArray ) ){
             return '';
         }
-        return tagsArray.map( function( tag ){
-            return _.escape( tag );
-        }).sort().join( ',' );
+        return tagsArray.sort().join( ',' );
     },
 
     /** @returns {jQuery} the input for this view */

@@ -19,7 +19,6 @@ import galaxy.web.framework
 import galaxy.web.framework.webapp
 from galaxy import util
 from galaxy.util import asbool
-from galaxy.util.properties import load_app_properties
 
 import logging
 log = logging.getLogger( __name__ )
@@ -32,9 +31,6 @@ def app_factory( global_conf, **kwargs ):
     """
     Return a wsgi application serving the root object
     """
-    kwargs = load_app_properties(
-        kwds=kwargs
-    )
     # Create the Galaxy application unless passed in
     if 'app' in kwargs:
         app = kwargs.pop( 'app' )

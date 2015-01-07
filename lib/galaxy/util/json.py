@@ -17,10 +17,12 @@ log = logging.getLogger( __name__ )
 
 
 def to_json_string(*args, **kwargs):
+    log.warning("Using deprecated function to_json_string.")
     return json.dumps(*args, **kwargs)
 
 
 def from_json_string(*args, **kwargs):
+    log.warning("Using deprecated function from_json_string.")
     return json.loads(*args, **kwargs)
 
 
@@ -57,7 +59,7 @@ def swap_inf_nan( val ):
         return val
 
 
-def safe_dumps( *args, **kwargs ):
+def safe_dumps(*args, **kwargs):
     """
     This is a wrapper around dumps that encodes Infinity and NaN values.  It's a
     fairly rare case (which will be low in request volume).  Basically, we tell
@@ -65,12 +67,10 @@ def safe_dumps( *args, **kwargs ):
     re-encoding.
     """
     try:
-        dumped = json.dumps( *args, allow_nan=False, **kwargs )
+        dumped = json.dumps(*args, allow_nan=False, **kwargs)
     except ValueError:
-        obj = swap_inf_nan( copy.deepcopy( args[0] ) )
-        dumped = json.dumps( obj, allow_nan=False, **kwargs )
-    if kwargs.get( 'escape_closing_tags', True ):
-        return dumped.replace( '</', '<\\/' )
+        obj = swap_inf_nan(copy.deepcopy(args[0]))
+        dumped = json.dumps(obj, allow_nan=False, **kwargs)
     return dumped
 
 

@@ -111,16 +111,16 @@
                     <label>Shed tool configuration file:</label>
                     ${shed_tool_conf_select_field.get_html()}
                     <div class="toolParamHelp" style="clear: both;">
-                        ${select_help|h}
+                        ${select_help}
                     </div>
                 </div>
                 <div style="clear: both"></div>
             %else:
-                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf|h}"/>
+                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf}"/>
             %endif
             <div class="form-row">
                 <label>Add new tool panel section:</label>
-                <input name="new_tool_panel_section_label" type="textfield" value="${new_tool_panel_section_label|h}" size="40"/>
+                <input name="new_tool_panel_section_label" type="textfield" value="${new_tool_panel_section_label}" size="40"/>
                 <div class="toolParamHelp" style="clear: both;">
                     Add a new tool panel section to contain the installed tools (optional).
                 </div>

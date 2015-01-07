@@ -20,6 +20,9 @@ from galaxy import eggs
 
 log = logging.getLogger( __name__ )
 
+CONFIG_DEFAULT_PREFIX = "GALAXY_CONFIG_"
+CONFIG_OVERRIDE_PREFIX = "GALAXY_CONFIG_OVERRIDE_"
+
 
 def resolve_path( path, root ):
     """If 'path' is relative make absolute by prepending 'root'"""
@@ -36,6 +39,15 @@ class Configuration( object ):
     deprecated_options = ( 'database_file', )
 
     def __init__( self, **kwargs ):
+        for key in os.environ:
+            if key.startswith( CONFIG_OVERRIDE_PREFIX ):
+                config_key = key[ len( CONFIG_OVERRIDE_PREFIX ): ].lower()
+                kwargs[ config_key ] = os.environ[ key ]
+            elif key.startswith( CONFIG_DEFAULT_PREFIX ):
+                config_key = key[ len( CONFIG_DEFAULT_PREFIX ): ].lower()
+                if config_key not in kwargs:
+                    kwargs[ config_key ] = os.environ[ key ]
+
         self.config_dict = kwargs
         self.root = kwargs.get( 'root_dir', '.' )
 
@@ -394,7 +406,7 @@ class Configuration( object ):
         )
 
         listify_defaults = dict(
-            tool_data_table_config_path = [ 'config/tool_data_table_conf.xml', 'tool_data_table_conf.xml', 'config/tool_data_table_conf.xml.sample' ],
+            tool_data_table_config_path = [ 'config/tool_data_table_conf.xml', 'config/tool_data_table_conf.xml', 'config/tool_data_table_conf.xml.sample' ],
             # rationale:
             # [0]: user has explicitly created config/tool_conf.xml but did not
             #      move their existing shed_tool_conf.xml, don't use
@@ -518,9 +530,9 @@ class Configuration( object ):
             tool_configs.append( self.migrated_tools_config )
         for path in tool_configs:
             if not os.path.exists( path ):
-                raise ConfigurationError("Tool config file not found: %s" % path )
+                raise ConfigurationError("File not found: %s" % path )
         if not os.path.isfile( self.datatypes_config ):
-            raise ConfigurationError("Datatypes config file not found: %s" % self.datatypes_config )
+            raise ConfigurationError("File not found: %s" % self.datatypes_config )
         # Check for deprecated options.
         for key in self.config_dict.keys():
             if key in self.deprecated_options:

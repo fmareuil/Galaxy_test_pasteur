@@ -71,7 +71,7 @@
                 <input type="hidden" name="includes_tools" value="${includes_tools}" />
                 <input type="hidden" name="includes_tool_dependencies" value="${includes_tool_dependencies}" />
                 <input type="hidden" name="includes_tools_for_display_in_tool_panel" value="${includes_tools_for_display_in_tool_panel}" />
-                <input type="hidden" name="tool_shed_url" value="${tool_shed_url|h}" />
+                <input type="hidden" name="tool_shed_url" value="${tool_shed_url}" />
             </div>
             <div style="clear: both"></div>
             <% readme_files_dict = containers_dict.get( 'readme_files', None ) %>
@@ -111,12 +111,12 @@
                     <label>Shed tool configuration file:</label>
                     ${shed_tool_conf_select_field.get_html()}
                     <div class="toolParamHelp" style="clear: both;">
-                        ${select_help|h}
+                        ${select_help}
                     </div>
                 </div>
                 <div style="clear: both"></div>
             %else:
-                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf|h}"/>
+                <input type="hidden" name="shed_tool_conf" value="${shed_tool_conf}"/>
             %endif
             <div class="form-row">
                 <input type="submit" name="select_shed_tool_panel_config_button" value="Install"/>

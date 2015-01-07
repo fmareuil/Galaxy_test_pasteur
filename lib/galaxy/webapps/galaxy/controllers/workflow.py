@@ -22,7 +22,8 @@ from galaxy.util.sanitize_html import sanitize_html
 from galaxy.web import error, url_for
 from galaxy.web.base.controller import BaseUIController, SharableMixin, UsesStoredWorkflowMixin
 from galaxy.web.framework.formbuilder import form
-from galaxy.web.framework.helpers import grids, time_ago, to_unicode
+from galaxy.web.framework.helpers import grids, time_ago
+from galaxy.web.framework.helpers import to_unicode
 from galaxy.workflow.modules import WorkflowModuleInjector
 from galaxy.workflow.modules import MissingToolException
 from galaxy.workflow.modules import module_factory, is_tool_module_type
@@ -37,7 +38,6 @@ from galaxy.workflow.steps import (
     order_workflow_steps_with_levels,
 )
 from galaxy.workflow.render import WorkflowCanvas, MARGIN, LINE_SPACING
-from markupsafe import escape
 
 
 class StoredWorkflowListGrid( grids.Grid ):
@@ -311,14 +311,14 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                                     .first()
             if not other:
                 mtype = "error"
-                msg = ( "User '%s' does not exist" % escape( email ) )
+                msg = ( "User '%s' does not exist" % email )
             elif other == trans.get_user():
                 mtype = "error"
                 msg = ( "You cannot share a workflow with yourself" )
             elif trans.sa_session.query( model.StoredWorkflowUserShareAssociation ) \
                     .filter_by( user=other, stored_workflow=stored ).count() > 0:
                 mtype = "error"
-                msg = ( "Workflow already shared with '%s'" % escape( email ) )
+                msg = ( "Workflow already shared with '%s'" % email )
             else:
                 share = model.StoredWorkflowUserShareAssociation()
                 share.stored_workflow = stored
@@ -326,7 +326,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                 session = trans.sa_session
                 session.add( share )
                 session.flush()
-                trans.set_message( "Workflow '%s' shared with user '%s'" % ( escape( stored.name ), escape( other.email ) ) )
+                trans.set_message( "Workflow '%s' shared with user '%s'" % ( stored.name, other.email ) )
                 return trans.response.send_redirect( url_for( controller='workflow', action='sharing', id=id ) )
         return trans.fill_template( "/ind_share_base.mako",
                                     message=msg,
@@ -389,7 +389,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
         # Set referer message.
         referer = trans.request.referer
         if referer is not "":
-            referer_message = "<a href='%s'>return to the previous page</a>" % escape(referer)
+            referer_message = "<a href='%s'>return to the previous page</a>" % referer
         else:
             referer_message = "<a href='%s'>go to Galaxy's start page</a>" % url_for( '/' )
 
@@ -437,7 +437,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
             stored.latest_workflow.name = san_new_name
             trans.sa_session.flush()
             # For current workflows grid:
-            trans.set_message( "Workflow renamed to '%s'." % san_new_name )
+            trans.set_message( "Workflow renamed to '%s'." % new_name )
             return self.list( trans )
             # For new workflows grid:
             #message = "Workflow renamed to '%s'." % new_name
@@ -557,7 +557,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
         session.add( new_stored )
         session.flush()
         # Display the management page
-        trans.set_message( 'Created new workflow with name "%s"' % escape( new_stored.name ) )
+        trans.set_message( 'Created new workflow with name "%s"' % new_stored.name )
         return self.list( trans )
 
     @web.expose
@@ -604,7 +604,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
         trans.sa_session.add( stored )
         trans.sa_session.flush()
         # Display the management page
-        trans.set_message( "Workflow '%s' deleted" % escape( stored.name ) )
+        trans.set_message( "Workflow '%s' deleted" % stored.name )
         return self.list( trans )
 
     @web.expose
@@ -1022,7 +1022,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
         """
         url = kwd.get( 'url', '' )
         workflow_text = kwd.get( 'workflow_text', '' )
-        message = escape( kwd.get( 'message', '' ) )
+        message = kwd.get( 'message', '' )
         status = kwd.get( 'status', 'done' )
         import_button = kwd.get( 'import_button', False )
         # The special Galaxy integration landing page's URL on myExperiment
@@ -1111,7 +1111,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                         message += "Imported, but this workflow contains cycles.  "
                         status = "error"
                     else:
-                        message += "Workflow <b>%s</b> imported successfully.  " % escape( workflow.name )
+                        message += "Workflow <b>%s</b> imported successfully.  " % workflow.name
                     if missing_tool_tups:
                         if trans.user_is_admin():
                             # A required tool is not available in the local Galaxy instance.
@@ -1125,7 +1125,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                             message += "You can likely install the required tools from one of the Galaxy tool sheds listed below.<br/>"
                             for missing_tool_tup in missing_tool_tups:
                                 missing_tool_id, missing_tool_name, missing_tool_version = missing_tool_tup
-                                message += "<b>Tool name</b> %s, <b>id</b> %s, <b>version</b> %s<br/>" % ( escape( missing_tool_name ), escape( missing_tool_id ), escape( missing_tool_version ) )
+                                message += "<b>Tool name</b> %s, <b>id</b> %s, <b>version</b> %s<br/>" % ( missing_tool_name, missing_tool_id, missing_tool_version )
                             message += "<br/>"
                             for shed_name, shed_url in trans.app.tool_shed_registry.tool_sheds.items():
                                 if shed_url.endswith( '/' ):
@@ -1135,7 +1135,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                                         url += '&tool_id='
                                     for missing_tool_tup in missing_tool_tups:
                                         missing_tool_id = missing_tool_tup[0]
-                                        url += '%s,' % escape( missing_tool_id )
+                                        url += '%s,' % missing_tool_id
                                 message += '<a href="%s">%s</a><br/>' % ( url, shed_name )
                                 status = 'error'
                             if installed_repository_file or tool_shed_url:
@@ -1155,13 +1155,13 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
                             pass
                     if tool_shed_url:
                         # We've received the textual representation of a workflow from a Galaxy tool shed.
-                        message = "Workflow <b>%s</b> imported successfully." % escape( workflow.name )
+                        message = "Workflow <b>%s</b> imported successfully." % workflow.name
                         url = '%s/workflow/view_workflow?repository_metadata_id=%s&workflow_name=%s&message=%s' % \
                             ( tool_shed_url, repository_metadata_id, encoding_util.tool_shed_encode( workflow_name ), message )
                         return trans.response.send_redirect( url )
                     elif installed_repository_file:
                         # The workflow was read from a file included with an installed tool shed repository.
-                        message = "Workflow <b>%s</b> imported successfully." % escape( workflow.name )
+                        message = "Workflow <b>%s</b> imported successfully." % workflow.name
                         if cntrller == 'api':
                             return status, message
                         return trans.response.send_redirect( web.url_for( controller='admin_toolshed',
@@ -1228,7 +1228,7 @@ class WorkflowController( BaseUIController, SharableMixin, UsesStoredWorkflowMix
             # Index page with message
             workflow_id = trans.security.encode_id( stored_workflow.id )
             return trans.show_message( 'Workflow "%s" created from current history. You can <a href="%s" target="_parent">edit</a> or <a href="%s">run</a> the workflow.' %
-                                       ( escape( workflow_name ), url_for( controller='workflow', action='editor', id=workflow_id ),
+                                       ( workflow_name, url_for( controller='workflow', action='editor', id=workflow_id ),
                                          url_for( controller='workflow', action='run', id=workflow_id ) ) )
 
     @web.expose

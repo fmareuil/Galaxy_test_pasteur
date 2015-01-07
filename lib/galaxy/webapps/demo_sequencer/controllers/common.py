@@ -4,7 +4,6 @@ from galaxy import util
 import time, socket, urllib, urllib2, base64, copy
 from galaxy.util.json import *
 from urllib import quote_plus, unquote_plus
-from markupsafe import escape
 
 import logging
 log = logging.getLogger( __name__ )
@@ -17,7 +16,7 @@ class CommonController( BaseUIController ):
         titles = util.listify( titles )
         JobId = util.restore_text( kwd.get( 'JobId', '' ) )
         sample_id = util.restore_text( kwd.get( 'sample_id', '' ) )
-        message = escape( util.restore_text( kwd.get( 'message', '' ) ) )
+        message = util.restore_text( kwd.get( 'message', '' ) )
         status = kwd.get( 'status', 'done' )
         redirect_delay = trans.app.sequencer_actions_registry.redirect_delay
         sequencer_redirects = copy.deepcopy( trans.app.sequencer_actions_registry.sequencer_redirects )
@@ -145,7 +144,7 @@ class CommonController( BaseUIController ):
         titles = util.restore_text( kwd.get( 'titles', '' ) )
         JobId = util.restore_text( kwd.get( 'JobId', '' ) )
         sample_id = util.restore_text( kwd.get( 'sample_id', '' ) )
-        message = escape( util.restore_text( kwd.get( 'message', '' ) ) )
+        message = util.restore_text( kwd.get( 'message', '' ) )
         status = kwd.get( 'status', 'done' )
         url, http_method, request_params, response_type = request_tup
         url = unquote_plus( url )

@@ -7,7 +7,6 @@ from galaxy import util
 from galaxy import web
 from galaxy.web.form_builder import build_select_field
 from galaxy.webapps.tool_shed.model import directory_hash_id
-from tool_shed.util.web_util import escape
 
 from tool_shed.dependencies.repository import relation_builder
 
@@ -257,7 +256,7 @@ def get_role_by_id( app, role_id ):
 
 def handle_role_associations( app, role, repository, **kwd ):
     sa_session = app.model.context.current
-    message = escape( kwd.get( 'message', '' ) )
+    message = kwd.get( 'message', '' )
     status = kwd.get( 'status', 'done' )
     repository_owner = repository.user
     if kwd.get( 'manage_role_associations_button', False ):
@@ -322,8 +321,8 @@ def validate_repository_name( app, name, user ):
             return 'You have a deleted repository named <b>%s</b>, so choose a different name.' % name
         else:
             return "You already have a repository named <b>%s</b>, so choose a different name." % name
-    if len( name ) < 2:
-        return "Repository names must be at least 2 characters in length."
+    if len( name ) < 4:
+        return "Repository names must be at least 4 characters in length."
     if len( name ) > 80:
         return "Repository names cannot be more than 80 characters in length."
     if not( VALID_REPOSITORYNAME_RE.match( name ) ):
