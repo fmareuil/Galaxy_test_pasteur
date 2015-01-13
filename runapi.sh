@@ -11,6 +11,12 @@ if [ -n "$GALAXY_UNIVERSE_CONFIG_DIR" ]; then
     python ./scripts/build_universe_config.py "$GALAXY_UNIVERSE_CONFIG_DIR"
 fi
 
+
+
+
+
+
+
 # explicitly attempt to fetch eggs before running
 FETCH_EGGS=1
 for arg in "$@"; do
